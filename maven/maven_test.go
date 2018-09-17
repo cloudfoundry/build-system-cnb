@@ -106,12 +106,12 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, maven.MavenDependency, "stub-maven.tar.gz")
 		f.AddBuildPlan(t, maven.MavenDependency, libbuildpack.BuildPlanDependency{})
 
-		j, _, err := maven.NewMaven(f.Build)
+		m, _, err := maven.NewMaven(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if err := j.Contribute(); err != nil {
+		if err := m.Contribute(); err != nil {
 			t.Fatal(err)
 		}
 
@@ -128,12 +128,12 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		j, _, err := maven.NewMaven(f.Build)
+		m, _, err := maven.NewMaven(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if err := j.Contribute(); err != nil {
+		if err := m.Contribute(); err != nil {
 			t.Fatal(err)
 		}
 

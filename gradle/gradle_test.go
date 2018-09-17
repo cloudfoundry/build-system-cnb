@@ -106,12 +106,12 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, gradle.GradleDependency, "stub-gradle.zip")
 		f.AddBuildPlan(t, gradle.GradleDependency, libbuildpack.BuildPlanDependency{})
 
-		j, _, err := gradle.NewGradle(f.Build)
+		g, _, err := gradle.NewGradle(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if err := j.Contribute(); err != nil {
+		if err := g.Contribute(); err != nil {
 			t.Fatal(err)
 		}
 
@@ -128,12 +128,12 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		j, _, err := gradle.NewGradle(f.Build)
+		g, _, err := gradle.NewGradle(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if err := j.Contribute(); err != nil {
+		if err := g.Contribute(); err != nil {
 			t.Fatal(err)
 		}
 

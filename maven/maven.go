@@ -31,11 +31,11 @@ const MavenDependency = "maven"
 // Maven represents the Maven executable contributed by the buildpack.
 type Maven struct {
 	application libbuildpack.Application
-	logger      libjavabuildpack.Logger
 	layer       libjavabuildpack.DependencyCacheLayer
+	logger      libjavabuildpack.Logger
 }
 
-// Contribute makes the contribution to the cache layer
+// Contribute makes the contribution to the cache layer.
 func (m Maven) Contribute() error {
 	if m.hasWrapper() {
 		m.logger.SubsequentLine("Using Maven wrapper")
@@ -60,7 +60,7 @@ func (m Maven) Executable() string {
 
 // String makes Maven satisfy the Stringer interface.
 func (m Maven) String() string {
-	return fmt.Sprintf("Maven{ application: %s, logger: %s, layer :%s }", m.application, m.logger, m.layer)
+	return fmt.Sprintf("Maven{ application: %s, layer :%s , logger: %s}", m.application, m.layer, m.logger)
 }
 
 func (m Maven) hasWrapper() bool {
@@ -110,7 +110,7 @@ func NewMaven(build libjavabuildpack.Build) (Maven, bool, error) {
 
 	return Maven{
 		build.Application,
-		build.Logger,
 		build.Cache.DependencyLayer(dep),
+		build.Logger,
 	}, true, nil
 }

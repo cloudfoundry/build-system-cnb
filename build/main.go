@@ -32,24 +32,36 @@ func main() {
 		os.Exit(101)
 	}
 
-	if gradle, ok, err := gradle.NewGradle(build); err != nil {
+	if g, ok, err := gradle.NewGradle(build); err != nil {
 		build.Logger.Info(err.Error())
 		build.Failure(102)
 		return
 	} else if ok {
-		if err = gradle.Contribute(); err != nil {
+		if err = g.Contribute(); err != nil {
+			build.Logger.Info(err.Error())
+			build.Failure(103)
+			return
+		}
+
+		if err = maven.NewGradleCache(build).Contribute(); err != nil {
 			build.Logger.Info(err.Error())
 			build.Failure(103)
 			return
 		}
 	}
 
-	if maven, ok, err := maven.NewMaven(build); err != nil {
+	if m, ok, err := maven.NewMaven(build); err != nil {
 		build.Logger.Info(err.Error())
 		build.Failure(102)
 		return
 	} else if ok {
-		if err = maven.Contribute(); err != nil {
+		if err = m.Contribute(); err != nil {
+			build.Logger.Info(err.Error())
+			build.Failure(103)
+			return
+		}
+
+		if err = maven.NewMavenCache(build).Contribute(); err != nil {
 			build.Logger.Info(err.Error())
 			build.Failure(103)
 			return
