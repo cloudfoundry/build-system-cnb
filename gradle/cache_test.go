@@ -14,69 +14,69 @@
  * limitations under the License.
  */
 
-package maven_test
+package gradle_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/build-system-buildpack/maven"
+	"github.com/cloudfoundry/build-system-buildpack/gradle"
 	"github.com/cloudfoundry/libjavabuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
-func TestMavenCache(t *testing.T) {
-	spec.Run(t, "MavenCache", testMavenCache, spec.Report(report.Terminal{}))
+func TestCache(t *testing.T) {
+	spec.Run(t, "Cache", testCache, spec.Report(report.Terminal{}))
 }
 
-func testMavenCache(t *testing.T, when spec.G, it spec.S) {
-	it("contributes .m2 if it doesn't exist", func() {
+func testCache(t *testing.T, when spec.G, it spec.S) {
+	it("contributes .gradle if it doesn't exist", func() {
 		f := test.NewBuildFactory(t)
 
 		home := test.ScratchDir(t, "home")
 		defer test.ReplaceEnv(t, "HOME", home)()
 
-		m := maven.NewMavenCache(f.Build)
+		g := gradle.NewCache(f.Build)
 
-		if err := m.Contribute(); err != nil {
+		if err := g.Contribute(); err != nil {
 			t.Fatal(err)
 		}
 
-		fi, err := os.Lstat(filepath.Join(home, ".m2"))
+		fi, err := os.Lstat(filepath.Join(home, ".gradle"))
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		if fi.Mode()&os.ModeSymlink != os.ModeSymlink {
-			t.Errorf("$HOME/.m2.Mode() = %s, expected symlink", fi.Mode())
+			t.Errorf("$HOME/.gradle.Mode() = %s, expected symlink", fi.Mode())
 		}
 	})
 
-	it("does not contribute .m2 if it does exist", func() {
+	it("does not contribute .gradle if it does exist", func() {
 		f := test.NewBuildFactory(t)
 
 		home := test.ScratchDir(t, "home")
 		defer test.ReplaceEnv(t, "HOME", home)()
 
-		m := maven.NewMavenCache(f.Build)
+		g := gradle.NewCache(f.Build)
 
-		if err := os.MkdirAll(filepath.Join(home, ".m2"), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Join(home, ".gradle"), 0755); err != nil {
 			t.Fatal(err)
 		}
 
-		if err := m.Contribute(); err != nil {
+		if err := g.Contribute(); err != nil {
 			t.Fatal(err)
 		}
 
-		fi, err := os.Lstat(filepath.Join(home, ".m2"))
+		fi, err := os.Lstat(filepath.Join(home, ".gradle"))
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
-			t.Errorf("$HOME/.m2.Mode() = %s, expected not symlink", fi.Mode())
+			t.Errorf("$HOME/.gradle.Mode() = %s, expected not symlink", fi.Mode())
 		}
 	})
 }

@@ -25,15 +25,15 @@ import (
 	"github.com/cloudfoundry/libjavabuildpack"
 )
 
-// MavenCache represents the location that Maven caches its downloaded artifacts for reuse.
-type MavenCache struct {
+// Cache represents the location that Maven caches its downloaded artifacts for reuse.
+type Cache struct {
 	layer  libbuildpack.CacheLayer
 	logger libjavabuildpack.Logger
 }
 
 // Contribute links the cache layer to $HOME/.m2.
-func (m MavenCache) Contribute() error {
-	m2 := m.m2()
+func (c Cache) Contribute() error {
+	m2 := c.m2()
 
 	exists, err := libjavabuildpack.FileExists(m2)
 	if err != nil {
@@ -41,33 +41,33 @@ func (m MavenCache) Contribute() error {
 	}
 
 	if exists {
-		m.logger.Debug("Maven cache already exists")
+		c.logger.Debug("Maven cache already exists")
 		return nil
 	}
 
-	m.logger.SubsequentLine("Linking Maven Cache to %s", m2)
+	c.logger.SubsequentLine("Linking Maven Cache to %s", m2)
 
-	m.logger.Debug("Creating cache directory %s", m.layer.Root)
-	if err := os.MkdirAll(m.layer.Root, 0755); err != nil {
+	c.logger.Debug("Creating cache directory %s", c.layer.Root)
+	if err := os.MkdirAll(c.layer.Root, 0755); err != nil {
 		return err
 	}
 
-	m.logger.Debug("Linking %s => %s", m.layer.Root, m2)
-	return os.Symlink(m.layer.Root, m2)
+	c.logger.Debug("Linking %s => %s", c.layer.Root, m2)
+	return os.Symlink(c.layer.Root, m2)
 }
 
-// String makes MavenCache satisfy the Stringer interface.
-func (m MavenCache) String() string {
-	return fmt.Sprintf("MavenCache{ layer :%s , logger: %s}", m.layer, m.logger)
+// String makes Cache satisfy the Stringer interface.
+func (c Cache) String() string {
+	return fmt.Sprintf("Cache{ layer :%s , logger: %s}", c.layer, c.logger)
 }
 
-func (m MavenCache) m2() string {
+func (c Cache) m2() string {
 	return filepath.Join(os.Getenv("HOME"), ".m2")
 }
 
-// NewMavenCache creates a new MavenCache instance.
-func NewMavenCache(build libjavabuildpack.Build) MavenCache {
-	return MavenCache{
+// NewCache creates a new Cache instance.
+func NewCache(build libjavabuildpack.Build) Cache {
+	return Cache{
 		build.Cache.Layer("maven-cache"),
 		build.Logger,
 	}

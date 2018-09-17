@@ -38,7 +38,7 @@ type Gradle struct {
 // Contribute makes the contribution to the cache layer
 func (g Gradle) Contribute() error {
 	if g.hasWrapper() {
-		g.logger.SubsequentLine("Using Gradle wrapper")
+		g.logger.FirstLine("Using Gradle wrapper")
 		return nil
 	}
 

@@ -38,7 +38,7 @@ type Maven struct {
 // Contribute makes the contribution to the cache layer.
 func (m Maven) Contribute() error {
 	if m.hasWrapper() {
-		m.logger.SubsequentLine("Using Maven wrapper")
+		m.logger.FirstLine("Using Maven wrapper")
 		return nil
 	}
 

@@ -25,15 +25,15 @@ import (
 	"github.com/cloudfoundry/libjavabuildpack"
 )
 
-// GradleCache represents the location that Gradle caches its downloaded artifacts for reuse.
-type GradleCache struct {
+// Cache represents the location that Gradle caches its downloaded artifacts for reuse.
+type Cache struct {
 	layer  libbuildpack.CacheLayer
 	logger libjavabuildpack.Logger
 }
 
 // Contribute links the cache layer to $HOME/.gradle.
-func (g GradleCache) Contribute() error {
-	gradle := g.gradle()
+func (c Cache) Contribute() error {
+	gradle := c.gradle()
 
 	exists, err := libjavabuildpack.FileExists(gradle)
 	if err != nil {
@@ -41,33 +41,33 @@ func (g GradleCache) Contribute() error {
 	}
 
 	if exists {
-		g.logger.Debug("Gradle cache already exists")
+		c.logger.Debug("Gradle cache already exists")
 		return nil
 	}
 
-	g.logger.SubsequentLine("Linking Gradle Cache to %s", gradle)
+	c.logger.SubsequentLine("Linking Gradle Cache to %s", gradle)
 
-	g.logger.Debug("Creating cache directory %s", g.layer.Root)
-	if err := os.MkdirAll(g.layer.Root, 0755); err != nil {
+	c.logger.Debug("Creating cache directory %s", c.layer.Root)
+	if err := os.MkdirAll(c.layer.Root, 0755); err != nil {
 		return err
 	}
 
-	g.logger.Debug("Linking %s => %s", g.layer.Root, gradle)
-	return os.Symlink(g.layer.Root, gradle)
+	c.logger.Debug("Linking %s => %s", c.layer.Root, gradle)
+	return os.Symlink(c.layer.Root, gradle)
 }
 
-// String makes GradleCache satisfy the Stringer interface.
-func (g GradleCache) String() string {
-	return fmt.Sprintf("GradleCache{ layer :%s , logger: %s}", g.layer, g.logger)
+// String makes Cache satisfy the Stringer interface.
+func (c Cache) String() string {
+	return fmt.Sprintf("Cache{ layer :%s , logger: %s}", c.layer, c.logger)
 }
 
-func (g GradleCache) gradle() string {
+func (c Cache) gradle() string {
 	return filepath.Join(os.Getenv("HOME"), ".gradle")
 }
 
-// NewGradleCache creates a new GradleCache instance.
-func NewGradleCache(build libjavabuildpack.Build) GradleCache {
-	return GradleCache{
+// NewCache creates a new Cache instance.
+func NewCache(build libjavabuildpack.Build) Cache {
+	return Cache{
 		build.Cache.Layer("gradle-cache"),
 		build.Logger,
 	}

@@ -32,6 +32,8 @@ func main() {
 		os.Exit(101)
 	}
 
+	build.Logger.FirstLine(build.Logger.PrettyVersion(build.Buildpack))
+
 	if g, ok, err := gradle.NewGradle(build); err != nil {
 		build.Logger.Info(err.Error())
 		build.Failure(102)
@@ -43,7 +45,13 @@ func main() {
 			return
 		}
 
-		if err = gradle.NewGradleCache(build).Contribute(); err != nil {
+		if err = gradle.NewCache(build).Contribute(); err != nil {
+			build.Logger.Info(err.Error())
+			build.Failure(103)
+			return
+		}
+
+		if err = gradle.NewRunner(build, g).Contribute(); err != nil {
 			build.Logger.Info(err.Error())
 			build.Failure(103)
 			return
@@ -61,7 +69,13 @@ func main() {
 			return
 		}
 
-		if err = maven.NewMavenCache(build).Contribute(); err != nil {
+		if err = maven.NewCache(build).Contribute(); err != nil {
+			build.Logger.Info(err.Error())
+			build.Failure(103)
+			return
+		}
+
+		if err = maven.NewRunner(build, m).Contribute(); err != nil {
 			build.Logger.Info(err.Error())
 			build.Failure(103)
 			return
