@@ -21,6 +21,7 @@ import (
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack"
+	"github.com/cloudfoundry/jvm-application-buildpack"
 	"github.com/cloudfoundry/libjavabuildpack"
 	"github.com/cloudfoundry/openjdk-buildpack"
 )
@@ -83,8 +84,8 @@ func (g Gradle) wrapper() string {
 // BuildPlanContribution returns the BuildPlan with requirements for Gradle.
 func BuildPlanContribution() libbuildpack.BuildPlan {
 	return libbuildpack.BuildPlan{
-		GradleDependency:  libbuildpack.BuildPlanDependency{},
-		"jvm-application": libbuildpack.BuildPlanDependency{}, // TODO use constants for jvm-application
+		GradleDependency:                         libbuildpack.BuildPlanDependency{},
+		jvm_application_buildpack.JVMApplication: libbuildpack.BuildPlanDependency{},
 		openjdk_buildpack.JDKDependency: libbuildpack.BuildPlanDependency{
 			Version: "1.*",
 		},

@@ -24,6 +24,7 @@ import (
 
 	"github.com/buildpack/libbuildpack"
 	"github.com/cloudfoundry/build-system-buildpack/maven"
+	"github.com/cloudfoundry/jvm-application-buildpack"
 	"github.com/cloudfoundry/libjavabuildpack"
 	"github.com/cloudfoundry/libjavabuildpack/test"
 	"github.com/cloudfoundry/openjdk-buildpack"
@@ -52,7 +53,7 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 	it("contains jvm-application", func() {
 		bp := maven.BuildPlanContribution()
 
-		actual := bp["jvm-application"] // TODO use constants for jvm-application
+		actual := bp[jvm_application_buildpack.JVMApplication]
 
 		expected := libbuildpack.BuildPlanDependency{}
 
