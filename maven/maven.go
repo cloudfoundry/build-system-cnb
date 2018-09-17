@@ -17,20 +17,100 @@
 package maven
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/buildpack/libbuildpack"
+	"github.com/cloudfoundry/libjavabuildpack"
 	"github.com/cloudfoundry/openjdk-buildpack"
 )
 
 // MavenDependency is the key identifying the Maven build system in the buildpack plan.
 const MavenDependency = "maven"
 
+// Maven represents the Maven executable contributed by the buildpack.
+type Maven struct {
+	application libbuildpack.Application
+	logger      libjavabuildpack.Logger
+	layer       libjavabuildpack.DependencyCacheLayer
+}
+
+// Contribute makes the contribution to the cache layer
+func (m Maven) Contribute() error {
+	if m.hasWrapper() {
+		m.logger.SubsequentLine("Using Maven wrapper")
+		return nil
+	}
+
+	return m.layer.Contribute(func(artifact string, layer libjavabuildpack.DependencyCacheLayer) error {
+		layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
+		return libjavabuildpack.ExtractTarGz(artifact, layer.Root, 1)
+	})
+}
+
+// Executable returns the path to the executable that should be used.  Will be the wrapper if it exists, the downloaded
+// Maven distribution otherwise.
+func (m Maven) Executable() string {
+	if m.hasWrapper() {
+		return m.wrapper()
+	}
+
+	return m.maven()
+}
+
+// String makes Maven satisfy the Stringer interface.
+func (m Maven) String() string {
+	return fmt.Sprintf("Maven{ application: %s, logger: %s, layer :%s }", m.application, m.logger, m.layer)
+}
+
+func (m Maven) hasWrapper() bool {
+	exists, err := libjavabuildpack.FileExists(m.wrapper())
+	if err != nil {
+		return false
+	}
+
+	return exists
+}
+
+func (m Maven) maven() string {
+	return filepath.Join(m.layer.Root, "bin", "mvn")
+}
+
+func (m Maven) wrapper() string {
+	return filepath.Join(m.application.Root, "mvnw")
+}
+
 // BuildPlanContribution returns the BuildPlan with requirements for Maven.
 func BuildPlanContribution() libbuildpack.BuildPlan {
 	return libbuildpack.BuildPlan{
-		MavenDependency:  libbuildpack.BuildPlanDependency{},
+		MavenDependency:   libbuildpack.BuildPlanDependency{},
 		"jvm-application": libbuildpack.BuildPlanDependency{}, // TODO use constants for jvm-application
 		openjdk_buildpack.JDKDependency: libbuildpack.BuildPlanDependency{
 			Version: "1.*",
 		},
 	}
+}
+
+// NewMaven creates a new Maven instance. OK is true if build plan contains "maven" dependency, otherwise false.
+func NewMaven(build libjavabuildpack.Build) (Maven, bool, error) {
+	bp, ok := build.BuildPlan[MavenDependency]
+	if !ok {
+		return Maven{}, false, nil
+	}
+
+	deps, err := build.Buildpack.Dependencies()
+	if err != nil {
+		return Maven{}, false, err
+	}
+
+	dep, err := deps.Best(MavenDependency, bp.Version, build.Stack)
+	if err != nil {
+		return Maven{}, false, err
+	}
+
+	return Maven{
+		build.Application,
+		build.Logger,
+		build.Cache.DependencyLayer(dep),
+	}, true, nil
 }
