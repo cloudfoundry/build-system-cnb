@@ -43,7 +43,7 @@ func main() {
 			return
 		}
 
-		if err = maven.NewGradleCache(build).Contribute(); err != nil {
+		if err = gradle.NewGradleCache(build).Contribute(); err != nil {
 			build.Logger.Info(err.Error())
 			build.Failure(103)
 			return
