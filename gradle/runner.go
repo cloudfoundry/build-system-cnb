@@ -93,7 +93,7 @@ func (r Runner) command() *exec.Cmd {
 	cmd.Stderr = os.Stderr
 	cmd.Dir = r.application.Root
 
-	r.logger.SubsequentLine("Running %s %s", cmd.Path, strings.Join(cmd.Args, " "))
+	r.logger.SubsequentLine("Running %s", strings.Join(cmd.Args, " "))
 	return cmd
 }
 
