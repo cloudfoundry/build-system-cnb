@@ -35,3 +35,14 @@ version = "3.5.4"
 uri     = "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.5.4/apache-maven-3.5.4-bin.tar.gz"
 sha256  = "ce50b1c91364cb77efe3776f756a6d92b76d9038b0a0782f7d53acf1e997a14d"
 stacks  = [ "io.buildpacks.stacks.bionic" ]
+
+[metadata]
+  pre_package = "ci/build.sh"
+  include_files = [
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "bin/build",
+    "bin/detect",
+    "buildpack.toml",
+  ]
