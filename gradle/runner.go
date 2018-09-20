@@ -91,7 +91,6 @@ func (r Runner) command() *exec.Cmd {
 	cmd := exec.Command(r.grad, "-x", "test", "build")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Env = os.Environ()
 	cmd.Dir = r.application.Root
 
 	r.logger.SubsequentLine("Running %s %s", cmd.Path, strings.Join(cmd.Args, " "))
