@@ -19,6 +19,7 @@ package gradle
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack"
@@ -33,7 +34,10 @@ type Cache struct {
 
 // Contribute links the cache layer to $HOME/.gradle.
 func (c Cache) Contribute() error {
-	gradle := c.gradle()
+	gradle, err := c.gradle()
+	if err != nil {
+		return err
+	}
 
 	exists, err := libjavabuildpack.FileExists(gradle)
 	if err != nil {
@@ -61,8 +65,12 @@ func (c Cache) String() string {
 	return fmt.Sprintf("Cache{ layer :%s , logger: %s}", c.layer, c.logger)
 }
 
-func (c Cache) gradle() string {
-	return filepath.Join(os.Getenv("HOME"), ".gradle")
+func (c Cache) gradle() (string, error) {
+	u, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(u.HomeDir, ".gradle"), nil
 }
 
 // NewCache creates a new Cache instance.

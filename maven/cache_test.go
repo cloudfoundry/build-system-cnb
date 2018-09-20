@@ -18,9 +18,11 @@ package maven_test
 
 import (
 	"os"
+	"os/user"
 	"path/filepath"
 	"testing"
 
+	"github.com/bouk/monkey"
 	"github.com/cloudfoundry/build-system-buildpack/maven"
 	"github.com/cloudfoundry/libjavabuildpack/test"
 	"github.com/sclevine/spec"
@@ -37,7 +39,11 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 		f := test.NewBuildFactory(t)
 
 		home := test.ScratchDir(t, "home")
-		defer test.ReplaceEnv(t, "HOME", home)()
+
+		pg := monkey.Patch(user.Current, func() (*user.User, error) {
+			return &user.User{HomeDir: home}, nil
+		})
+		defer pg.Unpatch()
 
 		m := maven.NewCache(f.Build)
 
@@ -59,7 +65,11 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 		f := test.NewBuildFactory(t)
 
 		home := test.ScratchDir(t, "home")
-		defer test.ReplaceEnv(t, "HOME", home)()
+
+		pg := monkey.Patch(user.Current, func() (*user.User, error) {
+			return &user.User{HomeDir: home}, nil
+		})
+		defer pg.Unpatch()
 
 		m := maven.NewCache(f.Build)
 

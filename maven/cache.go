@@ -19,6 +19,7 @@ package maven
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack"
@@ -33,7 +34,10 @@ type Cache struct {
 
 // Contribute links the cache layer to $HOME/.m2.
 func (c Cache) Contribute() error {
-	m2 := c.m2()
+	m2, err := c.m2()
+	if err != nil {
+		return err
+	}
 
 	exists, err := libjavabuildpack.FileExists(m2)
 	if err != nil {
@@ -61,8 +65,13 @@ func (c Cache) String() string {
 	return fmt.Sprintf("Cache{ layer :%s , logger: %s}", c.layer, c.logger)
 }
 
-func (c Cache) m2() string {
-	return filepath.Join(os.Getenv("HOME"), ".m2")
+func (c Cache) m2() (string, error) {
+	u, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(u.HomeDir, ".m2"), nil
 }
 
 // NewCache creates a new Cache instance.

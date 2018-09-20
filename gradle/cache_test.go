@@ -18,9 +18,11 @@ package gradle_test
 
 import (
 	"os"
+	"os/user"
 	"path/filepath"
 	"testing"
 
+	"bou.ke/monkey"
 	"github.com/cloudfoundry/build-system-buildpack/gradle"
 	"github.com/cloudfoundry/libjavabuildpack/test"
 	"github.com/sclevine/spec"
@@ -36,7 +38,11 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 		f := test.NewBuildFactory(t)
 
 		home := test.ScratchDir(t, "home")
-		defer test.ReplaceEnv(t, "HOME", home)()
+
+		pg := monkey.Patch(user.Current, func() (*user.User, error) {
+			return &user.User{HomeDir: home}, nil
+		})
+		defer pg.Unpatch()
 
 		g := gradle.NewCache(f.Build)
 
@@ -58,7 +64,11 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 		f := test.NewBuildFactory(t)
 
 		home := test.ScratchDir(t, "home")
-		defer test.ReplaceEnv(t, "HOME", home)()
+
+		pg := monkey.Patch(user.Current, func() (*user.User, error) {
+			return &user.User{HomeDir: home}, nil
+		})
+		defer pg.Unpatch()
 
 		g := gradle.NewCache(f.Build)
 
