@@ -78,8 +78,8 @@ func (r Runner) builtArtifact() (string, error) {
 		return "", err
 	}
 
-	if len(candidates) == 0 {
-		return "", fmt.Errorf("unable to find built artifact in %s", target)
+	if len(candidates) != 1 {
+		return "", fmt.Errorf("unable to determine built artifact in %s, candidates: %s", target, candidates)
 	}
 
 	artifact := candidates[0]
