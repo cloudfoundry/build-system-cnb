@@ -14,7 +14,7 @@ outputs:
 - name: artifactory
 
 caches:
-- path: go-build
+- path: go-module-cache
 
 run:
   path: build-system-buildpack/ci/package.sh
