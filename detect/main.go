@@ -50,9 +50,9 @@ func main() {
 }
 
 func isGradle(detect libjavabuildpack.Detect) bool {
-	pom := filepath.Join(detect.Application.Root, "build.gradle")
+	build := filepath.Join(detect.Application.Root, "build.gradle")
 
-	exists, err := libjavabuildpack.FileExists(pom)
+	exists, err := libjavabuildpack.FileExists(build)
 	if err != nil {
 		return false
 	}

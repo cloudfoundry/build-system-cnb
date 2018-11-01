@@ -83,4 +83,5 @@ func main() {
 	}
 
 	build.Success()
+	return
 }
