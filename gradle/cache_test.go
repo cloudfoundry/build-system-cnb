@@ -18,13 +18,11 @@ package gradle_test
 
 import (
 	"os"
-	"os/user"
 	"path/filepath"
 	"testing"
 
-	"bou.ke/monkey"
 	"github.com/cloudfoundry/build-system-buildpack/gradle"
-	"github.com/cloudfoundry/libjavabuildpack/test"
+	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -34,17 +32,18 @@ func TestCache(t *testing.T) {
 }
 
 func testCache(t *testing.T, when spec.G, it spec.S) {
+
 	it("contributes .gradle if it doesn't exist", func() {
 		f := test.NewBuildFactory(t)
 
-		home := test.ScratchDir(t, "home")
+		home := filepath.Join(f.Build.Application.Root, "home")
 
-		pg := monkey.Patch(user.Current, func() (*user.User, error) {
-			return &user.User{HomeDir: home}, nil
-		})
-		defer pg.Unpatch()
+		g, err := gradle.NewCache(f.Build)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-		g := gradle.NewCache(f.Build)
+		g.Gradle = filepath.Join(home, ".gradle")
 
 		if err := g.Contribute(); err != nil {
 			t.Fatal(err)
@@ -63,14 +62,12 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 	it("does not contribute .gradle if it does exist", func() {
 		f := test.NewBuildFactory(t)
 
-		home := test.ScratchDir(t, "home")
+		home := filepath.Join(f.Build.Application.Root, "home")
 
-		pg := monkey.Patch(user.Current, func() (*user.User, error) {
-			return &user.User{HomeDir: home}, nil
-		})
-		defer pg.Unpatch()
-
-		g := gradle.NewCache(f.Build)
+		g, err := gradle.NewCache(f.Build);
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if err := os.MkdirAll(filepath.Join(home, ".gradle"), 0755); err != nil {
 			t.Fatal(err)

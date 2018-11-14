@@ -24,15 +24,20 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/buildpack/libbuildpack"
-	"github.com/cloudfoundry/libjavabuildpack"
+	"github.com/buildpack/libbuildpack/application"
+	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/logger"
 	"github.com/fatih/color"
 )
 
 // Runner represents the behavior of running the maven command to build an application.
 type Runner struct {
-	application libbuildpack.Application
-	logger      libjavabuildpack.Logger
+	// Exec is the function that isolates execution
+	Exec Exec
+
+	application application.Application
+	logger      logger.Logger
 	mvn         string
 }
 
@@ -41,7 +46,7 @@ type Runner struct {
 func (r Runner) Contribute() error {
 	r.logger.FirstLine("%s application", color.YellowString("Building"))
 
-	if err := r.command().Run(); err != nil {
+	if err := r.Exec(r.command()); err != nil {
 		return err
 	}
 
@@ -61,13 +66,13 @@ func (r Runner) Contribute() error {
 	}
 
 	r.logger.Debug("Expanding %s to %s", tmp, r.application.Root)
-	return libjavabuildpack.ExtractZip(tmp, r.application.Root, 0)
-
+	return layers.ExtractZip(tmp, r.application.Root, 0)
 }
 
 // String makes Runner satisfy the Stringer interface.
 func (r Runner) String() string {
-	return fmt.Sprintf("Runner{ application: %s, logger: %s, mvn: %s}", r.application, r.logger, r.mvn)
+	return fmt.Sprintf("Runner{ Exec: %v, application: %s, logger: %s, mvn: %s }",
+		r.Exec, r.application, r.logger, r.mvn)
 }
 
 func (r Runner) builtArtifact() (string, error) {
@@ -104,16 +109,25 @@ func (r Runner) preserveBuiltArtifact(artifact string) (string, error) {
 	}
 
 	r.logger.Debug("Copying %s to %s", artifact, tmp.Name())
-	libjavabuildpack.CopyFile(artifact, tmp.Name())
+	if err := layers.CopyFile(artifact, tmp.Name()); err != nil {
+		return "", err
+	}
 
 	return tmp.Name(), nil
 }
 
 // NewRunner creates a new Runner instance.
-func NewRunner(build libjavabuildpack.Build, maven Maven) Runner {
+func NewRunner(build build.Build, maven Maven) Runner {
 	return Runner{
+		defaultExec,
 		build.Application,
 		build.Logger,
 		maven.Executable(),
 	}
+}
+
+type Exec func(cmd *exec.Cmd) error
+
+var defaultExec = func(cmd *exec.Cmd) error {
+	return cmd.Run()
 }

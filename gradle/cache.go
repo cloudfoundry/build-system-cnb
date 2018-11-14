@@ -22,24 +22,23 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/buildpack/libbuildpack"
-	"github.com/cloudfoundry/libjavabuildpack"
+	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/logger"
 )
 
 // Cache represents the location that Gradle caches its downloaded artifacts for reuse.
 type Cache struct {
-	layer  libbuildpack.CacheLayer
-	logger libjavabuildpack.Logger
+	// Gradle is the location of the .gradle directory.
+	Gradle string
+
+	layer  layers.Layer
+	logger logger.Logger
 }
 
 // Contribute links the cache layer to $HOME/.gradle.
 func (c Cache) Contribute() error {
-	gradle, err := c.gradle()
-	if err != nil {
-		return err
-	}
-
-	exists, err := libjavabuildpack.FileExists(gradle)
+	exists, err := layers.FileExists(c.Gradle)
 	if err != nil {
 		return err
 	}
@@ -49,34 +48,49 @@ func (c Cache) Contribute() error {
 		return nil
 	}
 
-	c.logger.SubsequentLine("Linking Gradle Cache to %s", gradle)
+	c.logger.SubsequentLine("Linking Gradle Cache to %s", c.Gradle)
 
 	c.logger.Debug("Creating cache directory %s", c.layer.Root)
 	if err := os.MkdirAll(c.layer.Root, 0755); err != nil {
 		return err
 	}
 
-	c.logger.Debug("Linking %s => %s", c.layer.Root, gradle)
-	return os.Symlink(c.layer.Root, gradle)
+	if err := os.MkdirAll(filepath.Dir(c.Gradle), 0755); err != nil {
+		return err
+	}
+
+	c.logger.Debug("Linking %s => %s", c.layer.Root, c.Gradle)
+	if err := os.Symlink(c.layer.Root, c.Gradle); err != nil {
+		return err
+	}
+
+	return c.layer.WriteMetadata(nil, layers.Build, layers.Cache)
 }
 
 // String makes Cache satisfy the Stringer interface.
 func (c Cache) String() string {
-	return fmt.Sprintf("Cache{ layer :%s , logger: %s}", c.layer, c.logger)
+	return fmt.Sprintf("Cache{ Gradle:%s, layer: %s , logger: %s}", c.Gradle, c.layer, c.logger)
 }
 
-func (c Cache) gradle() (string, error) {
+// NewCache creates a new Cache instance.
+func NewCache(build build.Build) (Cache, error) {
+	gradle, err := gradle()
+	if err != nil {
+		return Cache{}, err
+	}
+
+	return Cache{
+		gradle,
+		build.Layers.Layer("gradle-cache"),
+		build.Logger,
+	}, nil
+}
+
+func gradle() (string, error) {
 	u, err := user.Current()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(u.HomeDir, ".gradle"), nil
-}
 
-// NewCache creates a new Cache instance.
-func NewCache(build libjavabuildpack.Build) Cache {
-	return Cache{
-		build.Cache.Layer("gradle-cache"),
-		build.Logger,
-	}
+	return filepath.Join(u.HomeDir, ".gradle"), nil
 }

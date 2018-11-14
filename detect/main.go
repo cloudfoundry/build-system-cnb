@@ -19,54 +19,37 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/cloudfoundry/build-system-buildpack/gradle"
 	"github.com/cloudfoundry/build-system-buildpack/maven"
-	"github.com/cloudfoundry/libjavabuildpack"
+	detectPkg "github.com/cloudfoundry/libcfbuildpack/detect"
 )
 
 func main() {
-	detect, err := libjavabuildpack.DefaultDetect()
+	detect, err := detectPkg.DefaultDetect()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to initialize Detect: %s\n", err.Error())
+		_, _ = fmt.Fprintf(os.Stderr, "Failed to initialize Detect: %s\n", err.Error())
 		os.Exit(101)
 	}
 
-	if isGradle(detect) {
+	if code, err := d(detect); err != nil {
+		detect.Logger.Info(err.Error())
+		os.Exit(code)
+	} else {
+		os.Exit(code)
+	}
+}
+
+func d(detect detectPkg.Detect) (int, error) {
+	if gradle.IsGradle(detect.Application) {
 		detect.Logger.Debug("Gradle application")
-		detect.Pass(gradle.BuildPlanContribution())
-		return
+		return detect.Pass(gradle.BuildPlanContribution())
 	}
 
-	if isMaven(detect) {
+	if maven.IsMaven(detect.Application) {
 		detect.Logger.Debug("Maven application")
-		detect.Pass(maven.BuildPlanContribution())
-		return
+		return detect.Pass(maven.BuildPlanContribution())
 	}
 
-	detect.Fail()
-	return
-}
-
-func isGradle(detect libjavabuildpack.Detect) bool {
-	build := filepath.Join(detect.Application.Root, "build.gradle")
-
-	exists, err := libjavabuildpack.FileExists(build)
-	if err != nil {
-		return false
-	}
-
-	return exists
-}
-
-func isMaven(detect libjavabuildpack.Detect) bool {
-	pom := filepath.Join(detect.Application.Root, "pom.xml")
-
-	exists, err := libjavabuildpack.FileExists(pom)
-	if err != nil {
-		return false
-	}
-
-	return exists
+	return detect.Fail(), nil
 }

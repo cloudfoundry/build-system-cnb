@@ -20,20 +20,23 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/buildpack/libbuildpack"
-	"github.com/cloudfoundry/jvm-application-buildpack"
-	"github.com/cloudfoundry/libjavabuildpack"
-	"github.com/cloudfoundry/openjdk-buildpack"
+	"github.com/buildpack/libbuildpack/application"
+	"github.com/buildpack/libbuildpack/buildplan"
+	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
+	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/logger"
+	"github.com/cloudfoundry/openjdk-buildpack/jdk"
 )
 
-// MavenDependency is the key identifying the Maven build system in the buildpack plan.
-const MavenDependency = "maven"
+// Dependency is the key identifying the Maven build system in the buildpack plan.
+const Dependency = "maven"
 
 // Maven represents the Maven executable contributed by the buildpack.
 type Maven struct {
-	application libbuildpack.Application
-	layer       libjavabuildpack.DependencyCacheLayer
-	logger      libjavabuildpack.Logger
+	application application.Application
+	layer       layers.DependencyLayer
+	logger      logger.Logger
 }
 
 // Contribute makes the contribution to the cache layer.
@@ -43,10 +46,10 @@ func (m Maven) Contribute() error {
 		return nil
 	}
 
-	return m.layer.Contribute(func(artifact string, layer libjavabuildpack.DependencyCacheLayer) error {
+	return m.layer.Contribute(func(artifact string, layer layers.DependencyLayer) error {
 		layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
-		return libjavabuildpack.ExtractTarGz(artifact, layer.Root, 1)
-	})
+		return layers.ExtractTarGz(artifact, layer.Root, 1)
+	}, layers.Build, layers.Cache)
 }
 
 // Executable returns the path to the executable that should be used.  Will be the wrapper if it exists, the downloaded
@@ -65,7 +68,7 @@ func (m Maven) String() string {
 }
 
 func (m Maven) hasWrapper() bool {
-	exists, err := libjavabuildpack.FileExists(m.wrapper())
+	exists, err := layers.FileExists(m.wrapper())
 	if err != nil {
 		return false
 	}
@@ -82,19 +85,27 @@ func (m Maven) wrapper() string {
 }
 
 // BuildPlanContribution returns the BuildPlan with requirements for Maven.
-func BuildPlanContribution() libbuildpack.BuildPlan {
-	return libbuildpack.BuildPlan{
-		MavenDependency:                          libbuildpack.BuildPlanDependency{},
-		jvm_application_buildpack.JVMApplication: libbuildpack.BuildPlanDependency{},
-		openjdk_buildpack.JDKDependency: libbuildpack.BuildPlanDependency{
-			Version: "1.*",
-		},
+func BuildPlanContribution() buildplan.BuildPlan {
+	return buildplan.BuildPlan{
+		Dependency:                buildplan.Dependency{},
+		jvmapplication.Dependency: buildplan.Dependency{},
+		jdk.Dependency:            buildplan.Dependency{Version: "1.*"},
 	}
 }
 
+// IsMaven returns whether this application is built using Maven.
+func IsMaven(application application.Application) bool {
+	exists, err := layers.FileExists(filepath.Join(application.Root, "pom.xml"))
+	if err != nil {
+		return false
+	}
+
+	return exists
+}
+
 // NewMaven creates a new Maven instance. OK is true if build plan contains "maven" dependency, otherwise false.
-func NewMaven(build libjavabuildpack.Build) (Maven, bool, error) {
-	bp, ok := build.BuildPlan[MavenDependency]
+func NewMaven(build build.Build) (Maven, bool, error) {
+	bp, ok := build.BuildPlan[Dependency]
 	if !ok {
 		return Maven{}, false, nil
 	}
@@ -104,14 +115,14 @@ func NewMaven(build libjavabuildpack.Build) (Maven, bool, error) {
 		return Maven{}, false, err
 	}
 
-	dep, err := deps.Best(MavenDependency, bp.Version, build.Stack)
+	dep, err := deps.Best(Dependency, bp.Version, build.Stack)
 	if err != nil {
 		return Maven{}, false, err
 	}
 
 	return Maven{
 		build.Application,
-		build.Cache.DependencyLayer(dep),
+		build.Layers.DependencyLayer(dep),
 		build.Logger,
 	}, true, nil
 }

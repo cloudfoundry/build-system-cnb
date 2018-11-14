@@ -23,11 +23,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bouk/monkey"
-	"github.com/buildpack/libbuildpack"
+	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/maven"
-	"github.com/cloudfoundry/libjavabuildpack"
-	"github.com/cloudfoundry/libjavabuildpack/test"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -40,10 +39,10 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 
 	it("builds application", func() {
 		f := test.NewBuildFactory(t)
-		f.AddDependency(t, maven.MavenDependency, "stub-maven.tar.gz")
-		f.AddBuildPlan(t, maven.MavenDependency, libbuildpack.BuildPlanDependency{})
+		f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
+		f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-		if err := libjavabuildpack.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
+		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
 			t.Fatal(err)
 		}
 
@@ -53,20 +52,19 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		r := maven.NewRunner(f.Build, m)
-
-		pg := monkey.Patch((*exec.Cmd).Run, func(c *exec.Cmd) error {
+		r.Exec = func(cmd *exec.Cmd) error {
 			expected := []string{filepath.Join(f.Build.Application.Root, "mvnw"), "-Dmaven.test.skip=true", "package"}
-			if !reflect.DeepEqual(c.Args, expected) {
-				t.Errorf("Cmd.Args = %s, expected %s", c.Args, expected)
+
+			if !reflect.DeepEqual(cmd.Args, expected) {
+				t.Errorf("Cmd.Args = %s, expected %s", cmd.Args, expected)
 			}
 
 			return nil
-		})
-		defer pg.Unpatch()
+		}
 
-		source := filepath.Join(test.FindRoot(t), "fixtures", "stub-application.jar")
+		source := test.FixturePath(t, "stub-application.jar")
 		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
-		if err := libjavabuildpack.CopyFile(source, destination); err != nil {
+		if err := layers.CopyFile(source, destination); err != nil {
 			t.Fatal(err)
 		}
 
@@ -77,10 +75,10 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 
 	it("removes source code", func() {
 		f := test.NewBuildFactory(t)
-		f.AddDependency(t, maven.MavenDependency, "stub-maven.tar.gz")
-		f.AddBuildPlan(t, maven.MavenDependency, libbuildpack.BuildPlanDependency{})
+		f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
+		f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-		if err := libjavabuildpack.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
+		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
 			t.Fatal(err)
 		}
 
@@ -90,15 +88,13 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		r := maven.NewRunner(f.Build, m)
-
-		pg := monkey.Patch((*exec.Cmd).Run, func(c *exec.Cmd) error {
+		r.Exec = func(cmd *exec.Cmd) error {
 			return nil
-		})
-		defer pg.Unpatch()
+		}
 
-		source := filepath.Join(test.FindRoot(t), "fixtures", "stub-application.jar")
+		source := test.FixturePath(t, "stub-application.jar")
 		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
-		if err := libjavabuildpack.CopyFile(source, destination); err != nil {
+		if err := layers.CopyFile(source, destination); err != nil {
 			t.Fatal(err)
 		}
 
@@ -106,7 +102,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		exists, err := libjavabuildpack.FileExists(filepath.Join(f.Build.Application.Root, "mvnw"))
+		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "mvnw"))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -118,10 +114,10 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 
 	it("explodes built application", func() {
 		f := test.NewBuildFactory(t)
-		f.AddDependency(t, maven.MavenDependency, "stub-maven.tar.gz")
-		f.AddBuildPlan(t, maven.MavenDependency, libbuildpack.BuildPlanDependency{})
+		f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
+		f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-		if err := libjavabuildpack.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
+		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
 			t.Fatal(err)
 		}
 
@@ -131,15 +127,13 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		r := maven.NewRunner(f.Build, m)
-
-		pg := monkey.Patch((*exec.Cmd).Run, func(c *exec.Cmd) error {
+		r.Exec = func(cmd *exec.Cmd) error {
 			return nil
-		})
-		defer pg.Unpatch()
+		}
 
-		source := filepath.Join(test.FindRoot(t), "fixtures", "stub-application.jar")
+		source := test.FixturePath(t, "stub-application.jar")
 		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
-		if err := libjavabuildpack.CopyFile(source, destination); err != nil {
+		if err := layers.CopyFile(source, destination); err != nil {
 			t.Fatal(err)
 		}
 
@@ -147,7 +141,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		exists, err := libjavabuildpack.FileExists(filepath.Join(f.Build.Application.Root, "fixture-marker"))
+		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "fixture-marker"))
 		if err != nil {
 			t.Fatal(err)
 		}
