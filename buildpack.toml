@@ -35,7 +35,7 @@ stacks  = [ "io.buildpacks.stacks.bionic" ]
 [[metadata.dependencies]]
 id      = "maven"
 name    = "Apache Maven"
-version = "3.5.4"
+version = "3.6.0"
 uri     = "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.6.0/apache-maven-3.6.0-bin.tar.gz"
 sha256  = "6a1b346af36a1f1a491c1c1a141667c5de69b42e6611d3687df26868bc0f4637"
 stacks  = [ "io.buildpacks.stacks.bionic" ]
