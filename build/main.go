@@ -42,7 +42,7 @@ func main() {
 }
 
 func b(build buildPkg.Build) (int, error) {
-	build.Logger.FirstLine(build.Logger.PrettyVersion(build.Buildpack))
+	build.Logger.FirstLine(build.Logger.PrettyIdentity(build.Buildpack))
 
 	if g, ok, err := gradle.NewGradle(build); err != nil {
 		return build.Failure(102), err
