@@ -21,8 +21,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cloudfoundry/libjavabuildpack"
-	"github.com/cloudfoundry/libjavabuildpack/test"
+	"github.com/buildpack/libbuildpack/detect"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -34,49 +35,51 @@ func TestDetect(t *testing.T) {
 func testDetect(t *testing.T, when spec.G, it spec.S) {
 
 	it("fails without build system", func() {
-		f := test.NewEnvironmentFactory(t)
-		defer f.Restore()
+		f := test.NewDetectFactory(t)
 
-		f.Console.In(t, "")
+		exitStatus, err := d(f.Detect)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-		main()
-
-		if *f.ExitStatus != 100 {
-			t.Errorf("os.Exit = %d, expected 100", *f.ExitStatus)
+		if exitStatus != detect.FailStatusCode {
+			t.Errorf("os.Exit = %d, expected 100", exitStatus)
 		}
 	})
 
 	it("passes with build.gradle", func() {
-		f := test.NewEnvironmentFactory(t)
-		defer f.Restore()
+		f := test.NewDetectFactory(t)
 
-		f.Console.In(t, "")
-
-		if err := libjavabuildpack.WriteToFile(strings.NewReader(""), filepath.Join(f.Application, "build.gradle"), 0644); err != nil {
+		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Detect.Application.Root, "build.gradle"), 0644); err != nil {
 			t.Fatal(err)
 		}
 
-		main()
-
-		if *f.ExitStatus != 0 {
-			t.Errorf("os.Exit = %d, expected 0", *f.ExitStatus)
+		exitStatus, err := d(f.Detect)
+		if err != nil {
+			t.Fatal(err)
 		}
+
+		if exitStatus != detect.PassStatusCode {
+			t.Errorf("os.Exit = %d, expected 0", exitStatus)
+		}
+
 	})
 
 	it("passes with pom.xml", func() {
-		f := test.NewEnvironmentFactory(t)
-		defer f.Restore()
+		f := test.NewDetectFactory(t)
 
-		f.Console.In(t, "")
-
-		if err := libjavabuildpack.WriteToFile(strings.NewReader(""), filepath.Join(f.Application, "pom.xml"), 0644); err != nil {
+		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Detect.Application.Root, "pom.xml"), 0644); err != nil {
 			t.Fatal(err)
 		}
 
-		main()
-
-		if *f.ExitStatus != 0 {
-			t.Errorf("os.Exit = %d, expected 0", *f.ExitStatus)
+		exitStatus, err := d(f.Detect)
+		if err != nil {
+			t.Fatal(err)
 		}
+
+		if exitStatus != detect.PassStatusCode {
+			t.Errorf("os.Exit = %d, expected 0", exitStatus)
+		}
+
 	})
 }

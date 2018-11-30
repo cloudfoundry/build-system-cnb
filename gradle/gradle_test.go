@@ -18,16 +18,15 @@ package gradle_test
 
 import (
 	"path/filepath"
-	"reflect"
 	"strings"
 	"testing"
 
-	"github.com/buildpack/libbuildpack"
+	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/gradle"
-	"github.com/cloudfoundry/jvm-application-buildpack"
-	"github.com/cloudfoundry/libjavabuildpack"
-	"github.com/cloudfoundry/libjavabuildpack/test"
-	"github.com/cloudfoundry/openjdk-buildpack"
+	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/test"
+	"github.com/cloudfoundry/openjdk-buildpack/jdk"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -38,114 +37,133 @@ func TestGradle(t *testing.T) {
 
 func testGradle(t *testing.T, when spec.G, it spec.S) {
 
-	it("contains gradle", func() {
-		bp := gradle.BuildPlanContribution()
+	when("BuildPlan Contribution", func() {
 
-		actual := bp[gradle.GradleDependency]
+		it("contains gradle", func() {
+			_, ok := gradle.BuildPlanContribution()[gradle.Dependency]
 
-		expected := libbuildpack.BuildPlanDependency{}
+			if !ok {
+				t.Errorf("BuildPlan[\"gradle\"] = %t, expected to exist", ok)
+			}
+		})
 
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("BuildPlan[\"maven\"] = %s, expected = %s", actual, expected)
-		}
+		it("contains jvm-application", func() {
+			_, ok := gradle.BuildPlanContribution()[jvmapplication.Dependency]
+
+			if !ok {
+				t.Errorf("BuildPlan[\"jvm-application\"] = %t, expected to exist", ok)
+			}
+		})
+
+		it("contains openjdk-jdk", func() {
+			_, ok := gradle.BuildPlanContribution()[jdk.Dependency]
+
+			if !ok {
+				t.Errorf("BuildPlan[\"openjdk-jdk\"] = %t, expected to exist", ok)
+			}
+		})
 	})
 
-	it("contains jvm-application", func() {
-		bp := gradle.BuildPlanContribution()
+	when("Contribute", func() {
 
-		actual := bp[jvm_application_buildpack.JVMApplication]
+		it("contributes gradle if gradlew does not exist", func() {
+			f := test.NewBuildFactory(t)
+			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
+			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
 
-		expected := libbuildpack.BuildPlanDependency{}
+			g, _, err := gradle.NewGradle(f.Build)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("BuildPlan[\"jvm-application\"] = %s, expected = %s", actual, expected)
-		}
+			if err := g.Contribute(); err != nil {
+				t.Fatal(err)
+			}
+
+			layerRoot := filepath.Join(f.Build.Layers.Root, "gradle")
+			test.BeFileLike(t, filepath.Join(layerRoot, "fixture-marker"), 0644, "")
+		})
+
+		it("does not contribute gradle if gradlew does exist", func() {
+			f := test.NewBuildFactory(t)
+			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
+			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+
+			if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "gradlew"), 0755); err != nil {
+				t.Fatal(err)
+			}
+
+			g, _, err := gradle.NewGradle(f.Build)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if err := g.Contribute(); err != nil {
+				t.Fatal(err)
+			}
+
+			exist, err := layers.FileExists(filepath.Join(f.Build.Layers.Root, "gradle", "fixture-marker"))
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if exist {
+				t.Errorf("Expected gradle not to be contributed, but was")
+			}
+		})
 	})
 
-	it("contains openjdk-jdk", func() {
-		bp := gradle.BuildPlanContribution()
+	when("IsGradle", func() {
 
-		actual := bp[openjdk_buildpack.JDKDependency]
+		it("returns false if build.gradle does not exist", func() {
+			f := test.NewBuildFactory(t)
 
-		expected := libbuildpack.BuildPlanDependency{
-			Version: "1.*",
-		}
+			actual := gradle.IsGradle(f.Build.Application)
+			if actual {
+				t.Errorf("Gradle = %t, expected false", actual)
+			}
+		})
 
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("BuildPlan[\"openjdk-jdk\"] = %s, expected = %s", actual, expected)
-		}
+		it("returns true if build.gradle does exist", func() {
+			f := test.NewBuildFactory(t)
+
+			if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "build.gradle"), 0644); err != nil {
+				t.Fatal(err)
+			}
+
+			actual := gradle.IsGradle(f.Build.Application)
+			if !actual {
+				t.Errorf("IsGradle = %t, expected true", actual)
+			}
+		})
 	})
 
-	it("returns true if build plan exists", func() {
-		f := test.NewBuildFactory(t)
-		f.AddDependency(t, gradle.GradleDependency, "stub-gradle.zip")
-		f.AddBuildPlan(t, gradle.GradleDependency, libbuildpack.BuildPlanDependency{})
+	when("NewGradle", func() {
 
-		_, ok, err := gradle.NewGradle(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !ok {
-			t.Errorf("NewGradle = %t, expected true", ok)
-		}
+		it("returns true if build plan exists", func() {
+			f := test.NewBuildFactory(t)
+			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
+			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+
+			_, ok, err := gradle.NewGradle(f.Build)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !ok {
+				t.Errorf("NewGradle = %t, expected true", ok)
+			}
+		})
+
+		it("returns false if build plan does not exist", func() {
+			f := test.NewBuildFactory(t)
+
+			_, ok, err := gradle.NewGradle(f.Build)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if ok {
+				t.Errorf("NewGradle = %t, expected false", ok)
+			}
+		})
 	})
-
-	it("returns false if build plan does not exist", func() {
-		f := test.NewBuildFactory(t)
-
-		_, ok, err := gradle.NewGradle(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if ok {
-			t.Errorf("NewGradle = %t, expected false", ok)
-		}
-	})
-
-	it("contributes maven if gradlew does not exist", func() {
-		f := test.NewBuildFactory(t)
-		f.AddDependency(t, gradle.GradleDependency, "stub-gradle.zip")
-		f.AddBuildPlan(t, gradle.GradleDependency, libbuildpack.BuildPlanDependency{})
-
-		g, _, err := gradle.NewGradle(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if err := g.Contribute(); err != nil {
-			t.Fatal(err)
-		}
-
-		layerRoot := filepath.Join(f.Build.Cache.Root, "gradle")
-		test.BeFileLike(t, filepath.Join(layerRoot, "fixture-marker"), 0644, "")
-	})
-
-	it("does not contribute maven if gradlew does exist", func() {
-		f := test.NewBuildFactory(t)
-		f.AddDependency(t, gradle.GradleDependency, "stub-gradle.zip")
-		f.AddBuildPlan(t, gradle.GradleDependency, libbuildpack.BuildPlanDependency{})
-
-		if err := libjavabuildpack.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "gradlew"), 0755); err != nil {
-			t.Fatal(err)
-		}
-
-		g, _, err := gradle.NewGradle(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if err := g.Contribute(); err != nil {
-			t.Fatal(err)
-		}
-
-		exist, err := libjavabuildpack.FileExists(filepath.Join(f.Build.Cache.Root, "gradle", "fixture-marker"))
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if exist {
-			t.Errorf("Expected gradle not to be contributed, but was")
-		}
-	})
-
 }

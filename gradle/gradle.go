@@ -20,20 +20,23 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/buildpack/libbuildpack"
-	"github.com/cloudfoundry/jvm-application-buildpack"
-	"github.com/cloudfoundry/libjavabuildpack"
-	"github.com/cloudfoundry/openjdk-buildpack"
+	"github.com/buildpack/libbuildpack/application"
+	"github.com/buildpack/libbuildpack/buildplan"
+	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
+	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/logger"
+	"github.com/cloudfoundry/openjdk-buildpack/jdk"
 )
 
-// GradleDependency is the key identifying the Gradle build system in the buildpack plan.
-const GradleDependency = "gradle"
+// Dependency is the key identifying the Gradle build system in the buildpack plan.
+const Dependency = "gradle"
 
 // Gradle represents the Gradle executable contributed by the buildpack.
 type Gradle struct {
-	application libbuildpack.Application
-	logger      libjavabuildpack.Logger
-	layer       libjavabuildpack.DependencyCacheLayer
+	application application.Application
+	layer       layers.DependencyLayer
+	logger      logger.Logger
 }
 
 // Contribute makes the contribution to the cache layer
@@ -43,10 +46,10 @@ func (g Gradle) Contribute() error {
 		return nil
 	}
 
-	return g.layer.Contribute(func(artifact string, layer libjavabuildpack.DependencyCacheLayer) error {
+	return g.layer.Contribute(func(artifact string, layer layers.DependencyLayer) error {
 		layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
-		return libjavabuildpack.ExtractZip(artifact, layer.Root, 1)
-	})
+		return layers.ExtractZip(artifact, layer.Root, 1)
+	}, layers.Build, layers.Cache)
 }
 
 // Executable returns the path to the executable that should be used.  Will be the wrapper if it exists, the downloaded
@@ -61,11 +64,11 @@ func (g Gradle) Executable() string {
 
 // String makes Gradle satisfy the Stringer interface.
 func (g Gradle) String() string {
-	return fmt.Sprintf("Gradle{ application: %s, logger: %s, layer :%s }", g.application, g.logger, g.layer)
+	return fmt.Sprintf("Gradle{ application: %s, layer :%s, logger: %s }", g.application, g.layer, g.logger)
 }
 
 func (g Gradle) hasWrapper() bool {
-	exists, err := libjavabuildpack.FileExists(g.wrapper())
+	exists, err := layers.FileExists(g.wrapper())
 	if err != nil {
 		return false
 	}
@@ -82,19 +85,27 @@ func (g Gradle) wrapper() string {
 }
 
 // BuildPlanContribution returns the BuildPlan with requirements for Gradle.
-func BuildPlanContribution() libbuildpack.BuildPlan {
-	return libbuildpack.BuildPlan{
-		GradleDependency:                         libbuildpack.BuildPlanDependency{},
-		jvm_application_buildpack.JVMApplication: libbuildpack.BuildPlanDependency{},
-		openjdk_buildpack.JDKDependency: libbuildpack.BuildPlanDependency{
-			Version: "1.*",
-		},
+func BuildPlanContribution() buildplan.BuildPlan {
+	return buildplan.BuildPlan{
+		Dependency:                buildplan.Dependency{},
+		jvmapplication.Dependency: buildplan.Dependency{},
+		jdk.Dependency:            buildplan.Dependency{Version: "1.*"},
 	}
 }
 
+// IsGradle returns whether this application is built using Gradle.
+func IsGradle(application application.Application) bool {
+	exists, err := layers.FileExists(filepath.Join(application.Root, "build.gradle"))
+	if err != nil {
+		return false
+	}
+
+	return exists
+}
+
 // NewGradle creates a new Gradle instance. OK is true if build plan contains "gradle" dependency, otherwise false.
-func NewGradle(build libjavabuildpack.Build) (Gradle, bool, error) {
-	bp, ok := build.BuildPlan[GradleDependency]
+func NewGradle(build build.Build) (Gradle, bool, error) {
+	bp, ok := build.BuildPlan[Dependency]
 	if !ok {
 		return Gradle{}, false, nil
 	}
@@ -104,14 +115,14 @@ func NewGradle(build libjavabuildpack.Build) (Gradle, bool, error) {
 		return Gradle{}, false, err
 	}
 
-	dep, err := deps.Best(GradleDependency, bp.Version, build.Stack)
+	dep, err := deps.Best(Dependency, bp.Version, build.Stack)
 	if err != nil {
 		return Gradle{}, false, err
 	}
 
 	return Gradle{
 		build.Application,
+		build.Layers.DependencyLayer(dep),
 		build.Logger,
-		build.Cache.DependencyLayer(dep),
 	}, true, nil
 }

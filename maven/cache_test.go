@@ -18,13 +18,11 @@ package maven_test
 
 import (
 	"os"
-	"os/user"
 	"path/filepath"
 	"testing"
 
-	"github.com/bouk/monkey"
 	"github.com/cloudfoundry/build-system-buildpack/maven"
-	"github.com/cloudfoundry/libjavabuildpack/test"
+	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -38,14 +36,14 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 	it("contributes .m2 if it doesn't exist", func() {
 		f := test.NewBuildFactory(t)
 
-		home := test.ScratchDir(t, "home")
+		home := filepath.Join(f.Build.Application.Root, "home")
 
-		pg := monkey.Patch(user.Current, func() (*user.User, error) {
-			return &user.User{HomeDir: home}, nil
-		})
-		defer pg.Unpatch()
+		m, err := maven.NewCache(f.Build)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-		m := maven.NewCache(f.Build)
+		m.Maven = filepath.Join(home, ".m2")
 
 		if err := m.Contribute(); err != nil {
 			t.Fatal(err)
@@ -64,14 +62,12 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 	it("does not contribute .m2 if it does exist", func() {
 		f := test.NewBuildFactory(t)
 
-		home := test.ScratchDir(t, "home")
+		home := filepath.Join(f.Build.Application.Root, "home")
 
-		pg := monkey.Patch(user.Current, func() (*user.User, error) {
-			return &user.User{HomeDir: home}, nil
-		})
-		defer pg.Unpatch()
-
-		m := maven.NewCache(f.Build)
+		m, err := maven.NewCache(f.Build)
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if err := os.MkdirAll(filepath.Join(home, ".m2"), 0755); err != nil {
 			t.Fatal(err)
