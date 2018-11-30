@@ -64,7 +64,7 @@ func (c Cache) Contribute() error {
 		return err
 	}
 
-	return c.layer.WriteMetadata(nil, layers.Build, layers.Cache)
+	return c.layer.WriteMetadata(nil, layers.Cache)
 }
 
 // String makes Cache satisfy the Stringer interface.

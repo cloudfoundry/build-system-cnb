@@ -57,6 +57,8 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 		if fi.Mode()&os.ModeSymlink != os.ModeSymlink {
 			t.Errorf("$HOME/.m2.Mode() = %s, expected symlink", fi.Mode())
 		}
+
+		test.BeLayerLike(t, f.Build.Layers.Layer("maven-cache"), false, true, false)
 	})
 
 	it("does not contribute .m2 if it does exist", func() {

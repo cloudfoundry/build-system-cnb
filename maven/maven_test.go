@@ -18,7 +18,6 @@ package maven_test
 
 import (
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
@@ -37,33 +36,15 @@ func TestMaven(t *testing.T) {
 
 func testMaven(t *testing.T, when spec.G, it spec.S) {
 
-	when("BuildPlan Contribution", func() {
-
-		it("contains maven", func() {
-			_, ok := maven.BuildPlanContribution()[maven.Dependency]
-
-			if !ok {
-				t.Errorf("BuildPlan[\"maven\"] = %t, expected to exist", ok)
-			}
-		})
-
-		it("contains jvm-application", func() {
-			_, ok := maven.BuildPlanContribution()[jvmapplication.Dependency]
-
-			if !ok {
-				t.Errorf("BuildPlan[\"jvm-application\"] = %t, expected to exist", ok)
-			}
-		})
-
-		it("contains openjdk-jdk", func() {
-			_, ok := maven.BuildPlanContribution()[jdk.Dependency]
-
-			if !ok {
-				t.Errorf("BuildPlan[\"openjdk-jdk\"] = %t, expected to exist", ok)
-			}
+	it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
+		test.BeBuildPlanLike(t, maven.BuildPlanContribution(), buildplan.BuildPlan{
+			maven.Dependency:          buildplan.Dependency{},
+			jvmapplication.Dependency: buildplan.Dependency{},
+			jdk.Dependency: buildplan.Dependency{
+				Version: "1.*",
+			},
 		})
 	})
-
 	when("Contribute", func() {
 
 		it("contributes maven if mvnw does not exist", func() {
@@ -80,8 +61,9 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 				t.Fatal(err)
 			}
 
-			layerRoot := filepath.Join(f.Build.Layers.Root, "maven")
-			test.BeFileLike(t, filepath.Join(layerRoot, "fixture-marker"), 0644, "")
+			layer := f.Build.Layers.Layer("maven")
+			test.BeLayerLike(t, layer, true, true, false)
+			test.BeFileLike(t, filepath.Join(layer.Root, "fixture-marker"), 0644, "")
 		})
 
 		it("does not contribute maven if mvnw does exist", func() {
@@ -89,9 +71,7 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 			f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
 			f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-			if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0755); err != nil {
-				t.Fatal(err)
-			}
+			test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
 			m, _, err := maven.NewMaven(f.Build)
 			if err != nil {
@@ -127,9 +107,7 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		it("returns true if pom.xml does exist", func() {
 			f := test.NewBuildFactory(t)
 
-			if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "pom.xml"), 0644); err != nil {
-				t.Fatal(err)
-			}
+			test.TouchFile(t, f.Build.Application.Root, "pom.xml")
 
 			actual := maven.IsMaven(f.Build.Application)
 			if !actual {

@@ -20,7 +20,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
-	"strings"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
@@ -42,9 +41,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
 		f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "gradlew"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
 		g, _, err := gradle.NewGradle(f.Build)
 		if err != nil {
@@ -78,9 +75,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
 		f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "gradlew"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
 		g, _, err := gradle.NewGradle(f.Build)
 		if err != nil {
@@ -117,9 +112,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
 		f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "gradlew"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
 		g, _, err := gradle.NewGradle(f.Build)
 		if err != nil {

@@ -57,6 +57,8 @@ func testCache(t *testing.T, when spec.G, it spec.S) {
 		if fi.Mode()&os.ModeSymlink != os.ModeSymlink {
 			t.Errorf("$HOME/.gradle.Mode() = %s, expected symlink", fi.Mode())
 		}
+
+		test.BeLayerLike(t, f.Build.Layers.Layer("gradle-cache"), false, true, false)
 	})
 
 	it("does not contribute .gradle if it does exist", func() {

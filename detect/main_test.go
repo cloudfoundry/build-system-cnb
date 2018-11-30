@@ -17,12 +17,9 @@
 package main
 
 import (
-	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/detect"
-	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -50,10 +47,7 @@ func testDetect(t *testing.T, when spec.G, it spec.S) {
 	it("passes with build.gradle", func() {
 		f := test.NewDetectFactory(t)
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Detect.Application.Root, "build.gradle"), 0644); err != nil {
-			t.Fatal(err)
-		}
-
+		test.TouchFile(t, f.Detect.Application.Root, "build.gradle")
 		exitStatus, err := d(f.Detect)
 		if err != nil {
 			t.Fatal(err)
@@ -62,15 +56,12 @@ func testDetect(t *testing.T, when spec.G, it spec.S) {
 		if exitStatus != detect.PassStatusCode {
 			t.Errorf("os.Exit = %d, expected 0", exitStatus)
 		}
-
 	})
 
 	it("passes with pom.xml", func() {
 		f := test.NewDetectFactory(t)
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Detect.Application.Root, "pom.xml"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Detect.Application.Root, "pom.xml")
 
 		exitStatus, err := d(f.Detect)
 		if err != nil {
@@ -80,6 +71,5 @@ func testDetect(t *testing.T, when spec.G, it spec.S) {
 		if exitStatus != detect.PassStatusCode {
 			t.Errorf("os.Exit = %d, expected 0", exitStatus)
 		}
-
 	})
 }

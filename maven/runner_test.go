@@ -20,7 +20,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
-	"strings"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
@@ -42,9 +41,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
 		f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
 		m, _, err := maven.NewMaven(f.Build)
 		if err != nil {
@@ -78,9 +75,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
 		f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
 		m, _, err := maven.NewMaven(f.Build)
 		if err != nil {
@@ -117,9 +112,7 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 		f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
 		f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
 
-		if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "mvnw"), 0644); err != nil {
-			t.Fatal(err)
-		}
+		test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
 		m, _, err := maven.NewMaven(f.Build)
 		if err != nil {

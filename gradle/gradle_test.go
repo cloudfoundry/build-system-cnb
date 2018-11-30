@@ -18,7 +18,6 @@ package gradle_test
 
 import (
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
@@ -37,30 +36,13 @@ func TestGradle(t *testing.T) {
 
 func testGradle(t *testing.T, when spec.G, it spec.S) {
 
-	when("BuildPlan Contribution", func() {
-
-		it("contains gradle", func() {
-			_, ok := gradle.BuildPlanContribution()[gradle.Dependency]
-
-			if !ok {
-				t.Errorf("BuildPlan[\"gradle\"] = %t, expected to exist", ok)
-			}
-		})
-
-		it("contains jvm-application", func() {
-			_, ok := gradle.BuildPlanContribution()[jvmapplication.Dependency]
-
-			if !ok {
-				t.Errorf("BuildPlan[\"jvm-application\"] = %t, expected to exist", ok)
-			}
-		})
-
-		it("contains openjdk-jdk", func() {
-			_, ok := gradle.BuildPlanContribution()[jdk.Dependency]
-
-			if !ok {
-				t.Errorf("BuildPlan[\"openjdk-jdk\"] = %t, expected to exist", ok)
-			}
+	it("contains gradle, jvm-application, and openjdk-jdk in build plan", func() {
+		test.BeBuildPlanLike(t, gradle.BuildPlanContribution(), buildplan.BuildPlan{
+			gradle.Dependency:         buildplan.Dependency{},
+			jvmapplication.Dependency: buildplan.Dependency{},
+			jdk.Dependency: buildplan.Dependency{
+				Version: "1.*",
+			},
 		})
 	})
 
@@ -80,8 +62,9 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 				t.Fatal(err)
 			}
 
-			layerRoot := filepath.Join(f.Build.Layers.Root, "gradle")
-			test.BeFileLike(t, filepath.Join(layerRoot, "fixture-marker"), 0644, "")
+			layer := f.Build.Layers.Layer("gradle")
+			test.BeLayerLike(t, layer, true, true, false)
+			test.BeFileLike(t, filepath.Join(layer.Root, "fixture-marker"), 0644, "")
 		})
 
 		it("does not contribute gradle if gradlew does exist", func() {
@@ -89,9 +72,7 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
 			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
 
-			if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "gradlew"), 0755); err != nil {
-				t.Fatal(err)
-			}
+			test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
 			g, _, err := gradle.NewGradle(f.Build)
 			if err != nil {
@@ -127,9 +108,7 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 		it("returns true if build.gradle does exist", func() {
 			f := test.NewBuildFactory(t)
 
-			if err := layers.WriteToFile(strings.NewReader(""), filepath.Join(f.Build.Application.Root, "build.gradle"), 0644); err != nil {
-				t.Fatal(err)
-			}
+			test.TouchFile(t, f.Build.Application.Root, "build.gradle")
 
 			actual := gradle.IsGradle(f.Build.Application)
 			if !actual {
