@@ -18,7 +18,6 @@ package gradle
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -37,6 +36,7 @@ type Runner struct {
 	Exec Exec
 
 	application application.Application
+	layer       layers.Layer
 	logger      logger.Logger
 	grad        string
 }
@@ -55,8 +55,12 @@ func (r Runner) Contribute() error {
 		return err
 	}
 
-	tmp, err := r.preserveBuiltArtifact(a)
-	if err != nil {
+	if err := os.RemoveAll(r.layer.Root); err != nil {
+		return err
+	}
+
+	r.logger.Debug("Expanding %s to %s", a, r.layer.Root)
+	if err := layers.ExtractZip(a, r.layer.Root, 0); err != nil {
 		return err
 	}
 
@@ -65,14 +69,18 @@ func (r Runner) Contribute() error {
 		return err
 	}
 
-	r.logger.Debug("Expanding %s to %s", tmp, r.application.Root)
-	return layers.ExtractZip(tmp, r.application.Root, 0)
+	r.logger.Debug("Linking %s => %s", r.layer.Root, r.application.Root)
+	if err := os.Symlink(r.layer.Root, r.application.Root); err != nil {
+		return err
+	}
+
+	return r.layer.WriteMetadata(nil, layers.Build, layers.Launch)
 }
 
 // String makes Runner satisfy the Stringer interface.
 func (r Runner) String() string {
-	return fmt.Sprintf("Runner{ Exec: %v, application: %s, logger: %s, grad: %s }",
-		r.Exec, r.application, r.logger, r.grad)
+	return fmt.Sprintf("Runner{ Exec: %v, application: %s, layer:%s, logger: %s, grad: %s }",
+		r.Exec, r.application, r.layer, r.logger, r.grad)
 }
 
 func (r Runner) builtArtifact() (string, error) {
@@ -102,25 +110,12 @@ func (r Runner) command() *exec.Cmd {
 	return cmd
 }
 
-func (r Runner) preserveBuiltArtifact(artifact string) (string, error) {
-	tmp, err := ioutil.TempFile("", "runner")
-	if err != nil {
-		return "", err
-	}
-
-	r.logger.Debug("Copying %s to %s", artifact, tmp.Name())
-	if err := layers.CopyFile(artifact, tmp.Name()); err != nil {
-		return "", err
-	}
-
-	return tmp.Name(), nil
-}
-
 // NewRunner creates a new Runner instance.
 func NewRunner(build build.Build, gradle Gradle) Runner {
 	return Runner{
 		defaultExec,
 		build.Application,
+		build.Layers.Layer("build-system-application"),
 		build.Logger,
 		gradle.Executable(),
 	}

@@ -74,7 +74,7 @@ func (c Cache) String() string {
 
 // NewCache creates a new Cache instance.
 func NewCache(build build.Build) (Cache, error) {
-	m2, err := m2()
+	m2, err := m2(build.Logger)
 	if err != nil {
 		return Cache{}, err
 	}
@@ -86,11 +86,13 @@ func NewCache(build build.Build) (Cache, error) {
 	}, nil
 }
 
-func m2() (string, error) {
+func m2(logger logger.Logger) (string, error) {
 	u, err := user.Current()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(u.HomeDir, ".m2"), nil
+	m2 := filepath.Join(u.HomeDir, ".m2")
+	logger.Debug(".m2 directory: %s", m2)
+	return m2, nil
 }

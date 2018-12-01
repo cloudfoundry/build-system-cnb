@@ -63,7 +63,7 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 			}
 
 			layer := f.Build.Layers.Layer("gradle")
-			test.BeLayerLike(t, layer, true, true, false)
+			test.BeLayerLike(t, layer, false, true, false)
 			test.BeFileLike(t, filepath.Join(layer.Root, "fixture-marker"), 0644, "")
 		})
 

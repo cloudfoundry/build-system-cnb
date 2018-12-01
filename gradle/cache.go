@@ -74,7 +74,7 @@ func (c Cache) String() string {
 
 // NewCache creates a new Cache instance.
 func NewCache(build build.Build) (Cache, error) {
-	gradle, err := gradle()
+	gradle, err := gradle(build.Logger)
 	if err != nil {
 		return Cache{}, err
 	}
@@ -86,11 +86,13 @@ func NewCache(build build.Build) (Cache, error) {
 	}, nil
 }
 
-func gradle() (string, error) {
+func gradle(logger logger.Logger) (string, error) {
 	u, err := user.Current()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(u.HomeDir, ".gradle"), nil
+	gradle := filepath.Join(u.HomeDir, ".gradle")
+	logger.Debug(".gradle directory: %s", gradle)
+	return gradle, nil
 }

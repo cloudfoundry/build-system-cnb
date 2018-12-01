@@ -71,8 +71,7 @@ func b(build buildPkg.Build) (int, error) {
 			return build.Failure(103), err
 		}
 
-		cache, err := maven.NewCache(build)
-		if err = cache.Contribute(); err != nil {
+		if cache, err := maven.NewCache(build); err != nil {
 			return build.Failure(101), err
 		} else {
 			if err = cache.Contribute(); err != nil {
