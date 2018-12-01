@@ -17,6 +17,7 @@
 package maven_test
 
 import (
+	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
@@ -97,13 +98,13 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "mvnw"))
+		fi, err := os.Lstat(f.Build.Application.Root)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if exists {
-			t.Errorf("Expected source code to be removed, but was not")
+		if fi.Mode()&os.ModeSymlink != os.ModeSymlink {
+			t.Errorf("Application.Root.Mode() = %s, expected symlink", fi.Mode())
 		}
 	})
 
@@ -134,7 +135,9 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "fixture-marker"))
+		layer := f.Build.Layers.Layer("build-system-application")
+		test.BeLayerLike(t, layer, true, false, true)
+		exists, err := layers.FileExists(filepath.Join(layer.Root, "fixture-marker"))
 		if err != nil {
 			t.Fatal(err)
 		}

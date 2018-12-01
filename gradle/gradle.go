@@ -49,7 +49,7 @@ func (g Gradle) Contribute() error {
 	return g.layer.Contribute(func(artifact string, layer layers.DependencyLayer) error {
 		layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
 		return layers.ExtractZip(artifact, layer.Root, 1)
-	}, layers.Build, layers.Cache)
+	}, layers.Cache)
 }
 
 // Executable returns the path to the executable that should be used.  Will be the wrapper if it exists, the downloaded
