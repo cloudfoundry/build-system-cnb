@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package maven
+package runner
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 
 	"github.com/buildpack/libbuildpack/application"
@@ -30,37 +29,39 @@ import (
 	"github.com/fatih/color"
 )
 
-// Runner represents the behavior of running the maven command to build an application.
+// Runner represents the behavior of running the build system command to build an application.
 type Runner struct {
-	// Exec is the function that isolates execution
-	Exec Exec
+	// Executor is the function that isolates execution
+	Executor Executor
 
-	application application.Application
-	layer       layers.Layer
-	logger      logger.Logger
-	mvn         string
+	application           application.Application
+	builtArtifactProvider BuiltArtifactProvider
+	command               *exec.Cmd
+	layer                 layers.Layer
+	logger                logger.Logger
 }
 
-// Contributes builds the application from source code, removes the source, and expands the built artifact into
-// $APPLICATION_ROOT.
+// Contributes builds the application from source code, expands the built artifact, and symlinks the expanded artifact
+// to $APPLICATION_ROOT.
 func (r Runner) Contribute() error {
 	r.logger.FirstLine("%s application", color.YellowString("Building"))
 
-	if err := r.Exec(r.command()); err != nil {
+	if err := r.Executor(r.application, r.command, r.logger); err != nil {
 		return err
 	}
 
-	a, err := r.builtArtifact()
+	artifact, err := r.builtArtifactProvider(r.application)
 	if err != nil {
 		return err
 	}
+	r.logger.Debug("Built artifact: %s", artifact)
 
 	if err := os.RemoveAll(r.layer.Root); err != nil {
 		return err
 	}
 
-	r.logger.Debug("Expanding %s to %s", a, r.layer.Root)
-	if err := layers.ExtractZip(a, r.layer.Root, 0); err != nil {
+	r.logger.Debug("Expanding %s to %s", artifact, r.layer.Root)
+	if err := layers.ExtractZip(artifact, r.layer.Root, 0); err != nil {
 		return err
 	}
 
@@ -79,50 +80,30 @@ func (r Runner) Contribute() error {
 
 // String makes Runner satisfy the Stringer interface.
 func (r Runner) String() string {
-	return fmt.Sprintf("Runner{ Exec: %v, application: %s, layer: %s, logger: %s, mvn: %s }",
-		r.Exec, r.application, r.layer, r.logger, r.mvn)
+	return fmt.Sprintf("Runner{ Executor: %v, application: %s, builtArtifactProvider: %v, command: %v, layer:%s, logger: %s }",
+		r.Executor, r.application, r.builtArtifactProvider, r.command, r.layer, r.logger)
 }
 
-func (r Runner) builtArtifact() (string, error) {
-	target := filepath.Join(r.application.Root, "target")
+type BuiltArtifactProvider func(application application.Application) (string, error)
 
-	candidates, err := filepath.Glob(filepath.Join(target, "*.jar"))
-	if err != nil {
-		return "", err
-	}
+type Executor func(application application.Application, cmd *exec.Cmd, logger logger.Logger) error
 
-	if len(candidates) != 1 {
-		return "", fmt.Errorf("unable to determine built artifact in %s, candidates: %s", target, candidates)
-	}
-
-	artifact := candidates[0]
-	r.logger.Debug("Built artifact: %s", artifact)
-	return artifact, nil
-}
-
-func (r Runner) command() *exec.Cmd {
-	cmd := exec.Command(r.mvn, "-Dmaven.test.skip=true", "package")
+var defaultExecutor = func(application application.Application, cmd *exec.Cmd, logger logger.Logger) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	cmd.Dir = r.application.Root
+	cmd.Dir = application.Root
 
-	r.logger.SubsequentLine("Running %s", strings.Join(cmd.Args, " "))
-	return cmd
+	logger.SubsequentLine("Running %s", strings.Join(cmd.Args, " "))
+	return cmd.Run()
 }
 
-// NewRunner creates a new Runner instance.
-func NewRunner(build build.Build, maven Maven) Runner {
+func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, cmd *exec.Cmd) Runner {
 	return Runner{
-		defaultExec,
+		defaultExecutor,
 		build.Application,
+		builtArtifactProvider,
+		cmd,
 		build.Layers.Layer("build-system-application"),
 		build.Logger,
-		maven.Executable(),
 	}
-}
-
-type Exec func(cmd *exec.Cmd) error
-
-var defaultExec = func(cmd *exec.Cmd) error {
-	return cmd.Run()
 }

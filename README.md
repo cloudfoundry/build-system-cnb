@@ -10,13 +10,11 @@ The detection phase passes if
   * Contributes `gradle` to the build plan
   * Contributes `jvm-application` to the build plan
   * Contributes `openjdk-jdk` to the build plan
-  * Contributes `openjdk-jdk.version = 1.*` to the build plan
 
 * `<APPLICATION_ROOT>/pom.xml` exists
   * Contributes `maven` to the build plan
   * Contributes `jvm-application` to the build plan
   * Contributes `openjdk-jdk` to the build plan
-  * Contributes `openjdk-jdk.version = 1.*` to the build plan
 
 ## Build
 If the build plan contains

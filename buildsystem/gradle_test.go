@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package gradle_test
+package buildsystem_test
 
 import (
 	"path/filepath"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/build-system-buildpack/gradle"
+	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/test"
@@ -37,12 +37,10 @@ func TestGradle(t *testing.T) {
 func testGradle(t *testing.T, when spec.G, it spec.S) {
 
 	it("contains gradle, jvm-application, and openjdk-jdk in build plan", func() {
-		test.BeBuildPlanLike(t, gradle.BuildPlanContribution(), buildplan.BuildPlan{
-			gradle.Dependency:         buildplan.Dependency{},
-			jvmapplication.Dependency: buildplan.Dependency{},
-			jdk.Dependency: buildplan.Dependency{
-				Version: "1.*",
-			},
+		test.BeBuildPlanLike(t, buildsystem.GradleBuildPlanContribution(), buildplan.BuildPlan{
+			buildsystem.GradleDependency: buildplan.Dependency{},
+			jvmapplication.Dependency:    buildplan.Dependency{},
+			jdk.Dependency:               buildplan.Dependency{},
 		})
 	})
 
@@ -50,10 +48,10 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 
 		it("contributes gradle if gradlew does not exist", func() {
 			f := test.NewBuildFactory(t)
-			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
-			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+			f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
+			f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
 
-			g, _, err := gradle.NewGradle(f.Build)
+			g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -69,12 +67,12 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 
 		it("does not contribute gradle if gradlew does exist", func() {
 			f := test.NewBuildFactory(t)
-			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
-			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+			f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
+			f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
 
 			test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
-			g, _, err := gradle.NewGradle(f.Build)
+			g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -99,7 +97,7 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 		it("returns false if build.gradle does not exist", func() {
 			f := test.NewBuildFactory(t)
 
-			actual := gradle.IsGradle(f.Build.Application)
+			actual := buildsystem.IsGradle(f.Build.Application)
 			if actual {
 				t.Errorf("Gradle = %t, expected false", actual)
 			}
@@ -110,21 +108,21 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 
 			test.TouchFile(t, f.Build.Application.Root, "build.gradle")
 
-			actual := gradle.IsGradle(f.Build.Application)
+			actual := buildsystem.IsGradle(f.Build.Application)
 			if !actual {
 				t.Errorf("IsGradle = %t, expected true", actual)
 			}
 		})
 	})
 
-	when("NewGradle", func() {
+	when("NewGradleBuildSystem", func() {
 
 		it("returns true if build plan exists", func() {
 			f := test.NewBuildFactory(t)
-			f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
-			f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+			f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
+			f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
 
-			_, ok, err := gradle.NewGradle(f.Build)
+			_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -136,7 +134,7 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 		it("returns false if build plan does not exist", func() {
 			f := test.NewBuildFactory(t)
 
-			_, ok, err := gradle.NewGradle(f.Build)
+			_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package maven_test
+package buildsystem_test
 
 import (
 	"path/filepath"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/build-system-buildpack/maven"
+	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/test"
@@ -37,22 +37,21 @@ func TestMaven(t *testing.T) {
 func testMaven(t *testing.T, when spec.G, it spec.S) {
 
 	it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
-		test.BeBuildPlanLike(t, maven.BuildPlanContribution(), buildplan.BuildPlan{
-			maven.Dependency:          buildplan.Dependency{},
-			jvmapplication.Dependency: buildplan.Dependency{},
-			jdk.Dependency: buildplan.Dependency{
-				Version: "1.*",
-			},
+		test.BeBuildPlanLike(t, buildsystem.MavenBuildPlanContribution(), buildplan.BuildPlan{
+			buildsystem.MavenDependency: buildplan.Dependency{},
+			jvmapplication.Dependency:   buildplan.Dependency{},
+			jdk.Dependency:              buildplan.Dependency{},
 		})
 	})
+
 	when("Contribute", func() {
 
 		it("contributes maven if mvnw does not exist", func() {
 			f := test.NewBuildFactory(t)
-			f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
-			f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
+			f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
+			f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
 
-			m, _, err := maven.NewMaven(f.Build)
+			m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -68,12 +67,12 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 
 		it("does not contribute maven if mvnw does exist", func() {
 			f := test.NewBuildFactory(t)
-			f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
-			f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
+			f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
+			f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
 
 			test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
-			m, _, err := maven.NewMaven(f.Build)
+			m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -98,7 +97,7 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		it("returns false if pom.xml does not exist", func() {
 			f := test.NewBuildFactory(t)
 
-			actual := maven.IsMaven(f.Build.Application)
+			actual := buildsystem.IsMaven(f.Build.Application)
 			if actual {
 				t.Errorf("IsMaven = %t, expected false", actual)
 			}
@@ -109,21 +108,21 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 
 			test.TouchFile(t, f.Build.Application.Root, "pom.xml")
 
-			actual := maven.IsMaven(f.Build.Application)
+			actual := buildsystem.IsMaven(f.Build.Application)
 			if !actual {
 				t.Errorf("IsMaven = %t, expected true", actual)
 			}
 		})
 	})
 
-	when("NewMaven", func() {
+	when("NewMavenBuildSystem", func() {
 
 		it("returns true if build plan exists", func() {
 			f := test.NewBuildFactory(t)
-			f.AddDependency(t, maven.Dependency, "stub-maven.tar.gz")
-			f.AddBuildPlan(t, maven.Dependency, buildplan.Dependency{})
+			f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
+			f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
 
-			_, ok, err := maven.NewMaven(f.Build)
+			_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -135,7 +134,7 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		it("returns false if build plan does not exist", func() {
 			f := test.NewBuildFactory(t)
 
-			_, ok, err := maven.NewMaven(f.Build)
+			_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -144,4 +143,5 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 			}
 		})
 	})
+
 }

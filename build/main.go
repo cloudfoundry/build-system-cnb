@@ -21,8 +21,9 @@ import (
 	"os"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/build-system-buildpack/gradle"
-	"github.com/cloudfoundry/build-system-buildpack/maven"
+	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
+	cachePkg "github.com/cloudfoundry/build-system-buildpack/cache"
+	"github.com/cloudfoundry/build-system-buildpack/runner"
 	buildPkg "github.com/cloudfoundry/libcfbuildpack/build"
 )
 
@@ -44,14 +45,14 @@ func main() {
 func b(build buildPkg.Build) (int, error) {
 	build.Logger.FirstLine(build.Logger.PrettyIdentity(build.Buildpack))
 
-	if g, ok, err := gradle.NewGradle(build); err != nil {
+	if b, ok, err := buildsystem.NewGradleBuildSystem(build); err != nil {
 		return build.Failure(102), err
 	} else if ok {
-		if err = g.Contribute(); err != nil {
+		if err = b.Contribute(); err != nil {
 			return build.Failure(103), err
 		}
 
-		if cache, err := gradle.NewCache(build); err != nil {
+		if cache, err := cachePkg.NewGradleCache(build); err != nil {
 			return build.Failure(102), err
 		} else {
 			if err = cache.Contribute(); err != nil {
@@ -59,19 +60,19 @@ func b(build buildPkg.Build) (int, error) {
 			}
 		}
 
-		if err = gradle.NewRunner(build, g).Contribute(); err != nil {
+		if err = runner.NewGradleRunner(build, b).Contribute(); err != nil {
 			return build.Failure(103), err
 		}
 	}
 
-	if m, ok, err := maven.NewMaven(build); err != nil {
+	if buildSystem, ok, err := buildsystem.NewMavenBuildSystem(build); err != nil {
 		return build.Failure(102), err
 	} else if ok {
-		if err = m.Contribute(); err != nil {
+		if err = buildSystem.Contribute(); err != nil {
 			return build.Failure(103), err
 		}
 
-		if cache, err := maven.NewCache(build); err != nil {
+		if cache, err := cachePkg.NewMavenCache(build); err != nil {
 			return build.Failure(101), err
 		} else {
 			if err = cache.Contribute(); err != nil {
@@ -79,7 +80,7 @@ func b(build buildPkg.Build) (int, error) {
 			}
 		}
 
-		if err = maven.NewRunner(build, m).Contribute(); err != nil {
+		if err = runner.NewMavenRunner(build, buildSystem).Contribute(); err != nil {
 			return build.Failure(103), err
 		}
 	}

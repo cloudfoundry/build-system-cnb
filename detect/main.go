@@ -20,8 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudfoundry/build-system-buildpack/gradle"
-	"github.com/cloudfoundry/build-system-buildpack/maven"
+	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	detectPkg "github.com/cloudfoundry/libcfbuildpack/detect"
 )
 
@@ -41,14 +40,14 @@ func main() {
 }
 
 func d(detect detectPkg.Detect) (int, error) {
-	if gradle.IsGradle(detect.Application) {
+	if buildsystem.IsGradle(detect.Application) {
 		detect.Logger.Debug("Gradle application")
-		return detect.Pass(gradle.BuildPlanContribution())
+		return detect.Pass(buildsystem.GradleBuildPlanContribution())
 	}
 
-	if maven.IsMaven(detect.Application) {
+	if buildsystem.IsMaven(detect.Application) {
 		detect.Logger.Debug("Maven application")
-		return detect.Pass(maven.BuildPlanContribution())
+		return detect.Pass(buildsystem.MavenBuildPlanContribution())
 	}
 
 	return detect.Fail(), nil
