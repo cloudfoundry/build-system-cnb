@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gradle_test
+package runner_test
 
 import (
 	"os"
@@ -23,34 +23,37 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/buildpack/libbuildpack/application"
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/build-system-buildpack/gradle"
+	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
+	"github.com/cloudfoundry/build-system-buildpack/runner"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/cloudfoundry/libcfbuildpack/logger"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
-func TestRunner(t *testing.T) {
-	spec.Run(t, "Runner", testRunner, spec.Report(report.Terminal{}))
+func TestGradle(t *testing.T) {
+	spec.Run(t, "Gradle", testGradle, spec.Report(report.Terminal{}))
 }
 
-func testRunner(t *testing.T, when spec.G, it spec.S) {
+func testGradle(t *testing.T, when spec.G, it spec.S) {
 
 	it("builds application", func() {
 		f := test.NewBuildFactory(t)
-		f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
-		f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+		f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
+		f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
 
 		test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
-		g, _, err := gradle.NewGradle(f.Build)
+		g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		r := gradle.NewRunner(f.Build, g)
-		r.Exec = func(cmd *exec.Cmd) error {
+		r := runner.NewGradleRunner(f.Build, g)
+		r.Executor = func(application application.Application, cmd *exec.Cmd, logger logger.Logger) error {
 			expected := []string{filepath.Join(f.Build.Application.Root, "gradlew"), "-x", "test", "build"}
 
 			if !reflect.DeepEqual(cmd.Args, expected) {
@@ -73,18 +76,18 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 
 	it("removes source code", func() {
 		f := test.NewBuildFactory(t)
-		f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
-		f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+		f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
+		f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
 
 		test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
-		g, _, err := gradle.NewGradle(f.Build)
+		g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		r := gradle.NewRunner(f.Build, g)
-		r.Exec = func(cmd *exec.Cmd) error {
+		r := runner.NewGradleRunner(f.Build, g)
+		r.Executor = func(application.Application, *exec.Cmd, logger.Logger) error {
 			return nil
 		}
 
@@ -110,18 +113,18 @@ func testRunner(t *testing.T, when spec.G, it spec.S) {
 
 	it("explodes built application", func() {
 		f := test.NewBuildFactory(t)
-		f.AddDependency(t, gradle.Dependency, "stub-gradle.zip")
-		f.AddBuildPlan(t, gradle.Dependency, buildplan.Dependency{})
+		f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
+		f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
 
 		test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
-		g, _, err := gradle.NewGradle(f.Build)
+		g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		r := gradle.NewRunner(f.Build, g)
-		r.Exec = func(cmd *exec.Cmd) error {
+		r := runner.NewGradleRunner(f.Build, g)
+		r.Executor = func(application.Application, *exec.Cmd, logger.Logger) error {
 			return nil
 		}
 
