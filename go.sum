@@ -8,12 +8,6 @@ github.com/cloudfoundry/jvm-application-buildpack v1.0.0-M2 h1:gbYufw9QhF2X0gntc
 github.com/cloudfoundry/jvm-application-buildpack v1.0.0-M2/go.mod h1:AeepJ9poJd2tK2N3vLH8EZL8c+wxnzqXTbus3/xpkGo=
 github.com/cloudfoundry/libcfbuildpack v1.14.0 h1:ZsAM8LSRQc4+7S21hXrsFEgEAEbRB7u/yWS7g/B4vZc=
 github.com/cloudfoundry/libcfbuildpack v1.14.0/go.mod h1:6+ZQATGWoargNqM1paPX9BTtqjK6S6davk6kGpIF1Zo=
-github.com/cloudfoundry/libcfbuildpack v1.16.0 h1:0ZrU1KmOLjHrVXnZcdJFoOBXlAShPKEIE6rWhv3zU+8=
-github.com/cloudfoundry/libcfbuildpack v1.16.0/go.mod h1:6+ZQATGWoargNqM1paPX9BTtqjK6S6davk6kGpIF1Zo=
-github.com/cloudfoundry/libcfbuildpack v1.17.0 h1:p/0hYX861ZEc+BH1vXzje2jTGbF+4iDrpqOP9PL+LEE=
-github.com/cloudfoundry/libcfbuildpack v1.17.0/go.mod h1:6+ZQATGWoargNqM1paPX9BTtqjK6S6davk6kGpIF1Zo=
-github.com/cloudfoundry/libcfbuildpack v1.18.0 h1:FUWVKYIIGFBBGeOxsTLNcf1lXhfhoXWo4D+7mpYUepo=
-github.com/cloudfoundry/libcfbuildpack v1.18.0/go.mod h1:6+ZQATGWoargNqM1paPX9BTtqjK6S6davk6kGpIF1Zo=
 github.com/cloudfoundry/libcfbuildpack v1.19.0 h1:MHa/VNhjsPNGsgwDiPVvMkp3cGK5YS6boCMjxBS9TAc=
 github.com/cloudfoundry/libcfbuildpack v1.19.0/go.mod h1:6+ZQATGWoargNqM1paPX9BTtqjK6S6davk6kGpIF1Zo=
 github.com/cloudfoundry/openjdk-buildpack v1.0.0-M2 h1:Ob9dRTrbhCzFrPLbKLj+ohXrOm2FefXeqFFzXoU5fdI=
