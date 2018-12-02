@@ -26,7 +26,6 @@ import (
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/logger"
-	"github.com/fatih/color"
 )
 
 // Runner represents the behavior of running the build system command to build an application.
@@ -44,25 +43,26 @@ type Runner struct {
 // Contributes builds the application from source code, expands the built artifact, and symlinks the expanded artifact
 // to $APPLICATION_ROOT.
 func (r Runner) Contribute() error {
-	r.logger.FirstLine("%s application", color.YellowString("Building"))
-
-	if err := r.Executor(r.application, r.command, r.logger); err != nil {
-		return err
-	}
-
-	artifact, err := r.builtArtifactProvider(r.application)
+	c, err := r.compiledCode()
 	if err != nil {
 		return err
 	}
-	r.logger.Debug("Built artifact: %s", artifact)
 
-	if err := os.RemoveAll(r.layer.Root); err != nil {
-		return err
-	}
+	if err := r.layer.Contribute(c, func(layer layers.Layer) error {
+		if err := r.Executor.Execute(r.application, r.command, r.logger); err != nil {
+			return err
+		}
 
-	r.logger.Debug("Expanding %s to %s", artifact, r.layer.Root)
-	if err := layers.ExtractZip(artifact, r.layer.Root, 0); err != nil {
-		return err
+		artifact, err := r.builtArtifactProvider(r.application)
+		if err != nil {
+			return err
+		}
+		r.logger.Debug("Built artifact: %s", artifact)
+
+		r.logger.Debug("Expanding %s to %s", artifact, r.layer.Root)
+		return layers.ExtractZip(artifact, r.layer.Root, 0)
+	}, layers.Build, layers.Launch); err != nil {
+		return nil
 	}
 
 	r.logger.SubsequentLine("Removing source code")
@@ -71,11 +71,7 @@ func (r Runner) Contribute() error {
 	}
 
 	r.logger.Debug("Linking %s => %s", r.layer.Root, r.application.Root)
-	if err := os.Symlink(r.layer.Root, r.application.Root); err != nil {
-		return err
-	}
-
-	return r.layer.WriteMetadata(nil, layers.Build, layers.Launch)
+	return os.Symlink(r.layer.Root, r.application.Root)
 }
 
 // String makes Runner satisfy the Stringer interface.
@@ -84,11 +80,38 @@ func (r Runner) String() string {
 		r.Executor, r.application, r.builtArtifactProvider, r.command, r.layer, r.logger)
 }
 
+func (r Runner) compiledCode() (compiledCode, error) {
+	v, err := r.Executor.ExecuteWithOutput(r.application, exec.Command("javac", "-version"), r.logger)
+	if err != nil {
+		return compiledCode{}, err
+	}
+
+	return compiledCode{strings.TrimSpace(string(v))}, nil
+}
+
+type compiledCode struct {
+	JavaVersion string `toml:"java-version"`
+}
+
+func (c compiledCode) Identity() (string, string) {
+	return "Compiled Code", ""
+}
+
+// BuildArtifactProvider returns the location of the build artifact.
 type BuiltArtifactProvider func(application application.Application) (string, error)
 
-type Executor func(application application.Application, cmd *exec.Cmd, logger logger.Logger) error
+// Executor is an interface to mock out actual execution.
+type Executor interface {
+	// Execute configures a command and executes it, sending output to stdout and stderr.
+	Execute(application application.Application, cmd *exec.Cmd, logger logger.Logger) error
 
-var defaultExecutor = func(application application.Application, cmd *exec.Cmd, logger logger.Logger) error {
+	// Execute configures a command and executes it, collecting output and returning it
+	ExecuteWithOutput(application application.Application, cmd *exec.Cmd, logger logger.Logger) ([]byte, error)
+}
+
+type defaultExecutor struct{}
+
+func (defaultExecutor) Execute(application application.Application, cmd *exec.Cmd, logger logger.Logger) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Dir = application.Root
@@ -97,9 +120,15 @@ var defaultExecutor = func(application application.Application, cmd *exec.Cmd, l
 	return cmd.Run()
 }
 
+func (defaultExecutor) ExecuteWithOutput(application application.Application, cmd *exec.Cmd, logger logger.Logger) ([]byte, error) {
+	cmd.Dir = application.Root
+
+	return cmd.CombinedOutput()
+}
+
 func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, cmd *exec.Cmd) Runner {
 	return Runner{
-		defaultExecutor,
+		defaultExecutor{},
 		build.Application,
 		builtArtifactProvider,
 		cmd,

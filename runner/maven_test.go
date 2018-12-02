@@ -18,17 +18,14 @@ package runner_test
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"testing"
 
-	"github.com/buildpack/libbuildpack/application"
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	"github.com/cloudfoundry/build-system-buildpack/runner"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
-	"github.com/cloudfoundry/libcfbuildpack/logger"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -53,15 +50,9 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		r := runner.NewMavenRunner(f.Build, m)
-		r.Executor = func(application application.Application, cmd *exec.Cmd, logger logger.Logger) error {
-			expected := []string{filepath.Join(f.Build.Application.Root, "mvnw"), "-Dmaven.test.skip=true", "package"}
 
-			if !reflect.DeepEqual(cmd.Args, expected) {
-				t.Errorf("Cmd.Args = %s, expected %s", cmd.Args, expected)
-			}
-
-			return nil
-		}
+		e := &testExecutor{Outputs: []string{"test-java-version"}}
+		r.Executor = e
 
 		source := test.FixturePath(t, "stub-application.jar")
 		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
@@ -71,6 +62,11 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 
 		if err := r.Contribute(); err != nil {
 			t.Fatal(err)
+		}
+
+		expected := []string{filepath.Join(f.Build.Application.Root, "mvnw"), "-Dmaven.test.skip=true", "package"}
+		if !reflect.DeepEqual(e.Commands[1].Args, expected) {
+			t.Errorf("Cmd.Args = %s, expected %s", e.Commands[1].Args, expected)
 		}
 	})
 
@@ -87,9 +83,9 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		r := runner.NewMavenRunner(f.Build, m)
-		r.Executor = func(application.Application, *exec.Cmd, logger.Logger) error {
-			return nil
-		}
+
+		e := &testExecutor{Outputs: []string{"test-java-version"}}
+		r.Executor = e
 
 		source := test.FixturePath(t, "stub-application.jar")
 		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
@@ -124,9 +120,9 @@ func testMaven(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		r := runner.NewMavenRunner(f.Build, m)
-		r.Executor = func(application.Application, *exec.Cmd, logger.Logger) error {
-			return nil
-		}
+
+		e := &testExecutor{Outputs: []string{"test-java-version"}}
+		r.Executor = e
 
 		source := test.FixturePath(t, "stub-application.jar")
 		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
