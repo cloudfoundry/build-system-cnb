@@ -61,7 +61,7 @@ func (r Runner) Contribute() error {
 		r.logger.Debug("Expanding %s to %s", artifact, r.layer.Root)
 		return layers.ExtractZip(artifact, r.layer.Root, 0)
 	}, layers.Build, layers.Launch); err != nil {
-		return nil
+		return err
 	}
 
 	r.logger.SubsequentLine("Removing source code")
