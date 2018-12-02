@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/buildpack/libbuildpack/application"
 	"github.com/cloudfoundry/libcfbuildpack/build"
@@ -43,7 +42,7 @@ type Runner struct {
 // Contributes builds the application from source code, expands the built artifact, and symlinks the expanded artifact
 // to $APPLICATION_ROOT.
 func (r Runner) Contribute() error {
-	c, err := r.compiledCode()
+	c, err := NewCompiledApplication(r.application, r.Executor, r.logger)
 	if err != nil {
 		return err
 	}
@@ -80,51 +79,8 @@ func (r Runner) String() string {
 		r.Executor, r.application, r.builtArtifactProvider, r.command, r.layer, r.logger)
 }
 
-func (r Runner) compiledCode() (compiledCode, error) {
-	v, err := r.Executor.ExecuteWithOutput(r.application, exec.Command("javac", "-version"), r.logger)
-	if err != nil {
-		return compiledCode{}, err
-	}
-
-	return compiledCode{strings.TrimSpace(string(v))}, nil
-}
-
-type compiledCode struct {
-	JavaVersion string `toml:"java-version"`
-}
-
-func (c compiledCode) Identity() (string, string) {
-	return "Compiled Code", ""
-}
-
 // BuildArtifactProvider returns the location of the build artifact.
 type BuiltArtifactProvider func(application application.Application) (string, error)
-
-// Executor is an interface to mock out actual execution.
-type Executor interface {
-	// Execute configures a command and executes it, sending output to stdout and stderr.
-	Execute(application application.Application, cmd *exec.Cmd, logger logger.Logger) error
-
-	// Execute configures a command and executes it, collecting output and returning it
-	ExecuteWithOutput(application application.Application, cmd *exec.Cmd, logger logger.Logger) ([]byte, error)
-}
-
-type defaultExecutor struct{}
-
-func (defaultExecutor) Execute(application application.Application, cmd *exec.Cmd, logger logger.Logger) error {
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Dir = application.Root
-
-	logger.SubsequentLine("Running %s", strings.Join(cmd.Args, " "))
-	return cmd.Run()
-}
-
-func (defaultExecutor) ExecuteWithOutput(application application.Application, cmd *exec.Cmd, logger logger.Logger) ([]byte, error) {
-	cmd.Dir = application.Root
-
-	return cmd.CombinedOutput()
-}
 
 func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, cmd *exec.Cmd) Runner {
 	return Runner{
