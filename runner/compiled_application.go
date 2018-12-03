@@ -31,6 +31,7 @@ type CompiledApplication struct {
 	JavaVersion string `toml:"java-version"`
 }
 
+// Identity makes CompiledApplication satisfy the Identifiable interface.
 func (c CompiledApplication) Identity() (string, string) {
 	return "Compiled Application", ""
 }
