@@ -17,6 +17,7 @@
 package runner
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -32,6 +33,11 @@ type CompiledApplication struct {
 
 func (c CompiledApplication) Identity() (string, string) {
 	return "Compiled Application", ""
+}
+
+// String makes CompiledApplication satisfy the Stringer interface.
+func (c CompiledApplication) String() string {
+	return fmt.Sprintf("CompiledApplication{ JavaVersion: %s }", c.JavaVersion)
 }
 
 func NewCompiledApplication(application application.Application, executor Executor, logger logger.Logger) (CompiledApplication, error) {
