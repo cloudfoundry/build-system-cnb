@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/buildpack/libbuildpack/application"
 	"github.com/cloudfoundry/libcfbuildpack/build"
@@ -56,11 +57,10 @@ func (r Runner) Contribute() error {
 		if err != nil {
 			return err
 		}
-		r.logger.Debug("Built artifact: %s", artifact)
 
-		r.logger.Debug("Expanding %s to %s", artifact, r.layer.Root)
-		return layers.ExtractZip(artifact, r.layer.Root, 0)
-	}, layers.Build, layers.Launch); err != nil {
+		r.logger.Debug("Copying %s to %s", artifact, r.cachedApplication())
+		return layers.CopyFile(artifact, r.cachedApplication())
+		}); err != nil {
 		return err
 	}
 
@@ -69,8 +69,12 @@ func (r Runner) Contribute() error {
 		return err
 	}
 
-	r.logger.Debug("Linking %s => %s", r.layer.Root, r.application.Root)
-	return os.Symlink(r.layer.Root, r.application.Root)
+	r.logger.Debug("Expanding %s to %s", r.cachedApplication(), r.application.Root)
+	return layers.ExtractZip(r.cachedApplication(), r.application.Root, 0)
+}
+
+func (r Runner) cachedApplication() string {
+	return filepath.Join(r.layer.Root, "application.zip")
 }
 
 // String makes Runner satisfy the Stringer interface.

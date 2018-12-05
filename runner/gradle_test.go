@@ -17,7 +17,6 @@
 package runner_test
 
 import (
-	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -97,13 +96,13 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 			t.Fatal(err)
 		}
 
-		fi, err := os.Lstat(f.Build.Application.Root)
+		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "gradlew"))
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		if fi.Mode()&os.ModeSymlink != os.ModeSymlink {
-			t.Errorf("Application.Root.Mode() = %s, expected symlink", fi.Mode())
+		if exists {
+			t.Errorf("Expected source code to be removed, but was not")
 		}
 	})
 
@@ -135,8 +134,8 @@ func testGradle(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		layer := f.Build.Layers.Layer("build-system-application")
-		test.BeLayerLike(t, layer, true, false, true)
-		exists, err := layers.FileExists(filepath.Join(layer.Root, "fixture-marker"))
+		test.BeLayerLike(t, layer, false, false, false)
+		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "fixture-marker"))
 		if err != nil {
 			t.Fatal(err)
 		}
