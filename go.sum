@@ -10,8 +10,8 @@ github.com/cloudfoundry/jvm-application-buildpack v1.0.0-M2 h1:gbYufw9QhF2X0gntc
 github.com/cloudfoundry/jvm-application-buildpack v1.0.0-M2/go.mod h1:AeepJ9poJd2tK2N3vLH8EZL8c+wxnzqXTbus3/xpkGo=
 github.com/cloudfoundry/libcfbuildpack v1.14.0 h1:ZsAM8LSRQc4+7S21hXrsFEgEAEbRB7u/yWS7g/B4vZc=
 github.com/cloudfoundry/libcfbuildpack v1.14.0/go.mod h1:6+ZQATGWoargNqM1paPX9BTtqjK6S6davk6kGpIF1Zo=
-github.com/cloudfoundry/libcfbuildpack v1.26.0 h1:6YXxcAGtm/+ZdhUane7WFetfLcKhxQZV+j2ohaatggM=
-github.com/cloudfoundry/libcfbuildpack v1.26.0/go.mod h1:j5UKTSpvcJ+s2OSVGxTZ8mp8mpgs3/6SuJCQBRcD2Jo=
+github.com/cloudfoundry/libcfbuildpack v1.27.0 h1:eoYUf0/sg+CqY90kOLhmGRNCk/cFqZ/AORTzOkdCG6c=
+github.com/cloudfoundry/libcfbuildpack v1.27.0/go.mod h1:j5UKTSpvcJ+s2OSVGxTZ8mp8mpgs3/6SuJCQBRcD2Jo=
 github.com/cloudfoundry/openjdk-buildpack v1.0.0-M2 h1:Ob9dRTrbhCzFrPLbKLj+ohXrOm2FefXeqFFzXoU5fdI=
 github.com/cloudfoundry/openjdk-buildpack v1.0.0-M2/go.mod h1:q+owCaoVrhJDwM7fEXFT+6P9HRNJc+0dHs9nhvHe1/c=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
