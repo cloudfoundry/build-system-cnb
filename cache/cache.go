@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 
 	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/logger"
 )
@@ -35,7 +36,7 @@ type Cache struct {
 
 // Contribute links the cache layer to the destination if it does not already exist.
 func (c Cache) Contribute() error {
-	exists, err := layers.FileExists(c.destination)
+	exists, err := helper.FileExists(c.destination)
 	if err != nil {
 		return err
 	}

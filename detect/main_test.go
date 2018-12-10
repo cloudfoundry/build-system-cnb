@@ -21,55 +21,36 @@ import (
 
 	"github.com/buildpack/libbuildpack/detect"
 	"github.com/cloudfoundry/libcfbuildpack/test"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestDetect(t *testing.T) {
-	spec.Run(t, "Detect", testDetect, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "Detect", func(t *testing.T, _ spec.G, it spec.S) {
 
-func testDetect(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("fails without build system", func() {
-		f := test.NewDetectFactory(t)
+		var f *test.DetectFactory
 
-		exitStatus, err := d(f.Detect)
-		if err != nil {
-			t.Fatal(err)
-		}
+		it.Before(func() {
+			f = test.NewDetectFactory(t)
+		})
 
-		if exitStatus != detect.FailStatusCode {
-			t.Errorf("os.Exit = %d, expected 100", exitStatus)
-		}
-	})
+		it("fails without build system", func() {
+			g.Expect(d(f.Detect)).To(Equal(detect.FailStatusCode))
+		})
 
-	it("passes with build.gradle", func() {
-		f := test.NewDetectFactory(t)
+		it("passes with build.gradle", func() {
+			test.TouchFile(t, f.Detect.Application.Root, "build.gradle")
 
-		test.TouchFile(t, f.Detect.Application.Root, "build.gradle")
-		exitStatus, err := d(f.Detect)
-		if err != nil {
-			t.Fatal(err)
-		}
+			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
+		})
 
-		if exitStatus != detect.PassStatusCode {
-			t.Errorf("os.Exit = %d, expected 0", exitStatus)
-		}
-	})
+		it("passes with pom.xml", func() {
+			test.TouchFile(t, f.Detect.Application.Root, "pom.xml")
 
-	it("passes with pom.xml", func() {
-		f := test.NewDetectFactory(t)
-
-		test.TouchFile(t, f.Detect.Application.Root, "pom.xml")
-
-		exitStatus, err := d(f.Detect)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if exitStatus != detect.PassStatusCode {
-			t.Errorf("os.Exit = %d, expected 0", exitStatus)
-		}
-	})
+			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
+		})
+	}, spec.Report(report.Terminal{}))
 }

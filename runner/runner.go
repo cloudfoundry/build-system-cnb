@@ -24,6 +24,7 @@ import (
 
 	"github.com/buildpack/libbuildpack/application"
 	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/logger"
 )
@@ -59,7 +60,7 @@ func (r Runner) Contribute() error {
 		}
 
 		r.logger.Debug("Copying %s to %s", artifact, r.cachedApplication())
-		return layers.CopyFile(artifact, r.cachedApplication())
+		return helper.CopyFile(artifact, r.cachedApplication())
 		}); err != nil {
 		return err
 	}
@@ -70,7 +71,7 @@ func (r Runner) Contribute() error {
 	}
 
 	r.logger.Debug("Expanding %s to %s", r.cachedApplication(), r.application.Root)
-	return layers.ExtractZip(r.cachedApplication(), r.application.Root, 0)
+	return helper.ExtractZip(r.cachedApplication(), r.application.Root, 0)
 }
 
 func (r Runner) cachedApplication() string {

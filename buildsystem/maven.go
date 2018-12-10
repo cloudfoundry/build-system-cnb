@@ -23,6 +23,7 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/openjdk-buildpack/jdk"
 )
@@ -41,7 +42,7 @@ func MavenBuildPlanContribution() buildplan.BuildPlan {
 
 // IsMaven returns whether this application is built using Maven.
 func IsMaven(application application.Application) bool {
-	exists, err := layers.FileExists(filepath.Join(application.Root, "pom.xml"))
+	exists, err := helper.FileExists(filepath.Join(application.Root, "pom.xml"))
 	if err != nil {
 		return false
 	}
@@ -82,5 +83,5 @@ func NewMavenBuildSystem(build build.Build) (BuildSystem, bool, error) {
 
 func contributeMavenDistribution(artifact string, layer layers.DependencyLayer) error {
 	layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
-	return layers.ExtractTarGz(artifact, layer.Root, 1)
+	return helper.ExtractTarGz(artifact, layer.Root, 1)
 }

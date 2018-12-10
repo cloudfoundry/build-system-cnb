@@ -19,6 +19,7 @@ package buildsystem
 import (
 	"fmt"
 
+	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/logger"
 )
@@ -59,7 +60,7 @@ func (b BuildSystem) String() string {
 }
 
 func (b BuildSystem) hasWrapper() bool {
-	exists, err := layers.FileExists(b.wrapper)
+	exists, err := helper.FileExists(b.wrapper)
 	if err != nil {
 		return false
 	}

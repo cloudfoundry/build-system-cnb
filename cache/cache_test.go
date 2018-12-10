@@ -17,45 +17,34 @@
 package cache_test
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/cloudfoundry/build-system-buildpack/cache"
 	"github.com/cloudfoundry/libcfbuildpack/test"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestCache(t *testing.T) {
-	spec.Run(t, "Cache", testCache, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "Cache", func(t *testing.T, _ spec.G, it spec.S) {
 
-func testCache(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("contributes destination if it does not exist", func() {
-		f := test.NewBuildFactory(t)
+		it("contributes destination if it does not exist", func() {
+			f := test.NewBuildFactory(t)
 
-		destination := filepath.Join(f.Home, "destination")
+			destination := filepath.Join(f.Home, "target")
 
-		c, err := cache.NewCache(f.Build, destination)
-		if err != nil {
-			t.Fatal(err)
-		}
+			c, err := cache.NewCache(f.Build, destination)
+			g.Expect(err).NotTo(HaveOccurred())
 
-		if err := c.Contribute(); err != nil {
-			t.Fatal(err)
-		}
+			g.Expect(c.Contribute()).To(Succeed())
 
-		fi, err := os.Lstat(destination)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if fi.Mode()&os.ModeSymlink != os.ModeSymlink {
-			t.Errorf("destination.Mode() = %s, expected symlink", fi.Mode())
-		}
-
-		test.BeLayerLike(t, f.Build.Layers.Layer("build-system-cache"), false, true, false)
-	})
+			layer := f.Build.Layers.Layer("build-system-cache")
+			g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
+			g.Expect(destination).To(test.BeASymlink(layer.Root))
+		})
+	}, spec.Report(report.Terminal{}))
 }
