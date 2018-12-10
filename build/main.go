@@ -22,13 +22,13 @@ import (
 
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
-	cachePkg "github.com/cloudfoundry/build-system-buildpack/cache"
+	"github.com/cloudfoundry/build-system-buildpack/cache"
 	"github.com/cloudfoundry/build-system-buildpack/runner"
-	buildPkg "github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/build"
 )
 
 func main() {
-	build, err := buildPkg.DefaultBuild()
+	build, err := build.DefaultBuild()
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Failed to initialize Build: %s\n", err)
 		os.Exit(101)
@@ -42,7 +42,7 @@ func main() {
 	}
 }
 
-func b(build buildPkg.Build) (int, error) {
+func b(build build.Build) (int, error) {
 	build.Logger.FirstLine(build.Logger.PrettyIdentity(build.Buildpack))
 
 	if b, ok, err := buildsystem.NewGradleBuildSystem(build); err != nil {
@@ -52,7 +52,7 @@ func b(build buildPkg.Build) (int, error) {
 			return build.Failure(103), err
 		}
 
-		if cache, err := cachePkg.NewGradleCache(build); err != nil {
+		if cache, err := cache.NewGradleCache(build); err != nil {
 			return build.Failure(102), err
 		} else {
 			if err = cache.Contribute(); err != nil {
@@ -72,7 +72,7 @@ func b(build buildPkg.Build) (int, error) {
 			return build.Failure(103), err
 		}
 
-		if cache, err := cachePkg.NewMavenCache(build); err != nil {
+		if cache, err := cache.NewMavenCache(build); err != nil {
 			return build.Failure(101), err
 		} else {
 			if err = cache.Contribute(); err != nil {
