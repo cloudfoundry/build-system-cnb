@@ -23,125 +23,93 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
-	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/openjdk-buildpack/jdk"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestMaven(t *testing.T) {
-	spec.Run(t, "Maven", testMaven, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "Maven", func(t *testing.T, when spec.G, it spec.S) {
 
-func testMaven(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
-		test.BeBuildPlanLike(t, buildsystem.MavenBuildPlanContribution(), buildplan.BuildPlan{
-			buildsystem.MavenDependency: buildplan.Dependency{},
-			jvmapplication.Dependency:   buildplan.Dependency{},
-			jdk.Dependency:              buildplan.Dependency{},
-		})
-	})
+		var f *test.BuildFactory
 
-	when("Contribute", func() {
-
-		it("contributes maven if mvnw does not exist", func() {
-			f := test.NewBuildFactory(t)
-			f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
-			f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
-
-			m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if err := m.Contribute(); err != nil {
-				t.Fatal(err)
-			}
-
-			layer := f.Build.Layers.Layer("maven")
-			test.BeLayerLike(t, layer, false, true, false)
-			test.BeFileLike(t, filepath.Join(layer.Root, "fixture-marker"), 0644, "")
+		it.Before(func() {
+			f = test.NewBuildFactory(t)
 		})
 
-		it("does not contribute maven if mvnw does exist", func() {
-			f := test.NewBuildFactory(t)
-			f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
-			f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
-
-			test.TouchFile(t, f.Build.Application.Root, "mvnw")
-
-			m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if err := m.Contribute(); err != nil {
-				t.Fatal(err)
-			}
-
-			exist, err := layers.FileExists(filepath.Join(f.Build.Layers.Root, "maven", "fixture-marker"))
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if exist {
-				t.Errorf("Expected mvn not to be contributed, but was")
-			}
-		})
-	})
-
-	when("IsMaven", func() {
-
-		it("returns false if pom.xml does not exist", func() {
-			f := test.NewBuildFactory(t)
-
-			actual := buildsystem.IsMaven(f.Build.Application)
-			if actual {
-				t.Errorf("IsMaven = %t, expected false", actual)
-			}
+		it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
+			g.Expect(buildsystem.MavenBuildPlanContribution()).To(Equal(buildplan.BuildPlan{
+				buildsystem.MavenDependency: buildplan.Dependency{},
+				jvmapplication.Dependency:   buildplan.Dependency{},
+				jdk.Dependency:              buildplan.Dependency{},
+			}))
 		})
 
-		it("returns true if pom.xml does exist", func() {
-			f := test.NewBuildFactory(t)
+		when("Contribute", func() {
 
-			test.TouchFile(t, f.Build.Application.Root, "pom.xml")
+			it("contributes maven if mvnw does not exist", func() {
+				f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
+				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
 
-			actual := buildsystem.IsMaven(f.Build.Application)
-			if !actual {
-				t.Errorf("IsMaven = %t, expected true", actual)
-			}
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+
+				g.Expect(b.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("maven")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
+				g.Expect(filepath.Join(layer.Root, "fixture-marker")).To(BeARegularFile())
+			})
+
+			it("does not contribute maven if mvnw does exist", func() {
+				f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
+				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+
+				test.TouchFile(t, f.Build.Application.Root, "mvnw")
+
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+
+				g.Expect(b.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("maven")
+				g.Expect(filepath.Join(layer.Root, "fixture-marker")).NotTo(BeAnExistingFile())
+			})
 		})
-	})
 
-	when("NewMavenBuildSystem", func() {
+		when("IsMaven", func() {
 
-		it("returns true if build plan exists", func() {
-			f := test.NewBuildFactory(t)
-			f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
-			f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
+			it("returns false if pom.xml does not exist", func() {
+				g.Expect(buildsystem.IsMaven(f.Build.Application)).To(BeFalse())
+			})
 
-			_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if !ok {
-				t.Errorf("NewMaven = %t, expected true", ok)
-			}
+			it("returns true if pom.xml does exist", func() {
+				test.TouchFile(t, f.Build.Application.Root, "pom.xml")
+
+				g.Expect(buildsystem.IsMaven(f.Build.Application)).To(BeTrue())
+			})
 		})
 
-		it("returns false if build plan does not exist", func() {
-			f := test.NewBuildFactory(t)
+		when("NewMavenBuildSystem", func() {
 
-			_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if ok {
-				t.Errorf("NewMaven = %t, expected false", ok)
-			}
+			it("returns true if build plan exists", func() {
+				f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
+				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+
+				_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(ok).To(BeTrue())
+				g.Expect(err).NotTo(HaveOccurred())
+			})
+
+			it("returns false if build plan does not exist", func() {
+				_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(ok).To(BeFalse())
+				g.Expect(err).NotTo(HaveOccurred())
+			})
 		})
-	})
-
+	}, spec.Report(report.Terminal{}))
 }

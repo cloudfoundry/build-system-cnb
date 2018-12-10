@@ -18,130 +18,74 @@ package runner_test
 
 import (
 	"path/filepath"
-	"reflect"
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	"github.com/cloudfoundry/build-system-buildpack/runner"
-	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/test"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestMaven(t *testing.T) {
-	spec.Run(t, "Maven", testMaven, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "Maven", func(t *testing.T, _ spec.G, it spec.S) {
 
-func testMaven(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("builds application", func() {
-		f := test.NewBuildFactory(t)
-		f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
-		f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
+		var f *test.BuildFactory
 
-		test.TouchFile(t, f.Build.Application.Root, "mvnw")
+		it.Before(func() {
+			f = test.NewBuildFactory(t)
 
-		m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
+			f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
+			f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+			test.TouchFile(t, f.Build.Application.Root, "mvnw")
+			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
+				filepath.Join(f.Build.Application.Root, "target", "stub-application.jar"))
+		})
 
-		r := runner.NewMavenRunner(f.Build, m)
+		it("builds application", func() {
+			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+			g.Expect(err).NotTo(HaveOccurred())
+			r := runner.NewMavenRunner(f.Build, b)
 
-		e := &testExecutor{Outputs: []string{"test-java-version"}}
-		r.Executor = e
+			e := &testExecutor{Outputs: []string{"test-java-version"}}
+			r.Executor = e
 
-		source := test.FixturePath(t, "stub-application.jar")
-		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
-		if err := layers.CopyFile(source, destination); err != nil {
-			t.Fatal(err)
-		}
+			g.Expect(r.Contribute()).To(Succeed())
 
-		if err := r.Contribute(); err != nil {
-			t.Fatal(err)
-		}
+			g.Expect(e.Commands[1].Args).
+				To(ConsistOf(filepath.Join(f.Build.Application.Root, "mvnw"), "-Dmaven.test.skip=true", "package"))
+		})
 
-		expected := []string{filepath.Join(f.Build.Application.Root, "mvnw"), "-Dmaven.test.skip=true", "package"}
-		if !reflect.DeepEqual(e.Commands[1].Args, expected) {
-			t.Errorf("Cmd.Args = %s, expected %s", e.Commands[1].Args, expected)
-		}
-	})
+		it("removes source code", func() {
+			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+			g.Expect(err).NotTo(HaveOccurred())
+			r := runner.NewMavenRunner(f.Build, b)
 
-	it("removes source code", func() {
-		f := test.NewBuildFactory(t)
-		f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
-		f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
+			e := &testExecutor{Outputs: []string{"test-java-version"}}
+			r.Executor = e
 
-		test.TouchFile(t, f.Build.Application.Root, "mvnw")
+			g.Expect(r.Contribute()).To(Succeed())
 
-		m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
+			g.Expect(filepath.Join(f.Build.Application.Root, "mvnw")).NotTo(BeAnExistingFile())
+		})
 
-		r := runner.NewMavenRunner(f.Build, m)
+		it("explodes built application", func() {
+			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+			g.Expect(err).NotTo(HaveOccurred())
+			r := runner.NewMavenRunner(f.Build, b)
 
-		e := &testExecutor{Outputs: []string{"test-java-version"}}
-		r.Executor = e
+			e := &testExecutor{Outputs: []string{"test-java-version"}}
+			r.Executor = e
 
-		source := test.FixturePath(t, "stub-application.jar")
-		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
-		if err := layers.CopyFile(source, destination); err != nil {
-			t.Fatal(err)
-		}
+			g.Expect(r.Contribute()).To(Succeed())
 
-		if err := r.Contribute(); err != nil {
-			t.Fatal(err)
-		}
-
-		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "mvnw"))
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if exists {
-			t.Errorf("Expected source code to be removed, but was not")
-		}
-	})
-
-	it("explodes built application", func() {
-		f := test.NewBuildFactory(t)
-		f.AddDependency(t, buildsystem.MavenDependency, "stub-maven.tar.gz")
-		f.AddBuildPlan(t, buildsystem.MavenDependency, buildplan.Dependency{})
-
-		test.TouchFile(t, f.Build.Application.Root, "mvnw")
-
-		m, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		r := runner.NewMavenRunner(f.Build, m)
-
-		e := &testExecutor{Outputs: []string{"test-java-version"}}
-		r.Executor = e
-
-		source := test.FixturePath(t, "stub-application.jar")
-		destination := filepath.Join(f.Build.Application.Root, "target", "stub-application.jar")
-		if err := layers.CopyFile(source, destination); err != nil {
-			t.Fatal(err)
-		}
-
-		if err := r.Contribute(); err != nil {
-			t.Fatal(err)
-		}
-
-		layer := f.Build.Layers.Layer("build-system-application")
-		test.BeLayerLike(t, layer, false, false, false)
-		exists, err := layers.FileExists(filepath.Join(f.Build.Application.Root, "fixture-marker"))
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if !exists {
-			t.Errorf("Expected application to be expanded, but was not")
-		}
-	})
+			layer := f.Build.Layers.Layer("build-system-application")
+			g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+			g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
+		})
+	}, spec.Report(report.Terminal{}))
 }

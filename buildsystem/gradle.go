@@ -23,6 +23,7 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/openjdk-buildpack/jdk"
 )
@@ -41,7 +42,7 @@ func GradleBuildPlanContribution() buildplan.BuildPlan {
 
 // IsGradle returns whether this application is built using Gradle.
 func IsGradle(application application.Application) bool {
-	exists, err := layers.FileExists(filepath.Join(application.Root, "build.gradle"))
+	exists, err := helper.FileExists(filepath.Join(application.Root, "build.gradle"))
 	if err != nil {
 		return false
 	}
@@ -82,5 +83,5 @@ func NewGradleBuildSystem(build build.Build) (BuildSystem, bool, error) {
 
 func contributeGradleDistribution(artifact string, layer layers.DependencyLayer) error {
 	layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
-	return layers.ExtractZip(artifact, layer.Root, 1)
+	return helper.ExtractZip(artifact, layer.Root, 1)
 }

@@ -23,124 +23,93 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
-	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/openjdk-buildpack/jdk"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestGradle(t *testing.T) {
-	spec.Run(t, "Gradle", testGradle, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "Gradle", func(t *testing.T, when spec.G, it spec.S) {
 
-func testGradle(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("contains gradle, jvm-application, and openjdk-jdk in build plan", func() {
-		test.BeBuildPlanLike(t, buildsystem.GradleBuildPlanContribution(), buildplan.BuildPlan{
-			buildsystem.GradleDependency: buildplan.Dependency{},
-			jvmapplication.Dependency:    buildplan.Dependency{},
-			jdk.Dependency:               buildplan.Dependency{},
-		})
-	})
+		var f *test.BuildFactory
 
-	when("Contribute", func() {
-
-		it("contributes gradle if gradlew does not exist", func() {
-			f := test.NewBuildFactory(t)
-			f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
-			f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
-
-			g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if err := g.Contribute(); err != nil {
-				t.Fatal(err)
-			}
-
-			layer := f.Build.Layers.Layer("gradle")
-			test.BeLayerLike(t, layer, false, true, false)
-			test.BeFileLike(t, filepath.Join(layer.Root, "fixture-marker"), 0644, "")
+		it.Before(func() {
+			f = test.NewBuildFactory(t)
 		})
 
-		it("does not contribute gradle if gradlew does exist", func() {
-			f := test.NewBuildFactory(t)
-			f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
-			f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
-
-			test.TouchFile(t, f.Build.Application.Root, "gradlew")
-
-			g, _, err := buildsystem.NewGradleBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if err := g.Contribute(); err != nil {
-				t.Fatal(err)
-			}
-
-			exist, err := layers.FileExists(filepath.Join(f.Build.Layers.Root, "gradle", "fixture-marker"))
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			if exist {
-				t.Errorf("Expected gradle not to be contributed, but was")
-			}
-		})
-	})
-
-	when("IsGradle", func() {
-
-		it("returns false if build.gradle does not exist", func() {
-			f := test.NewBuildFactory(t)
-
-			actual := buildsystem.IsGradle(f.Build.Application)
-			if actual {
-				t.Errorf("Gradle = %t, expected false", actual)
-			}
+		it("contains gradle, jvm-application, and openjdk-jdk in build plan", func() {
+			g.Expect(buildsystem.GradleBuildPlanContribution()).To(Equal(buildplan.BuildPlan{
+				buildsystem.GradleDependency: buildplan.Dependency{},
+				jvmapplication.Dependency:    buildplan.Dependency{},
+				jdk.Dependency:               buildplan.Dependency{},
+			}))
 		})
 
-		it("returns true if build.gradle does exist", func() {
-			f := test.NewBuildFactory(t)
+		when("Contribute", func() {
 
-			test.TouchFile(t, f.Build.Application.Root, "build.gradle")
+			it("contributes gradle if gradlew does not exist", func() {
+				f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
+				f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
 
-			actual := buildsystem.IsGradle(f.Build.Application)
-			if !actual {
-				t.Errorf("IsGradle = %t, expected true", actual)
-			}
+				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+
+				g.Expect(b.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("gradle")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
+				g.Expect(filepath.Join(layer.Root, "fixture-marker")).To(BeARegularFile())
+			})
+
+			it("does not contribute gradle if gradlew does exist", func() {
+				f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
+				f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
+
+				test.TouchFile(t, f.Build.Application.Root, "gradlew")
+
+				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+
+				g.Expect(b.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("gradle")
+				g.Expect(filepath.Join(layer.Root, "fixture-marker")).NotTo(BeAnExistingFile())
+			})
 		})
-	})
 
-	when("NewGradleBuildSystem", func() {
+		when("IsGradle", func() {
 
-		it("returns true if build plan exists", func() {
-			f := test.NewBuildFactory(t)
-			f.AddDependency(t, buildsystem.GradleDependency, "stub-gradle.zip")
-			f.AddBuildPlan(t, buildsystem.GradleDependency, buildplan.Dependency{})
+			it("returns false if build.gradle does not exist", func() {
+				g.Expect(buildsystem.IsGradle(f.Build.Application)).To(BeFalse())
+			})
 
-			_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if !ok {
-				t.Errorf("NewGradle = %t, expected true", ok)
-			}
+			it("returns true if build.gradle does exist", func() {
+				test.TouchFile(t, f.Build.Application.Root, "build.gradle")
+
+				g.Expect(buildsystem.IsGradle(f.Build.Application)).To(BeTrue())
+			})
 		})
 
-		it("returns false if build plan does not exist", func() {
-			f := test.NewBuildFactory(t)
+		when("NewGradleBuildSystem", func() {
 
-			_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if ok {
-				t.Errorf("NewGradle = %t, expected false", ok)
-			}
+			it("returns true if build plan exists", func() {
+				f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
+				f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
+
+				_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(ok).To(BeTrue())
+				g.Expect(err).NotTo(HaveOccurred())
+			})
+
+			it("returns false if build plan does not exist", func() {
+				_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(ok).To(BeFalse())
+				g.Expect(err).NotTo(HaveOccurred())
+			})
 		})
-	})
+	}, spec.Report(report.Terminal{}))
 }
