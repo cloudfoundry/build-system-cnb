@@ -47,6 +47,12 @@ func TestDetect(t *testing.T) {
 			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
 		})
 
+		it("passes with build.gradle.kts", func() {
+			test.TouchFile(t, f.Detect.Application.Root, "build.gradle.kts")
+
+			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
+		})
+
 		it("passes with pom.xml", func() {
 			test.TouchFile(t, f.Detect.Application.Root, "pom.xml")
 

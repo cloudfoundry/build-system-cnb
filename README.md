@@ -6,7 +6,7 @@ This buildpack is designed to work in collaboration with other buildpacks.
 ## Detection
 The detection phase passes if
 
-* `<APPLICATION_ROOT>/build.gradle` exists
+* `<APPLICATION_ROOT>/build.gradle` or `<APPLICATION_ROOT>/build.gradle.kts` exists
   * Contributes `gradle` to the build plan
   * Contributes `jvm-application` to the build plan
   * Contributes `openjdk-jdk` to the build plan

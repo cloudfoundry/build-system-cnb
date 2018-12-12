@@ -92,6 +92,12 @@ func TestGradle(t *testing.T) {
 
 				g.Expect(buildsystem.IsGradle(f.Build.Application)).To(BeTrue())
 			})
+
+			it("returns true if build.gradle.kts does exist", func() {
+				test.TouchFile(t, f.Build.Application.Root, "build.gradle.kts")
+
+				g.Expect(buildsystem.IsGradle(f.Build.Application)).To(BeTrue())
+			})
 		})
 
 		when("NewGradleBuildSystem", func() {
