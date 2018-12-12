@@ -42,12 +42,17 @@ func GradleBuildPlanContribution() buildplan.BuildPlan {
 
 // IsGradle returns whether this application is built using Gradle.
 func IsGradle(application application.Application) bool {
-	exists, err := helper.FileExists(filepath.Join(application.Root, "build.gradle"))
+	e1, err := helper.FileExists(filepath.Join(application.Root, "build.gradle"))
 	if err != nil {
 		return false
 	}
 
-	return exists
+	e2, err := helper.FileExists(filepath.Join(application.Root, "build.gradle.kts"))
+	if err != nil {
+		return false
+	}
+
+	return e1 || e2
 }
 
 // NewGradleBuildSystem creates a new Gradle BuildSystem instance. OK is true if build plan contains "gradle"
