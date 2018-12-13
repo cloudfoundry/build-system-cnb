@@ -48,6 +48,8 @@ func (c Cache) Contribute() error {
 
 	c.logger.SubsequentLine("Linking Cache to %s", c.destination)
 
+	c.layer.Touch()
+
 	c.logger.Debug("Creating cache directory %s", c.layer.Root)
 	if err := os.MkdirAll(c.layer.Root, 0755); err != nil {
 		return err
