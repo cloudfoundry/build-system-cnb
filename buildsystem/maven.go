@@ -32,11 +32,11 @@ import (
 const MavenDependency = "maven"
 
 // MavenBuildPlanContribution returns the BuildPlan with requirements for Maven.
-func MavenBuildPlanContribution() buildplan.BuildPlan {
+func MavenBuildPlanContribution(buildPlan buildplan.BuildPlan) buildplan.BuildPlan {
 	return buildplan.BuildPlan{
-		MavenDependency:           buildplan.Dependency{},
-		jvmapplication.Dependency: buildplan.Dependency{},
-		jdk.Dependency:            buildplan.Dependency{},
+		MavenDependency:           buildPlan[MavenDependency],
+		jvmapplication.Dependency: buildPlan[jvmapplication.Dependency],
+		jdk.Dependency:            buildPlan[jdk.Dependency],
 	}
 }
 

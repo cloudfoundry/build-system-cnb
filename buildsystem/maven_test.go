@@ -42,7 +42,7 @@ func TestMaven(t *testing.T) {
 		})
 
 		it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
-			g.Expect(buildsystem.MavenBuildPlanContribution()).To(Equal(buildplan.BuildPlan{
+			g.Expect(buildsystem.MavenBuildPlanContribution(f.Build.BuildPlan)).To(Equal(buildplan.BuildPlan{
 				buildsystem.MavenDependency: buildplan.Dependency{},
 				jvmapplication.Dependency:   buildplan.Dependency{},
 				jdk.Dependency:              buildplan.Dependency{},

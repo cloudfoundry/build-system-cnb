@@ -42,7 +42,7 @@ func TestGradle(t *testing.T) {
 		})
 
 		it("contains gradle, jvm-application, and openjdk-jdk in build plan", func() {
-			g.Expect(buildsystem.GradleBuildPlanContribution()).To(Equal(buildplan.BuildPlan{
+			g.Expect(buildsystem.GradleBuildPlanContribution(f.Build.BuildPlan)).To(Equal(buildplan.BuildPlan{
 				buildsystem.GradleDependency: buildplan.Dependency{},
 				jvmapplication.Dependency:    buildplan.Dependency{},
 				jdk.Dependency:               buildplan.Dependency{},

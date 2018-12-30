@@ -32,11 +32,11 @@ import (
 const GradleDependency = "gradle"
 
 // GradleBuildPlanContribution returns the BuildPlan with requirements for Gradle.
-func GradleBuildPlanContribution() buildplan.BuildPlan {
+func GradleBuildPlanContribution(buildPlan buildplan.BuildPlan) buildplan.BuildPlan {
 	return buildplan.BuildPlan{
-		GradleDependency:          buildplan.Dependency{},
-		jvmapplication.Dependency: buildplan.Dependency{},
-		jdk.Dependency:            buildplan.Dependency{},
+		GradleDependency:          buildPlan[GradleDependency],
+		jvmapplication.Dependency: buildPlan[jvmapplication.Dependency],
+		jdk.Dependency:            buildPlan[jdk.Dependency],
 	}
 }
 
