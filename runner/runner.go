@@ -50,6 +50,10 @@ func (r Runner) Contribute() error {
 	}
 
 	if err := r.layer.Contribute(c, func(layer layers.Layer) error {
+		if err := os.RemoveAll(layer.Root); err != nil {
+			return err
+		}
+
 		if err := r.Executor.Execute(r.application, r.command, r.logger); err != nil {
 			return err
 		}
@@ -61,7 +65,7 @@ func (r Runner) Contribute() error {
 
 		r.logger.Debug("Copying %s to %s", artifact, r.cachedApplication())
 		return helper.CopyFile(artifact, r.cachedApplication())
-		}); err != nil {
+	}); err != nil {
 		return err
 	}
 
