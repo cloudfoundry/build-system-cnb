@@ -15,7 +15,7 @@
 [buildpack]
 id = "org.cloudfoundry.buildsystem"
 name = "Cloud Foundry Build System Buildpack"
-version = "1.0.0-BUILD-SNAPSHOT"
+version = "1.0.0-M4"
 
 [[stacks]]
 id = "io.buildpacks.stacks.bionic"
