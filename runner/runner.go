@@ -18,6 +18,7 @@ package runner
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -41,8 +42,8 @@ type Runner struct {
 	logger                logger.Logger
 }
 
-// Contributes builds the application from source code, expands the built artifact, and symlinks the expanded artifact
-// to $APPLICATION_ROOT.
+// Contributes builds the application from source code, removes the source code, and expands the built artifact to
+// $APPLICATION_ROOT.
 func (r Runner) Contribute() error {
 	c, err := NewCompiledApplication(r.application, r.Executor, r.logger)
 	if err != nil {
@@ -70,8 +71,14 @@ func (r Runner) Contribute() error {
 	}
 
 	r.logger.SubsequentLine("Removing source code")
-	if err := os.RemoveAll(r.application.Root); err != nil {
+	if cs, err := ioutil.ReadDir(r.application.Root); err != nil {
 		return err
+	} else {
+		for _, c := range cs {
+			if err := os.RemoveAll(filepath.Join(r.application.Root, c.Name())); err != nil {
+				return err
+			}
+		}
 	}
 
 	r.logger.Debug("Expanding %s to %s", r.cachedApplication(), r.application.Root)

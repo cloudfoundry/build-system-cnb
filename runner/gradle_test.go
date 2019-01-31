@@ -41,6 +41,7 @@ func TestGradle(t *testing.T) {
 
 			f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
 			f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
+			test.TouchFile(t, f.Build.Application.Root, ".gradle")
 			test.TouchFile(t, f.Build.Application.Root, "gradlew")
 			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
 				filepath.Join(f.Build.Application.Root, "build", "libs", "stub-application.jar"))
@@ -60,7 +61,7 @@ func TestGradle(t *testing.T) {
 				To(ConsistOf(filepath.Join(f.Build.Application.Root, "gradlew"), "-x", "test", "build"))
 		})
 
-		it("removes source code", func() {
+		it.Focus("removes source code", func() {
 			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewGradleRunner(f.Build, b)
@@ -70,7 +71,10 @@ func TestGradle(t *testing.T) {
 
 			g.Expect(r.Contribute()).To(Succeed())
 
+			g.Expect(f.Build.Application.Root).To(BeADirectory())
+			g.Expect(filepath.Join(f.Build.Application.Root, ".gradle")).NotTo(BeAnExistingFile())
 			g.Expect(filepath.Join(f.Build.Application.Root, "gradlew")).NotTo(BeAnExistingFile())
+			g.Expect(filepath.Join(f.Build.Application.Root, "build")).NotTo(BeAnExistingFile())
 		})
 
 		it("explodes built application", func() {
