@@ -41,6 +41,7 @@ func TestMaven(t *testing.T) {
 
 			f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
 			f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+			test.TouchFile(t, f.Build.Application.Root, ".mvn")
 			test.TouchFile(t, f.Build.Application.Root, "mvnw")
 			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
 				filepath.Join(f.Build.Application.Root, "target", "stub-application.jar"))
@@ -70,7 +71,11 @@ func TestMaven(t *testing.T) {
 
 			g.Expect(r.Contribute()).To(Succeed())
 
+			g.Expect(f.Build.Application.Root).To(BeADirectory())
+			g.Expect(f.Build.Application.Root).To(BeADirectory())
+			g.Expect(filepath.Join(f.Build.Application.Root, ".mvn")).NotTo(BeAnExistingFile())
 			g.Expect(filepath.Join(f.Build.Application.Root, "mvnw")).NotTo(BeAnExistingFile())
+			g.Expect(filepath.Join(f.Build.Application.Root, "target")).NotTo(BeAnExistingFile())
 		})
 
 		it("explodes built application", func() {
