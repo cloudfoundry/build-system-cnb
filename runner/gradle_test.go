@@ -61,7 +61,7 @@ func TestGradle(t *testing.T) {
 				To(ConsistOf(filepath.Join(f.Build.Application.Root, "gradlew"), "-x", "test", "build"))
 		})
 
-		it.Focus("removes source code", func() {
+		it("removes source code", func() {
 			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewGradleRunner(f.Build, b)
