@@ -23,9 +23,9 @@ id = "io.buildpacks.stacks.bionic"
 [[metadata.dependencies]]
 id      = "gradle"
 name    = "Gradle"
-version = "5.1.1"
-uri     = "https://downloads.gradle.org/distributions/gradle-5.1.1-bin.zip"
-sha256  = "4953323605c5d7b89e97d0dc7779e275bccedefcdac090aec123375eae0cc798"
+version = "5.2.1"
+uri     = "https://downloads.gradle.org/distributions/gradle-5.2.1-bin.zip"
+sha256  = "748c33ff8d216736723be4037085b8dc342c6a0f309081acf682c9803e407357"
 stacks  = [ "io.buildpacks.stacks.bionic" ]
 
   [[metadata.dependencies.licenses]]
