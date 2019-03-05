@@ -18,7 +18,6 @@ package runner
 
 import (
 	"fmt"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack/application"
@@ -28,7 +27,7 @@ import (
 
 // NewRunner creates a new Gradle Runner instance.
 func NewGradleRunner(build build.Build, buildSystem buildsystem.BuildSystem) Runner {
-	return NewRunner(build, gradleBuiltArtifactProvider, exec.Command(buildSystem.Executable(), "-x", "test", "build"))
+	return NewRunner(build, gradleBuiltArtifactProvider, buildSystem.Executable(), "-x", "test", "build")
 }
 
 func gradleBuiltArtifactProvider(application application.Application) (string, error) {

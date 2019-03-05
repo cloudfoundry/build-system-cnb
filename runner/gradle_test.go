@@ -48,26 +48,28 @@ func TestGradle(t *testing.T) {
 		})
 
 		it("builds application", func() {
+			f.Runner.Outputs = []string{"test-java-version"}
+
 			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewGradleRunner(f.Build, b)
-
-			e := &testExecutor{Outputs: []string{"test-java-version"}}
-			r.Executor = e
 
 			g.Expect(r.Contribute()).To(Succeed())
 
-			g.Expect(e.Commands[1].Args).
-				To(ConsistOf(filepath.Join(f.Build.Application.Root, "gradlew"), "-x", "test", "build"))
+			g.Expect(f.Runner.Commands[1]).
+				To(Equal(test.Command{
+					Bin:  filepath.Join(f.Build.Application.Root, "gradlew"),
+					Dir:  f.Build.Application.Root,
+					Args: []string{"-x", "test", "build"},
+				}))
 		})
 
 		it("removes source code", func() {
+			f.Runner.Outputs = []string{"test-java-version"}
+
 			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewGradleRunner(f.Build, b)
-
-			e := &testExecutor{Outputs: []string{"test-java-version"}}
-			r.Executor = e
 
 			g.Expect(r.Contribute()).To(Succeed())
 
@@ -78,12 +80,11 @@ func TestGradle(t *testing.T) {
 		})
 
 		it("explodes built application", func() {
+			f.Runner.Outputs = []string{"test-java-version"}
+
 			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewGradleRunner(f.Build, b)
-
-			e := &testExecutor{Outputs: []string{"test-java-version"}}
-			r.Executor = e
 
 			g.Expect(r.Contribute()).To(Succeed())
 

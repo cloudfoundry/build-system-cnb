@@ -18,11 +18,10 @@ package runner
 
 import (
 	"fmt"
-	"os/exec"
 	"strings"
 
 	"github.com/buildpack/libbuildpack/application"
-	"github.com/cloudfoundry/libcfbuildpack/logger"
+	"github.com/cloudfoundry/libcfbuildpack/runner"
 )
 
 // CompiledApplication represents metadata about a compiled application.
@@ -41,8 +40,8 @@ func (c CompiledApplication) String() string {
 	return fmt.Sprintf("CompiledApplication{ JavaVersion: %s }", c.JavaVersion)
 }
 
-func NewCompiledApplication(application application.Application, executor Executor, logger logger.Logger) (CompiledApplication, error) {
-	v, err := javaVersion(application, executor, logger)
+func NewCompiledApplication(application application.Application, runner runner.Runner) (CompiledApplication, error) {
+	v, err := javaVersion(application, runner)
 	if err != nil {
 		return CompiledApplication{}, err
 	}
@@ -52,8 +51,8 @@ func NewCompiledApplication(application application.Application, executor Execut
 	}, nil
 }
 
-func javaVersion(application application.Application, executor Executor, logger logger.Logger) (string, error) {
-	v, err := executor.ExecuteWithOutput(application, exec.Command("javac", "-version"), logger)
+func javaVersion(application application.Application, runner runner.Runner) (string, error) {
+	v, err := runner.RunWithOutput("javac", application.Root, "-version")
 	if err != nil {
 		return "", err
 	}

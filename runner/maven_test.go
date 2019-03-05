@@ -48,26 +48,28 @@ func TestMaven(t *testing.T) {
 		})
 
 		it("builds application", func() {
+			f.Runner.Outputs = []string{"test-java-version"}
+
 			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewMavenRunner(f.Build, b)
-
-			e := &testExecutor{Outputs: []string{"test-java-version"}}
-			r.Executor = e
 
 			g.Expect(r.Contribute()).To(Succeed())
 
-			g.Expect(e.Commands[1].Args).
-				To(ConsistOf(filepath.Join(f.Build.Application.Root, "mvnw"), "-Dmaven.test.skip=true", "package"))
+			g.Expect(f.Runner.Commands[1]).
+				To(Equal(test.Command{
+					Bin:  filepath.Join(f.Build.Application.Root, "mvnw"),
+					Dir:  f.Build.Application.Root,
+					Args: []string{"-Dmaven.test.skip=true", "package"},
+				}))
 		})
 
 		it("removes source code", func() {
+			f.Runner.Outputs = []string{"test-java-version"}
+
 			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewMavenRunner(f.Build, b)
-
-			e := &testExecutor{Outputs: []string{"test-java-version"}}
-			r.Executor = e
 
 			g.Expect(r.Contribute()).To(Succeed())
 
@@ -79,12 +81,11 @@ func TestMaven(t *testing.T) {
 		})
 
 		it("explodes built application", func() {
+			f.Runner.Outputs = []string{"test-java-version"}
+
 			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 			g.Expect(err).NotTo(HaveOccurred())
 			r := runner.NewMavenRunner(f.Build, b)
-
-			e := &testExecutor{Outputs: []string{"test-java-version"}}
-			r.Executor = e
 
 			g.Expect(r.Contribute()).To(Succeed())
 

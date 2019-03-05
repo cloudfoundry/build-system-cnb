@@ -18,7 +18,6 @@ package runner
 
 import (
 	"fmt"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack/application"
@@ -28,7 +27,7 @@ import (
 
 // NewRunner creates a new Maven Runner instance.
 func NewMavenRunner(build build.Build, buildSystem buildsystem.BuildSystem) Runner {
-	return NewRunner(build, mavenBuiltArtifactProvider, exec.Command(buildSystem.Executable(), "-Dmaven.test.skip=true", "package"))
+	return NewRunner(build, mavenBuiltArtifactProvider, buildSystem.Executable(), "-Dmaven.test.skip=true", "package")
 }
 
 func mavenBuiltArtifactProvider(application application.Application) (string, error) {

@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack/application"
@@ -28,24 +27,24 @@ import (
 	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/logger"
+	"github.com/cloudfoundry/libcfbuildpack/runner"
 )
 
 // Runner represents the behavior of running the build system command to build an application.
 type Runner struct {
-	// Executor is the function that isolates execution
-	Executor Executor
-
 	application           application.Application
+	args                  []string
+	bin                   string
 	builtArtifactProvider BuiltArtifactProvider
-	command               *exec.Cmd
 	layer                 layers.Layer
 	logger                logger.Logger
+	runner                runner.Runner
 }
 
 // Contributes builds the application from source code, removes the source code, and expands the built artifact to
 // $APPLICATION_ROOT.
 func (r Runner) Contribute() error {
-	c, err := NewCompiledApplication(r.application, r.Executor, r.logger)
+	c, err := NewCompiledApplication(r.application, r.runner)
 	if err != nil {
 		return err
 	}
@@ -55,7 +54,7 @@ func (r Runner) Contribute() error {
 			return err
 		}
 
-		if err := r.Executor.Execute(r.application, r.command, r.logger); err != nil {
+		if err := r.runner.Run(r.bin, r.application.Root, r.args...); err != nil {
 			return err
 		}
 
@@ -91,20 +90,21 @@ func (r Runner) cachedApplication() string {
 
 // String makes Runner satisfy the Stringer interface.
 func (r Runner) String() string {
-	return fmt.Sprintf("Runner{ Executor: %v, application: %s, builtArtifactProvider: %v, command: %v, layer:%s, logger: %s }",
-		r.Executor, r.application, r.builtArtifactProvider, r.command, r.layer, r.logger)
+	return fmt.Sprintf("Runner{ application: %s, args: %s, bin: %s, builtArtifactProvider: %v, layer:%s, logger: %s, runner: %s }",
+		r.application, r.args, r.bin, r.builtArtifactProvider, r.layer, r.logger, r.runner)
 }
 
 // BuildArtifactProvider returns the location of the build artifact.
 type BuiltArtifactProvider func(application application.Application) (string, error)
 
-func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, cmd *exec.Cmd) Runner {
+func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, bin string, args ...string) Runner {
 	return Runner{
-		defaultExecutor{},
 		build.Application,
+		args,
+		bin,
 		builtArtifactProvider,
-		cmd,
 		build.Layers.Layer("build-system-application"),
 		build.Logger,
+		build.Runner,
 	}
 }
