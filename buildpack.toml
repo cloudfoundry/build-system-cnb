@@ -45,12 +45,12 @@ stacks  = [ "io.buildpacks.stacks.bionic" ]
   uri  = "https://www.apache.org/licenses/"
 
 [metadata]
-  pre_package = "ci/build.sh"
-  include_files = [
-    "LICENSE",
-    "NOTICE",
-    "README.md",
-    "bin/build",
-    "bin/detect",
-    "buildpack.toml",
-  ]
+pre_package = "ci/build.sh"
+include_files = [
+  "LICENSE",
+  "NOTICE",
+  "README.md",
+  "bin/build",
+  "bin/detect",
+  "buildpack.toml",
+]
