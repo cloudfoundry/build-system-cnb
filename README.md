@@ -1,4 +1,4 @@
-# `build-system-buildpack`
+# `build-system-cnb`
 The Cloud Foundry Build System Buildpack is a Cloud Native Buildpack V3 that enables the building of JVM applications from source.
 
 This buildpack is designed to work in collaboration with other buildpacks.

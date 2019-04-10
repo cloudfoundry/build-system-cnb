@@ -1,10 +1,10 @@
-module github.com/cloudfoundry/build-system-buildpack
+module github.com/cloudfoundry/build-system-cnb
 
 require (
-	github.com/buildpack/libbuildpack v1.12.0
-	github.com/cloudfoundry/jvm-application-buildpack v1.0.0-M6
-	github.com/cloudfoundry/libcfbuildpack v1.49.0
-	github.com/cloudfoundry/openjdk-buildpack v1.0.0-M6
+	github.com/buildpack/libbuildpack v1.13.0
+	github.com/cloudfoundry/jvm-application-cnb v1.0.0-M7
+	github.com/cloudfoundry/libcfbuildpack v1.51.0
+	github.com/cloudfoundry/openjdk-cnb v1.0.0-M7
 	github.com/onsi/gomega v1.5.0
 	github.com/sclevine/spec v1.2.0
 )

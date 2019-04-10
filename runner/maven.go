@@ -21,7 +21,7 @@ import (
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack/application"
-	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
+	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 )
 

@@ -21,8 +21,8 @@ import (
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
-	"github.com/cloudfoundry/build-system-buildpack/runner"
+	"github.com/cloudfoundry/build-system-cnb/buildsystem"
+	"github.com/cloudfoundry/build-system-cnb/runner"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"

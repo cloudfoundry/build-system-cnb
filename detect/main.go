@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
+	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
 )
 

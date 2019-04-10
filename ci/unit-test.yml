@@ -8,10 +8,10 @@ image_resource:
     tag: latest
 
 inputs:
-- name: build-system-buildpack
+- name: build-system-cnb
 
 caches:
 - path: go-module-cache
 
 run:
-  path: build-system-buildpack/ci/unit-test.sh
+  path: build-system-cnb/ci/unit-test.sh

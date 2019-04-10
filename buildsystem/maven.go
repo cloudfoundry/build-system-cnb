@@ -21,11 +21,11 @@ import (
 
 	"github.com/buildpack/libbuildpack/application"
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
+	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
-	"github.com/cloudfoundry/openjdk-buildpack/jdk"
+	"github.com/cloudfoundry/openjdk-cnb/jdk"
 )
 
 // MavenDependency is the key identifying the Maven build system in the buildpack plan.

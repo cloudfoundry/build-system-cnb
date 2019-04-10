@@ -21,9 +21,9 @@ import (
 	"os"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/build-system-buildpack/buildsystem"
-	"github.com/cloudfoundry/build-system-buildpack/cache"
-	"github.com/cloudfoundry/build-system-buildpack/runner"
+	"github.com/cloudfoundry/build-system-cnb/buildsystem"
+	"github.com/cloudfoundry/build-system-cnb/cache"
+	"github.com/cloudfoundry/build-system-cnb/runner"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 )
 
