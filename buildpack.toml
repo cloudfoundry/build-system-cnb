@@ -25,9 +25,9 @@ stacks = [
 [[metadata.dependencies]]
 id      = "gradle"
 name    = "Gradle"
-version = "5.3.1"
-uri     = "https://downloads.gradle.org/distributions/gradle-5.3.1-bin.zip"
-sha256  = "1c59a17a054e9c82f0dd881871c9646e943ec4c71dd52ebc6137d17f82337436"
+version = "5.4.1"
+uri     = "https://downloads.gradle.org/distributions/gradle-5.4.1-bin.zip"
+sha256  = "7bdbad1e4f54f13c8a78abc00c26d44dd8709d4aedb704d913fb1bb78ac025dc"
 stacks  = [ "io.buildpacks.stacks.bionic", "org.cloudfoundry.stacks.cflinuxfs3" ]
 
   [[metadata.dependencies.licenses]]
@@ -37,9 +37,9 @@ stacks  = [ "io.buildpacks.stacks.bionic", "org.cloudfoundry.stacks.cflinuxfs3" 
 [[metadata.dependencies]]
 id      = "maven"
 name    = "Apache Maven"
-version = "3.6.0"
-uri     = "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.6.0/apache-maven-3.6.0-bin.tar.gz"
-sha256  = "6a1b346af36a1f1a491c1c1a141667c5de69b42e6611d3687df26868bc0f4637"
+version = "3.6.1"
+uri     = "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.6.1/apache-maven-3.6.1-bin.tar.gz"
+sha256  = "2528c35a99c30f8940cc599ba15d34359d58bec57af58c1075519b8cd33b69e7"
 stacks  = [ "io.buildpacks.stacks.bionic", "org.cloudfoundry.stacks.cflinuxfs3" ]
 
   [[metadata.dependencies.licenses]]
