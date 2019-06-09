@@ -17,7 +17,6 @@
 package cache
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -67,11 +66,6 @@ func (c Cache) Contribute() error {
 	}
 
 	return c.layer.WriteMetadata(nil, layers.Cache)
-}
-
-// String makes Cache satisfy the Stringer interface.
-func (c Cache) String() string {
-	return fmt.Sprintf("Cache{ destination: %s, layer: %s , logger: %s}", c.destination, c.layer, c.logger)
 }
 
 // NewCache creates a new Cache instance.

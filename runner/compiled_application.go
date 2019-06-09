@@ -17,7 +17,6 @@
 package runner
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/buildpack/libbuildpack/application"
@@ -33,11 +32,6 @@ type CompiledApplication struct {
 // Identity makes CompiledApplication satisfy the Identifiable interface.
 func (c CompiledApplication) Identity() (string, string) {
 	return "Compiled Application", ""
-}
-
-// String makes CompiledApplication satisfy the Stringer interface.
-func (c CompiledApplication) String() string {
-	return fmt.Sprintf("CompiledApplication{ JavaVersion: %s }", c.JavaVersion)
 }
 
 func NewCompiledApplication(application application.Application, runner runner.Runner) (CompiledApplication, error) {

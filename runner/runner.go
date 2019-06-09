@@ -17,7 +17,6 @@
 package runner
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -86,12 +85,6 @@ func (r Runner) Contribute() error {
 
 func (r Runner) cachedApplication() string {
 	return filepath.Join(r.layer.Root, "application.zip")
-}
-
-// String makes Runner satisfy the Stringer interface.
-func (r Runner) String() string {
-	return fmt.Sprintf("Runner{ application: %s, args: %s, bin: %s, builtArtifactProvider: %v, layer:%s, logger: %s, runner: %s }",
-		r.application, r.args, r.bin, r.builtArtifactProvider, r.layer, r.logger, r.runner)
 }
 
 // BuildArtifactProvider returns the location of the build artifact.

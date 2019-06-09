@@ -17,8 +17,6 @@
 package buildsystem
 
 import (
-	"fmt"
-
 	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 	"github.com/cloudfoundry/libcfbuildpack/logger"
@@ -51,12 +49,6 @@ func (b BuildSystem) Executable() string {
 	}
 
 	return b.distribution
-}
-
-// String makes BuildSystem satisfy the Stringer interface.
-func (b BuildSystem) String() string {
-	return fmt.Sprintf("BuildSystem{ contributor: %v, distribution: %s, layer:%s, logger: %s, wrapper: %s }",
-		b.contributor, b.distribution, b.layer, b.logger, b.wrapper)
 }
 
 func (b BuildSystem) hasWrapper() bool {
