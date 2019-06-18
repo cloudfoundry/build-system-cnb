@@ -18,6 +18,7 @@ package runner
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/buildpack/libbuildpack/application"
@@ -31,7 +32,7 @@ func NewMavenRunner(build build.Build, buildSystem buildsystem.BuildSystem) Runn
 }
 
 func mavenBuiltArtifactProvider(application application.Application) (string, error) {
-	target := filepath.Join(application.Root, "target")
+	target := filepath.Join(application.Root, os.Getenv("BP_BUILD_SYSTEM_SUBMODULE"), "target")
 
 	candidates, err := filepath.Glob(filepath.Join(target, "*.jar"))
 	if err != nil {
