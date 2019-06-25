@@ -99,7 +99,7 @@ func TestGradle(t *testing.T) {
 			})
 		})
 
-		when("working with JAR file", func() {
+		when("working with WAR file", func() {
 
 			it.Before(func() {
 				test.CopyFile(t, filepath.Join("testdata", "stub-application.war"),
