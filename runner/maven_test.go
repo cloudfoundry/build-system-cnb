@@ -30,7 +30,7 @@ import (
 )
 
 func TestMaven(t *testing.T) {
-	spec.Run(t, "Maven", func(t *testing.T, _ spec.G, it spec.S) {
+	spec.Run(t, "Maven", func(t *testing.T, when spec.G, it spec.S) {
 
 		g := NewGomegaWithT(t)
 
@@ -43,55 +43,82 @@ func TestMaven(t *testing.T) {
 			f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
 			test.TouchFile(t, f.Build.Application.Root, ".mvn")
 			test.TouchFile(t, f.Build.Application.Root, "mvnw")
-			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
-				filepath.Join(f.Build.Application.Root, "target", "stub-application.jar"))
 		})
 
-		it("builds application", func() {
-			f.Runner.Outputs = []string{"test-java-version"}
+		when("working with JAR file", func() {
+			it.Before(func() {
+				test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
+					filepath.Join(f.Build.Application.Root, "target", "stub-application.jar"))
+			})
 
-			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			r := runner.NewMavenRunner(f.Build, b)
+			it("builds application", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
 
-			g.Expect(r.Contribute()).To(Succeed())
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewMavenRunner(f.Build, b)
 
-			g.Expect(f.Runner.Commands[1]).
-				To(Equal(test.Command{
-					Bin:  filepath.Join(f.Build.Application.Root, "mvnw"),
-					Dir:  f.Build.Application.Root,
-					Args: []string{"-Dmaven.test.skip=true", "package"},
-				}))
+				g.Expect(r.Contribute()).To(Succeed())
+
+				g.Expect(f.Runner.Commands[1]).
+					To(Equal(test.Command{
+						Bin:  filepath.Join(f.Build.Application.Root, "mvnw"),
+						Dir:  f.Build.Application.Root,
+						Args: []string{"-Dmaven.test.skip=true", "package"},
+					}))
+			})
+
+			it("removes source code", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewMavenRunner(f.Build, b)
+
+				g.Expect(r.Contribute()).To(Succeed())
+
+				g.Expect(f.Build.Application.Root).To(BeADirectory())
+				g.Expect(f.Build.Application.Root).To(BeADirectory())
+				g.Expect(filepath.Join(f.Build.Application.Root, ".mvn")).NotTo(BeAnExistingFile())
+				g.Expect(filepath.Join(f.Build.Application.Root, "mvnw")).NotTo(BeAnExistingFile())
+				g.Expect(filepath.Join(f.Build.Application.Root, "target")).NotTo(BeAnExistingFile())
+			})
+
+			it("explodes built application", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewMavenRunner(f.Build, b)
+
+				g.Expect(r.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("build-system-application")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
+			})
 		})
 
-		it("removes source code", func() {
-			f.Runner.Outputs = []string{"test-java-version"}
+		when("working with WAR file", func() {
+			it.Before(func() {
+				test.CopyFile(t, filepath.Join("testdata", "stub-application.war"),
+					filepath.Join(f.Build.Application.Root, "target", "stub-application.war"))
+			})
 
-			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			r := runner.NewMavenRunner(f.Build, b)
+			it("explodes built application", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
 
-			g.Expect(r.Contribute()).To(Succeed())
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewMavenRunner(f.Build, b)
 
-			g.Expect(f.Build.Application.Root).To(BeADirectory())
-			g.Expect(f.Build.Application.Root).To(BeADirectory())
-			g.Expect(filepath.Join(f.Build.Application.Root, ".mvn")).NotTo(BeAnExistingFile())
-			g.Expect(filepath.Join(f.Build.Application.Root, "mvnw")).NotTo(BeAnExistingFile())
-			g.Expect(filepath.Join(f.Build.Application.Root, "target")).NotTo(BeAnExistingFile())
+				g.Expect(r.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("build-system-application")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
+			})
 		})
 
-		it("explodes built application", func() {
-			f.Runner.Outputs = []string{"test-java-version"}
-
-			b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			r := runner.NewMavenRunner(f.Build, b)
-
-			g.Expect(r.Contribute()).To(Succeed())
-
-			layer := f.Build.Layers.Layer("build-system-application")
-			g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
-			g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
-		})
 	}, spec.Report(report.Terminal{}))
 }

@@ -34,7 +34,7 @@ func NewGradleRunner(build build.Build, buildSystem buildsystem.BuildSystem) Run
 func gradleBuiltArtifactProvider(application application.Application) (string, error) {
 	target, ok := os.LookupEnv("BP_BUILT_ARTIFACT")
 	if !ok {
-		target = filepath.Join("build", "libs", "*.jar")
+		target = filepath.Join("build", "libs", "*.[jw]ar")
 	}
 
 	candidates, err := filepath.Glob(filepath.Join(application.Root, target))

@@ -34,7 +34,7 @@ func NewMavenRunner(build build.Build, buildSystem buildsystem.BuildSystem) Runn
 func mavenBuiltArtifactProvider(application application.Application) (string, error) {
 	target, ok := os.LookupEnv("BP_BUILT_ARTIFACT")
 	if !ok {
-		target = filepath.Join("target", "*.jar")
+		target = filepath.Join("target", "*.[jw]ar")
 	}
 
 	candidates, err := filepath.Glob(filepath.Join(application.Root, target))

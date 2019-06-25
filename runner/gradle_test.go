@@ -30,7 +30,7 @@ import (
 )
 
 func TestGradle(t *testing.T) {
-	spec.Run(t, "Gradle", func(t *testing.T, _ spec.G, it spec.S) {
+	spec.Run(t, "Gradle", func(t *testing.T, when spec.G, it spec.S) {
 
 		g := NewGomegaWithT(t)
 
@@ -43,54 +43,82 @@ func TestGradle(t *testing.T) {
 			f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
 			test.TouchFile(t, f.Build.Application.Root, ".gradle")
 			test.TouchFile(t, f.Build.Application.Root, "gradlew")
-			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
-				filepath.Join(f.Build.Application.Root, "build", "libs", "stub-application.jar"))
 		})
 
-		it("builds application", func() {
-			f.Runner.Outputs = []string{"test-java-version"}
+		when("working with JAR file", func() {
 
-			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			r := runner.NewGradleRunner(f.Build, b)
+			it.Before(func() {
+				test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
+					filepath.Join(f.Build.Application.Root, "build", "libs", "stub-application.jar"))
+			})
 
-			g.Expect(r.Contribute()).To(Succeed())
+			it("builds application", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
 
-			g.Expect(f.Runner.Commands[1]).
-				To(Equal(test.Command{
-					Bin:  filepath.Join(f.Build.Application.Root, "gradlew"),
-					Dir:  f.Build.Application.Root,
-					Args: []string{"-x", "test", "build"},
-				}))
+				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewGradleRunner(f.Build, b)
+
+				g.Expect(r.Contribute()).To(Succeed())
+
+				g.Expect(f.Runner.Commands[1]).
+					To(Equal(test.Command{
+						Bin:  filepath.Join(f.Build.Application.Root, "gradlew"),
+						Dir:  f.Build.Application.Root,
+						Args: []string{"-x", "test", "build"},
+					}))
+			})
+
+			it("removes source code", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewGradleRunner(f.Build, b)
+
+				g.Expect(r.Contribute()).To(Succeed())
+
+				g.Expect(f.Build.Application.Root).To(BeADirectory())
+				g.Expect(filepath.Join(f.Build.Application.Root, ".gradle")).NotTo(BeAnExistingFile())
+				g.Expect(filepath.Join(f.Build.Application.Root, "gradlew")).NotTo(BeAnExistingFile())
+				g.Expect(filepath.Join(f.Build.Application.Root, "build")).NotTo(BeAnExistingFile())
+			})
+
+			it("explodes built application", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewGradleRunner(f.Build, b)
+
+				g.Expect(r.Contribute()).To(Succeed())
+
+				layer := f.Build.Layers.Layer("build-system-application")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
+			})
 		})
 
-		it("removes source code", func() {
-			f.Runner.Outputs = []string{"test-java-version"}
+		when("working with JAR file", func() {
 
-			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			r := runner.NewGradleRunner(f.Build, b)
+			it.Before(func() {
+				test.CopyFile(t, filepath.Join("testdata", "stub-application.war"),
+					filepath.Join(f.Build.Application.Root, "build", "libs", "stub-application.war"))
+			})
 
-			g.Expect(r.Contribute()).To(Succeed())
+			it("explodes built application", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
 
-			g.Expect(f.Build.Application.Root).To(BeADirectory())
-			g.Expect(filepath.Join(f.Build.Application.Root, ".gradle")).NotTo(BeAnExistingFile())
-			g.Expect(filepath.Join(f.Build.Application.Root, "gradlew")).NotTo(BeAnExistingFile())
-			g.Expect(filepath.Join(f.Build.Application.Root, "build")).NotTo(BeAnExistingFile())
-		})
+				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
+				g.Expect(err).NotTo(HaveOccurred())
+				r := runner.NewGradleRunner(f.Build, b)
 
-		it("explodes built application", func() {
-			f.Runner.Outputs = []string{"test-java-version"}
+				g.Expect(r.Contribute()).To(Succeed())
 
-			b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
-			g.Expect(err).NotTo(HaveOccurred())
-			r := runner.NewGradleRunner(f.Build, b)
-
-			g.Expect(r.Contribute()).To(Succeed())
-
-			layer := f.Build.Layers.Layer("build-system-application")
-			g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
-			g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
+				layer := f.Build.Layers.Layer("build-system-application")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(BeARegularFile())
+			})
 		})
 	}, spec.Report(report.Terminal{}))
 }
