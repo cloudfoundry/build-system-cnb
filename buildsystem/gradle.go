@@ -87,6 +87,6 @@ func NewGradleBuildSystem(build build.Build) (BuildSystem, bool, error) {
 }
 
 func contributeGradleDistribution(artifact string, layer layers.DependencyLayer) error {
-	layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
+	layer.Logger.Body("Expanding to %s", layer.Root)
 	return helper.ExtractZip(artifact, layer.Root, 1)
 }

@@ -43,7 +43,7 @@ func main() {
 }
 
 func b(build build.Build) (int, error) {
-	build.Logger.FirstLine(build.Logger.PrettyIdentity(build.Buildpack))
+	build.Logger.Title(build.Buildpack)
 
 	if b, ok, err := buildsystem.NewGradleBuildSystem(build); err != nil {
 		return build.Failure(102), err

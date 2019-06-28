@@ -82,6 +82,6 @@ func NewMavenBuildSystem(build build.Build) (BuildSystem, bool, error) {
 }
 
 func contributeMavenDistribution(artifact string, layer layers.DependencyLayer) error {
-	layer.Logger.SubsequentLine("Expanding to %s", layer.Root)
+	layer.Logger.Body("Expanding to %s", layer.Root)
 	return helper.ExtractTarGz(artifact, layer.Root, 1)
 }

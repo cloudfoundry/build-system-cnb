@@ -34,7 +34,7 @@ type BuildSystem struct {
 // Contribute makes the contribution to the cache layer.
 func (b BuildSystem) Contribute() error {
 	if b.hasWrapper() {
-		b.logger.FirstLine("Using wrapper")
+		b.logger.Body("Using wrapper")
 		return nil
 	}
 

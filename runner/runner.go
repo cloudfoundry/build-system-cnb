@@ -68,7 +68,7 @@ func (r Runner) Contribute() error {
 		return err
 	}
 
-	r.logger.SubsequentLine("Removing source code")
+	r.logger.Header("Removing source code")
 	if cs, err := ioutil.ReadDir(r.application.Root); err != nil {
 		return err
 	} else {

@@ -45,7 +45,7 @@ func (c Cache) Contribute() error {
 		return nil
 	}
 
-	c.logger.SubsequentLine("Linking Cache to %s", c.destination)
+	c.logger.Body("Linking Cache to %s", c.destination)
 
 	c.layer.Touch()
 
