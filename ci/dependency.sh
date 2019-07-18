@@ -17,7 +17,7 @@ git config --local user.email ${GIT_USER_EMAIL}
 
 go build -ldflags='-s -w' -o bin/dependency github.com/cloudfoundry/libcfbuildpack/dependency
 
-bin/dependency gradle "[\d]+\.[\d]+(\.[\d]+)?" $(cat ../gradle/version) $(cat ../gradle/uri)  $(cat ../gradle/sha256)
+bin/dependency gradle "[\d]+\.[\d]+(?:\.[\d]+)?" $(cat ../gradle/version) $(cat ../gradle/uri)  $(cat ../gradle/sha256)
 commit gradle $(cat ../gradle/version)
 
 bin/dependency maven "[\d]+\.[\d]+\.[\d]+" $(cat ../maven/version) $(cat ../maven/uri)  $(cat ../maven/sha256)
