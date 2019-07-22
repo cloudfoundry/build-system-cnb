@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/buildpack/libbuildpack/application"
 	"github.com/cloudfoundry/libcfbuildpack/build"
@@ -53,6 +54,7 @@ func (r Runner) Contribute() error {
 			return err
 		}
 
+		layer.Logger.Body("Executing %s %s", r.bin, strings.Join(r.args, " "))
 		if err := r.runner.Run(r.bin, r.application.Root, r.args...); err != nil {
 			return err
 		}
