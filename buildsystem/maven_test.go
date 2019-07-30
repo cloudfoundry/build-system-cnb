@@ -25,7 +25,7 @@ import (
 	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/openjdk-cnb/jdk"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -33,7 +33,7 @@ import (
 func TestMaven(t *testing.T) {
 	spec.Run(t, "Maven", func(t *testing.T, when spec.G, it spec.S) {
 
-		g := NewGomegaWithT(t)
+		g := gomega.NewWithT(t)
 
 		var f *test.BuildFactory
 
@@ -42,7 +42,7 @@ func TestMaven(t *testing.T) {
 		})
 
 		it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
-			g.Expect(buildsystem.MavenBuildPlanContribution(f.Build.BuildPlan)).To(Equal(buildplan.BuildPlan{
+			g.Expect(buildsystem.MavenBuildPlanContribution(f.Build.BuildPlan)).To(gomega.Equal(buildplan.BuildPlan{
 				buildsystem.MavenDependency: buildplan.Dependency{},
 				jvmapplication.Dependency:   buildplan.Dependency{},
 				jdk.Dependency:              buildplan.Dependency{},
@@ -56,13 +56,13 @@ func TestMaven(t *testing.T) {
 				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-				g.Expect(err).NotTo(HaveOccurred())
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
-				g.Expect(b.Contribute()).To(Succeed())
+				g.Expect(b.Contribute()).To(gomega.Succeed())
 
 				layer := f.Build.Layers.Layer("maven")
 				g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
-				g.Expect(filepath.Join(layer.Root, "fixture-marker")).To(BeARegularFile())
+				g.Expect(filepath.Join(layer.Root, "fixture-marker")).To(gomega.BeARegularFile())
 			})
 
 			it("does not contribute maven if mvnw does exist", func() {
@@ -72,25 +72,25 @@ func TestMaven(t *testing.T) {
 				test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
-				g.Expect(err).NotTo(HaveOccurred())
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
-				g.Expect(b.Contribute()).To(Succeed())
+				g.Expect(b.Contribute()).To(gomega.Succeed())
 
 				layer := f.Build.Layers.Layer("maven")
-				g.Expect(filepath.Join(layer.Root, "fixture-marker")).NotTo(BeAnExistingFile())
+				g.Expect(filepath.Join(layer.Root, "fixture-marker")).NotTo(gomega.BeAnExistingFile())
 			})
 		})
 
 		when("IsMaven", func() {
 
 			it("returns false if pom.xml does not exist", func() {
-				g.Expect(buildsystem.IsMaven(f.Build.Application)).To(BeFalse())
+				g.Expect(buildsystem.IsMaven(f.Build.Application)).To(gomega.BeFalse())
 			})
 
 			it("returns true if pom.xml does exist", func() {
 				test.TouchFile(t, f.Build.Application.Root, "pom.xml")
 
-				g.Expect(buildsystem.IsMaven(f.Build.Application)).To(BeTrue())
+				g.Expect(buildsystem.IsMaven(f.Build.Application)).To(gomega.BeTrue())
 			})
 		})
 
@@ -101,14 +101,14 @@ func TestMaven(t *testing.T) {
 				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
 
 				_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
-				g.Expect(ok).To(BeTrue())
-				g.Expect(err).NotTo(HaveOccurred())
+				g.Expect(ok).To(gomega.BeTrue())
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 			})
 
 			it("returns false if build plan does not exist", func() {
 				_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
-				g.Expect(ok).To(BeFalse())
-				g.Expect(err).NotTo(HaveOccurred())
+				g.Expect(ok).To(gomega.BeFalse())
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 			})
 		})
 	}, spec.Report(report.Terminal{}))

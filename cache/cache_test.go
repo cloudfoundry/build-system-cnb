@@ -22,7 +22,7 @@ import (
 
 	"github.com/cloudfoundry/build-system-cnb/cache"
 	"github.com/cloudfoundry/libcfbuildpack/test"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -30,7 +30,7 @@ import (
 func TestCache(t *testing.T) {
 	spec.Run(t, "Cache", func(t *testing.T, _ spec.G, it spec.S) {
 
-		g := NewGomegaWithT(t)
+		g := gomega.NewWithT(t)
 
 		it("contributes destination if it does not exist", func() {
 			f := test.NewBuildFactory(t)
@@ -38,9 +38,9 @@ func TestCache(t *testing.T) {
 			destination := filepath.Join(f.Home, "target")
 
 			c, err := cache.NewCache(f.Build, destination)
-			g.Expect(err).NotTo(HaveOccurred())
+			g.Expect(err).NotTo(gomega.HaveOccurred())
 
-			g.Expect(c.Contribute()).To(Succeed())
+			g.Expect(c.Contribute()).To(gomega.Succeed())
 
 			layer := f.Build.Layers.Layer("build-system-cache")
 			g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
