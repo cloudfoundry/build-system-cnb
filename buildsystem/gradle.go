@@ -31,12 +31,17 @@ import (
 // GradleDependency is the key identifying the Gradle build system in the buildpack plan.
 const GradleDependency = "gradle"
 
-// GradleBuildPlanContribution returns the BuildPlan with requirements for Gradle.
-func GradleBuildPlanContribution(buildPlan buildplan.BuildPlan) buildplan.BuildPlan {
-	return buildplan.BuildPlan{
-		GradleDependency:          buildPlan[GradleDependency],
-		jvmapplication.Dependency: buildPlan[jvmapplication.Dependency],
-		jdk.Dependency:            buildPlan[jdk.Dependency],
+// GradlePlan returns the Plan with requirements for Gradle.
+func GradlePlan() buildplan.Plan {
+	return buildplan.Plan{
+		Provides: []buildplan.Provided{
+			{Name: GradleDependency},
+			{Name: jvmapplication.Dependency},
+		},
+		Requires: []buildplan.Required{
+			{Name: GradleDependency},
+			{Name: jdk.Dependency},
+		},
 	}
 }
 
@@ -58,8 +63,10 @@ func IsGradle(application application.Application) bool {
 // NewGradleBuildSystem creates a new Gradle BuildSystem instance. OK is true if build plan contains "gradle"
 // dependency, otherwise false.
 func NewGradleBuildSystem(build build.Build) (BuildSystem, bool, error) {
-	bp, ok := build.BuildPlan[GradleDependency]
-	if !ok {
+	p, ok, err := build.Plans.GetShallowMerged(GradleDependency)
+	if err != nil {
+		return BuildSystem{}, false, err
+	} else if !ok {
 		return BuildSystem{}, false, nil
 	}
 
@@ -68,7 +75,7 @@ func NewGradleBuildSystem(build build.Build) (BuildSystem, bool, error) {
 		return BuildSystem{}, false, err
 	}
 
-	dep, err := deps.Best(GradleDependency, bp.Version, build.Stack)
+	dep, err := deps.Best(GradleDependency, p.Version, build.Stack)
 	if err != nil {
 		return BuildSystem{}, false, err
 	}

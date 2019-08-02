@@ -23,6 +23,7 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
+	"github.com/cloudfoundry/libcfbuildpack/buildpackplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/openjdk-cnb/jdk"
 	"github.com/onsi/gomega"
@@ -42,10 +43,15 @@ func TestMaven(t *testing.T) {
 		})
 
 		it("contains maven, jvm-application, and openjdk-jdk in build plan", func() {
-			g.Expect(buildsystem.MavenBuildPlanContribution(f.Build.BuildPlan)).To(gomega.Equal(buildplan.BuildPlan{
-				buildsystem.MavenDependency: buildplan.Dependency{},
-				jvmapplication.Dependency:   buildplan.Dependency{},
-				jdk.Dependency:              buildplan.Dependency{},
+			g.Expect(buildsystem.MavenPlan()).To(gomega.Equal(buildplan.Plan{
+				Provides: []buildplan.Provided{
+					{Name: buildsystem.MavenDependency},
+					{Name: jvmapplication.Dependency},
+				},
+				Requires: []buildplan.Required{
+					{Name: buildsystem.MavenDependency},
+					{Name: jdk.Dependency},
+				},
 			}))
 		})
 
@@ -53,7 +59,7 @@ func TestMaven(t *testing.T) {
 
 			it("contributes maven if mvnw does not exist", func() {
 				f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
-				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+				f.AddPlan(buildpackplan.Plan{Name: buildsystem.MavenDependency})
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
@@ -67,7 +73,7 @@ func TestMaven(t *testing.T) {
 
 			it("does not contribute maven if mvnw does exist", func() {
 				f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
-				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+				f.AddPlan(buildpackplan.Plan{Name: buildsystem.MavenDependency})
 
 				test.TouchFile(t, f.Build.Application.Root, "mvnw")
 
@@ -98,7 +104,7 @@ func TestMaven(t *testing.T) {
 
 			it("returns true if build plan exists", func() {
 				f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
-				f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+				f.AddPlan(buildpackplan.Plan{Name: buildsystem.MavenDependency})
 
 				_, ok, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(ok).To(gomega.BeTrue())

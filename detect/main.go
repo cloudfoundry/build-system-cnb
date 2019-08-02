@@ -42,12 +42,12 @@ func main() {
 func d(detect detect.Detect) (int, error) {
 	if buildsystem.IsGradle(detect.Application) {
 		detect.Logger.Debug("Gradle application")
-		return detect.Pass(buildsystem.GradleBuildPlanContribution(detect.BuildPlan))
+		return detect.Pass(buildsystem.GradlePlan())
 	}
 
 	if buildsystem.IsMaven(detect.Application) {
 		detect.Logger.Debug("Maven application")
-		return detect.Pass(buildsystem.MavenBuildPlanContribution(detect.BuildPlan))
+		return detect.Pass(buildsystem.MavenPlan())
 	}
 
 	return detect.Fail(), nil

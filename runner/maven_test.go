@@ -20,9 +20,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/build-system-cnb/runner"
+	"github.com/cloudfoundry/libcfbuildpack/buildpackplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
@@ -40,7 +40,7 @@ func TestMaven(t *testing.T) {
 			f = test.NewBuildFactory(t)
 
 			f.AddDependency(buildsystem.MavenDependency, filepath.Join("testdata", "stub-maven.tar.gz"))
-			f.AddBuildPlan(buildsystem.MavenDependency, buildplan.Dependency{})
+			f.AddPlan(buildpackplan.Plan{Name: buildsystem.MavenDependency})
 			test.TouchFile(t, f.Build.Application.Root, ".mvn")
 			test.TouchFile(t, f.Build.Application.Root, "mvnw")
 		})

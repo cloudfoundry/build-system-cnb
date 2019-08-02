@@ -23,6 +23,7 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
+	"github.com/cloudfoundry/libcfbuildpack/buildpackplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/cloudfoundry/openjdk-cnb/jdk"
 	"github.com/onsi/gomega"
@@ -42,10 +43,15 @@ func TestGradle(t *testing.T) {
 		})
 
 		it("contains gradle, jvm-application, and openjdk-jdk in build plan", func() {
-			g.Expect(buildsystem.GradleBuildPlanContribution(f.Build.BuildPlan)).To(gomega.Equal(buildplan.BuildPlan{
-				buildsystem.GradleDependency: buildplan.Dependency{},
-				jvmapplication.Dependency:    buildplan.Dependency{},
-				jdk.Dependency:               buildplan.Dependency{},
+			g.Expect(buildsystem.GradlePlan()).To(gomega.Equal(buildplan.Plan{
+				Provides: []buildplan.Provided{
+					{Name: buildsystem.GradleDependency},
+					{Name: jvmapplication.Dependency},
+				},
+				Requires: []buildplan.Required{
+					{Name: buildsystem.GradleDependency},
+					{Name: jdk.Dependency},
+				},
 			}))
 		})
 
@@ -53,7 +59,7 @@ func TestGradle(t *testing.T) {
 
 			it("contributes gradle if gradlew does not exist", func() {
 				f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
-				f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
+				f.AddPlan(buildpackplan.Plan{Name: buildsystem.GradleDependency})
 
 				b, _, err := buildsystem.NewGradleBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
@@ -67,7 +73,7 @@ func TestGradle(t *testing.T) {
 
 			it("does not contribute gradle if gradlew does exist", func() {
 				f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
-				f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
+				f.AddPlan(buildpackplan.Plan{Name: buildsystem.GradleDependency})
 
 				test.TouchFile(t, f.Build.Application.Root, "gradlew")
 
@@ -104,7 +110,7 @@ func TestGradle(t *testing.T) {
 
 			it("returns true if build plan exists", func() {
 				f.AddDependency(buildsystem.GradleDependency, filepath.Join("testdata", "stub-gradle.zip"))
-				f.AddBuildPlan(buildsystem.GradleDependency, buildplan.Dependency{})
+				f.AddPlan(buildpackplan.Plan{Name: buildsystem.GradleDependency})
 
 				_, ok, err := buildsystem.NewGradleBuildSystem(f.Build)
 				g.Expect(ok).To(gomega.BeTrue())
