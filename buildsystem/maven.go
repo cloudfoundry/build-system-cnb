@@ -31,12 +31,17 @@ import (
 // MavenDependency is the key identifying the Maven build system in the buildpack plan.
 const MavenDependency = "maven"
 
-// MavenBuildPlanContribution returns the BuildPlan with requirements for Maven.
-func MavenBuildPlanContribution(buildPlan buildplan.BuildPlan) buildplan.BuildPlan {
-	return buildplan.BuildPlan{
-		MavenDependency:           buildPlan[MavenDependency],
-		jvmapplication.Dependency: buildPlan[jvmapplication.Dependency],
-		jdk.Dependency:            buildPlan[jdk.Dependency],
+// MavenPlan returns the Plan with requirements for Maven.
+func MavenPlan() buildplan.Plan {
+	return buildplan.Plan{
+		Provides: []buildplan.Provided{
+			{Name: MavenDependency},
+			{Name: jvmapplication.Dependency},
+		},
+		Requires: []buildplan.Required{
+			{Name: MavenDependency},
+			{Name: jdk.Dependency},
+		},
 	}
 }
 
@@ -53,8 +58,10 @@ func IsMaven(application application.Application) bool {
 // NewMavenBuildSystem creates a new Maven BuildSystem instance. OK is true if build plan contains "maven" dependency,
 // otherwise false.
 func NewMavenBuildSystem(build build.Build) (BuildSystem, bool, error) {
-	bp, ok := build.BuildPlan[MavenDependency]
-	if !ok {
+	p, ok, err := build.Plans.GetShallowMerged(MavenDependency)
+	if err != nil {
+		return BuildSystem{}, false, err
+	} else if !ok {
 		return BuildSystem{}, false, nil
 	}
 
@@ -63,7 +70,7 @@ func NewMavenBuildSystem(build build.Build) (BuildSystem, bool, error) {
 		return BuildSystem{}, false, err
 	}
 
-	dep, err := deps.Best(MavenDependency, bp.Version, build.Stack)
+	dep, err := deps.Best(MavenDependency, p.Version, build.Stack)
 	if err != nil {
 		return BuildSystem{}, false, err
 	}
