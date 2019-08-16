@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+api = "0.2"
+
 [buildpack]
-id = "org.cloudfoundry.buildsystem"
-name = "Cloud Foundry Build System Buildpack"
+id      = "org.cloudfoundry.buildsystem"
+name    = "Cloud Foundry Build System Buildpack"
 version = "1.0.0-BUILD-SNAPSHOT"
 
 [[stacks]]
@@ -48,7 +50,7 @@ stacks  = [ "io.buildpacks.stacks.bionic", "org.cloudfoundry.stacks.cflinuxfs3" 
   uri  = "https://www.apache.org/licenses/"
 
 [metadata]
-pre_package = "ci/build.sh"
+pre_package   = "ci/build.sh"
 include_files = [
   "LICENSE",
   "NOTICE",
