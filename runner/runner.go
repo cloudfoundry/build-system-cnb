@@ -59,7 +59,7 @@ func (r Runner) Contribute() error {
 			return err
 		}
 
-		artifact, err := r.builtArtifactProvider(r.application)
+		artifact, err := r.builtArtifactProvider.Get(r.application)
 		if err != nil {
 			return err
 		}
@@ -88,9 +88,6 @@ func (r Runner) Contribute() error {
 func (r Runner) cachedApplication() string {
 	return filepath.Join(r.layer.Root, "application.zip")
 }
-
-// BuildArtifactProvider returns the location of the build artifact.
-type BuiltArtifactProvider func(application application.Application) (string, error)
 
 func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, bin string, args ...string) Runner {
 	return Runner{

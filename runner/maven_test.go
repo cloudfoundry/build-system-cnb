@@ -46,6 +46,7 @@ func TestMaven(t *testing.T) {
 		})
 
 		when("working with JAR file", func() {
+
 			it.Before(func() {
 				test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
 					filepath.Join(f.Build.Application.Root, "target", "stub-application.jar"))
@@ -78,7 +79,6 @@ func TestMaven(t *testing.T) {
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
 				g.Expect(f.Build.Application.Root).To(gomega.BeADirectory())
-				g.Expect(f.Build.Application.Root).To(gomega.BeADirectory())
 				g.Expect(filepath.Join(f.Build.Application.Root, ".mvn")).NotTo(gomega.BeAnExistingFile())
 				g.Expect(filepath.Join(f.Build.Application.Root, "mvnw")).NotTo(gomega.BeAnExistingFile())
 				g.Expect(filepath.Join(f.Build.Application.Root, "target")).NotTo(gomega.BeAnExistingFile())
@@ -100,6 +100,7 @@ func TestMaven(t *testing.T) {
 		})
 
 		when("working with WAR file", func() {
+
 			it.Before(func() {
 				test.CopyFile(t, filepath.Join("testdata", "stub-application.war"),
 					filepath.Join(f.Build.Application.Root, "target", "stub-application.war"))
@@ -120,5 +121,27 @@ func TestMaven(t *testing.T) {
 			})
 		})
 
+		when("working with modules", func() {
+
+			it.Before(func() {
+				test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
+					filepath.Join(f.Build.Application.Root, "test-module", "target", "stub-application.jar"))
+			})
+
+			it("explodes built application", func() {
+				defer test.ReplaceEnv(t, "BP_BUILT_MODULE", "test-module")()
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
+				r := runner.NewMavenRunner(f.Build, b)
+
+				g.Expect(r.Contribute()).To(gomega.Succeed())
+
+				layer := f.Build.Layers.Layer("build-system-application")
+				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(gomega.BeARegularFile())
+			})
+		})
 	}, spec.Report(report.Terminal{}))
 }
