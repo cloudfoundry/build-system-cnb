@@ -57,7 +57,8 @@ func TestMaven(t *testing.T) {
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
-				r := runner.NewMavenRunner(f.Build, b)
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
@@ -69,12 +70,32 @@ func TestMaven(t *testing.T) {
 					}))
 			})
 
+			it("builds application with custom command", func() {
+				defer test.ReplaceEnv(t, "BP_BUILD_ARGUMENTS", "test configured arguments")()
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
+
+				g.Expect(r.Contribute()).To(gomega.Succeed())
+
+				g.Expect(f.Runner.Commands[1]).
+					To(gomega.Equal(test.Command{
+						Bin:  filepath.Join(f.Build.Application.Root, "mvnw"),
+						Dir:  f.Build.Application.Root,
+						Args: []string{"test", "configured", "arguments"},
+					}))
+			})
+
 			it("removes source code", func() {
 				f.Runner.Outputs = []string{"test-java-version"}
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
-				r := runner.NewMavenRunner(f.Build, b)
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
@@ -89,7 +110,8 @@ func TestMaven(t *testing.T) {
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
-				r := runner.NewMavenRunner(f.Build, b)
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
@@ -111,7 +133,8 @@ func TestMaven(t *testing.T) {
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
-				r := runner.NewMavenRunner(f.Build, b)
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
@@ -134,7 +157,8 @@ func TestMaven(t *testing.T) {
 
 				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
 				g.Expect(err).NotTo(gomega.HaveOccurred())
-				r := runner.NewMavenRunner(f.Build, b)
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
 
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 

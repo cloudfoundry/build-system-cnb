@@ -32,13 +32,13 @@ import (
 
 // Runner represents the behavior of running the build system command to build an application.
 type Runner struct {
-	application           application.Application
-	args                  []string
-	bin                   string
-	builtArtifactProvider BuiltArtifactProvider
-	layer                 layers.Layer
-	logger                logger.Logger
-	runner                runner.Runner
+	application            application.Application
+	bin                    string
+	buildArgumentsProvider BuildArgumentsProvider
+	builtArtifactProvider  BuiltArtifactProvider
+	layer                  layers.Layer
+	logger                 logger.Logger
+	runner                 runner.Runner
 }
 
 // Contributes builds the application from source code, removes the source code, and expands the built artifact to
@@ -54,8 +54,8 @@ func (r Runner) Contribute() error {
 			return err
 		}
 
-		layer.Logger.Body("Executing %s %s", r.bin, strings.Join(r.args, " "))
-		if err := r.runner.Run(r.bin, r.application.Root, r.args...); err != nil {
+		layer.Logger.Body("Executing %s %s", r.bin, strings.Join(r.buildArgumentsProvider.Arguments, " "))
+		if err := r.runner.Run(r.bin, r.application.Root, r.buildArgumentsProvider.Arguments...); err != nil {
 			return err
 		}
 
@@ -89,11 +89,11 @@ func (r Runner) cachedApplication() string {
 	return filepath.Join(r.layer.Root, "application.zip")
 }
 
-func NewRunner(build build.Build, builtArtifactProvider BuiltArtifactProvider, bin string, args ...string) Runner {
+func NewRunner(build build.Build, bin string, buildArgumentsProvider BuildArgumentsProvider, builtArtifactProvider BuiltArtifactProvider) Runner {
 	return Runner{
 		build.Application,
-		args,
 		bin,
+		buildArgumentsProvider,
 		builtArtifactProvider,
 		build.Layers.Layer("build-system-application"),
 		build.Logger,
