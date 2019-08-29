@@ -17,34 +17,12 @@
 package runner
 
 import (
-	"fmt"
-	"os"
-	"path/filepath"
-
-	"github.com/buildpack/libbuildpack/application"
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 )
 
 // NewRunner creates a new Maven Runner instance.
 func NewMavenRunner(build build.Build, buildSystem buildsystem.BuildSystem) Runner {
-	return NewRunner(build, mavenBuiltArtifactProvider, buildSystem.Executable(), "-Dmaven.test.skip=true", "package")
-}
-
-func mavenBuiltArtifactProvider(application application.Application) (string, error) {
-	target, ok := os.LookupEnv("BP_BUILT_ARTIFACT")
-	if !ok {
-		target = filepath.Join("target", "*.[jw]ar")
-	}
-
-	candidates, err := filepath.Glob(filepath.Join(application.Root, target))
-	if err != nil {
-		return "", err
-	}
-
-	if len(candidates) != 1 {
-		return "", fmt.Errorf("unable to determine built artifact in %s, candidates: %s", target, candidates)
-	}
-
-	return candidates[0], nil
+	builtArtifactProvider := NewBuiltArtifactProvider("target", "*.[jw]ar")
+	return NewRunner(build, builtArtifactProvider, buildSystem.Executable(), "-Dmaven.test.skip=true", "package")
 }

@@ -27,7 +27,8 @@ If the build plan contains
     * Contributes Gradle distribution to a layer marked `cache` with all commands on `$PATH`
     * Contributes a layer marked `build`, `cache`, and `launch` by running `<GRADLE_ROOT>/bin/gradle -x test build`
   * Replaces`<APPLICATION_ROOT>` with a link to compiled application layer
-  * If `$BP_BUILT_ARTIFACT` exists, uses the specified path (including glob patterns) as the built artifact
+  * If `$BP_BUILT_MODULE` exists, prepends a directory to the default glob pattern when searching for the built artifact
+  * If `$BP_BUILT_ARTIFACT` exists, uses the specified path (including glob patterns) as the built artifact.  Supersedes `$BP_BUILT_MODULE`.
 
 * `maven`
   * Contributes a layer marked `cache` and links it to `$HOME/.m2`
@@ -37,7 +38,8 @@ If the build plan contains
     * Contributes Maven distribution to a layer marked `cache` with all commands on `$PATH`
     * Contributes a layer marked `build`, `cache`, and `launch` by running `<MAVEN_ROOT>/bin/mvn -Dmaven.test.skip=true package`
   * Replaces`<APPLICATION_ROOT>` with a link to compiled application layer
-  * If `$BP_BUILT_ARTIFACT` exists, uses the specified path (including glob patterns) as the built artifact
+  * If `$BP_BUILT_MODULE` exists, prepends a directory to the default glob pattern when searching for the built artifact
+  * If `$BP_BUILT_ARTIFACT` exists, uses the specified path (including glob patterns) as the built artifact.  Supersedes `$BP_BUILT_MODULE`.
 
 ## License
 This buildpack is released under version 2.0 of the [Apache License][a].
