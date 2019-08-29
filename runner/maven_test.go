@@ -48,8 +48,8 @@ func TestMaven(t *testing.T) {
 		when("working with JAR file", func() {
 
 			it.Before(func() {
-				test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
-					filepath.Join(f.Build.Application.Root, "target", "stub-application.jar"))
+				test.CopyFile(t, filepath.Join("testdata", "stub-executable.jar"),
+					filepath.Join(f.Build.Application.Root, "target", "stub-executable.jar"))
 			})
 
 			it("builds application", func() {
@@ -124,8 +124,8 @@ func TestMaven(t *testing.T) {
 		when("working with modules", func() {
 
 			it.Before(func() {
-				test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
-					filepath.Join(f.Build.Application.Root, "test-module", "target", "stub-application.jar"))
+				test.CopyFile(t, filepath.Join("testdata", "stub-executable.jar"),
+					filepath.Join(f.Build.Application.Root, "test-module", "target", "stub-executable.jar"))
 			})
 
 			it("explodes built application", func() {

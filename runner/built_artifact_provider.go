@@ -17,11 +17,15 @@
 package runner
 
 import (
+	"archive/zip"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 
 	"github.com/buildpack/libbuildpack/application"
+	"github.com/magiconair/properties"
 )
 
 // BuiltArtifactProvider returns the artifact built as part of running a build system.
@@ -36,11 +40,70 @@ func (b BuiltArtifactProvider) Get(application application.Application) (string,
 		return "", err
 	}
 
-	if len(candidates) != 1 {
-		return "", fmt.Errorf("unable to find built artifact in %s, candidates: %s", b.target, candidates)
+	var artifacts []string
+
+	for _, c := range candidates {
+		if i, err := b.isInterestingFile(c); err != nil {
+			return "", err
+		} else if i {
+			artifacts = append(artifacts, c)
+		}
 	}
 
-	return candidates[0], nil
+	if len(artifacts) != 1 {
+		sort.Strings(candidates)
+		return "", fmt.Errorf("unable to find built artifact (executable JAR or WAR) in %s, candidates: %s", b.target, candidates)
+	}
+
+	return artifacts[0], nil
+}
+
+func (BuiltArtifactProvider) isInterestingEntry(f *zip.File) (bool, error) {
+	if f.Name == "WEB-INF/" && f.FileInfo().IsDir() {
+		return true, nil
+	}
+
+	if f.Name == "META-INF/MANIFEST.MF" {
+		m, err := f.Open()
+		if err != nil {
+			return false, err
+		}
+		defer m.Close()
+
+		b, err := ioutil.ReadAll(m)
+		if err != nil {
+			return false, err
+		}
+
+		p, err := properties.Load(b, properties.UTF8)
+		if err != nil {
+			return false, nil
+		}
+
+		if _, ok := p.Get("Main-Class"); ok {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+func (b BuiltArtifactProvider) isInterestingFile(f string) (bool, error) {
+	z, err := zip.OpenReader(f)
+	if err != nil {
+		return false, err
+	}
+	defer z.Close()
+
+	for _, f := range z.File {
+		if i, err := b.isInterestingEntry(f); err != nil {
+			return false, err
+		} else if i {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 // NewBuiltArtifactProvider creates a new instance using the default target if not otherwise configured.
