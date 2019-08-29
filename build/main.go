@@ -59,8 +59,12 @@ func b(build build.Build) (int, error) {
 			}
 		}
 
-		if err = runner.NewGradleRunner(build, b).Contribute(); err != nil {
-			return build.Failure(103), err
+		if runner, err := runner.NewGradleRunner(build, b); err != nil {
+			return build.Failure(102), err
+		} else {
+			if err = runner.Contribute(); err != nil {
+				return build.Failure(103), err
+			}
 		}
 	}
 
@@ -72,15 +76,19 @@ func b(build build.Build) (int, error) {
 		}
 
 		if cache, err := cache.NewMavenCache(build); err != nil {
-			return build.Failure(101), err
+			return build.Failure(102), err
 		} else {
 			if err = cache.Contribute(); err != nil {
 				return build.Failure(103), err
 			}
 		}
 
-		if err = runner.NewMavenRunner(build, buildSystem).Contribute(); err != nil {
-			return build.Failure(103), err
+		if runner, err := runner.NewMavenRunner(build, buildSystem); err != nil {
+			return build.Failure(102), err
+		} else {
+			if err = runner.Contribute(); err != nil {
+				return build.Failure(103), err
+			}
 		}
 	}
 

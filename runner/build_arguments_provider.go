@@ -17,18 +17,25 @@
 package runner
 
 import (
-	"github.com/cloudfoundry/build-system-cnb/buildsystem"
-	"github.com/cloudfoundry/libcfbuildpack/build"
+	"os"
+
+	"github.com/mattn/go-shellwords"
 )
 
-// NewRunner creates a new Maven Runner instance.
-func NewMavenRunner(build build.Build, buildSystem buildsystem.BuildSystem) (Runner, error) {
-	buildArgumentsProvider, err := NewBuildArgumentsProvider("-Dmaven.test.skip=true", "package")
-	if err != nil {
-		return Runner{}, err
+type BuildArgumentsProvider struct {
+	Arguments []string
+}
+
+func NewBuildArgumentsProvider(defaultArguments ...string) (BuildArgumentsProvider, error) {
+	p := BuildArgumentsProvider{defaultArguments}
+
+	if c, ok := os.LookupEnv("BP_BUILD_ARGUMENTS"); ok {
+		if args, err := shellwords.Parse(c); err != nil {
+			return BuildArgumentsProvider{}, err
+		} else {
+			p.Arguments = args
+		}
 	}
 
-	builtArtifactProvider := NewBuiltArtifactProvider("target", "*.[jw]ar")
-
-	return NewRunner(build, buildSystem.Executable(), buildArgumentsProvider, builtArtifactProvider), nil
+	return p, nil
 }

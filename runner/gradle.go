@@ -22,7 +22,12 @@ import (
 )
 
 // NewRunner creates a new Gradle Runner instance.
-func NewGradleRunner(build build.Build, buildSystem buildsystem.BuildSystem) Runner {
+func NewGradleRunner(build build.Build, buildSystem buildsystem.BuildSystem) (Runner, error) {
+	buildArgumentsProvider, err := NewBuildArgumentsProvider("-x", "test", "build")
+	if err != nil {
+		return Runner{}, err
+	}
+
 	builtArtifactProvider := NewBuiltArtifactProvider("build", "libs", "*.[jw]ar")
-	return NewRunner(build, builtArtifactProvider, buildSystem.Executable(), "-x", "test", "build")
+	return NewRunner(build, buildSystem.Executable(), buildArgumentsProvider, builtArtifactProvider), nil
 }
