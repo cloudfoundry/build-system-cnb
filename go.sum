@@ -4,12 +4,12 @@ github.com/Masterminds/semver v1.4.2 h1:WBLTQ37jOCzSLtXNdoo8bNM8876KhNqOKvrlGITg
 github.com/Masterminds/semver v1.4.2/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
 github.com/buildpack/libbuildpack v1.22.0 h1:rwavXaBksbJ3K+vvtpUSsmrxwpIkwvEBPTnJYno1/pI=
 github.com/buildpack/libbuildpack v1.22.0/go.mod h1:ZQhXsfWdbeglOBaeF3Ea5TSppKih/bVVJxNLX5yg2pg=
-github.com/cloudfoundry/jvm-application-cnb v1.0.0-RC02 h1:1PRGoV1YhFBWobhEo8tRw5RG3+cicR11mb6hCNhcbNc=
-github.com/cloudfoundry/jvm-application-cnb v1.0.0-RC02/go.mod h1:+Lwtb3ktK7I3KukNCjhyZmTL+o3nfb3zBgp4Noe8nzQ=
+github.com/cloudfoundry/jvm-application-cnb v1.0.0-RC03 h1:ozLlUEs60zEyW09vDM9MTWlf6GaRtppbQgMd0DM9pPk=
+github.com/cloudfoundry/jvm-application-cnb v1.0.0-RC03/go.mod h1:D+kMQMV5wsA5Fo8IITlV2gNIeaF5EGDuh4ZF+SwND24=
 github.com/cloudfoundry/libcfbuildpack v1.84.0 h1:Z94PAXmryUyGRlq0xXmEwxVmpC8sN713H9DR4lwRBVc=
 github.com/cloudfoundry/libcfbuildpack v1.84.0/go.mod h1:iw9bBxxYN/IBimFVAdeZY95cfy/UiWIlTltVerjKAio=
-github.com/cloudfoundry/openjdk-cnb v1.0.0-RC02 h1:97n3p+LrMP9MvyYl6fpptdhQ2JSdLf5k8rbxmsU88Po=
-github.com/cloudfoundry/openjdk-cnb v1.0.0-RC02/go.mod h1:n/NnNY4C3f2jANmLSqPI9IODsRv0g/AEwQQ6t9iIgU0=
+github.com/cloudfoundry/openjdk-cnb v1.0.0-RC03 h1:EO8WKaIrGsa8Yy0r5nrUYc+jR71KniJbltTvTk5F62g=
+github.com/cloudfoundry/openjdk-cnb v1.0.0-RC03/go.mod h1:pYy8zJAXQGtwpwT0MmGDeMksKsKMm2LXpq9BKTOXQhw=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
@@ -39,6 +39,8 @@ github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh
 github.com/onsi/ginkgo v1.6.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/ginkgo v1.10.0 h1:XaTQmdKecIbwNHpzOIy0XMoEG5bmv/n0OVyaF1NKUdo=
 github.com/onsi/ginkgo v1.10.0/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
+github.com/onsi/ginkgo v1.10.1 h1:q/mM8GF/n0shIN8SaAZ0V+jnLPzen6WIVZdiwrRlMlo=
+github.com/onsi/ginkgo v1.10.1/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
 github.com/onsi/gomega v1.7.0 h1:XPnZz8VVBHjVsy1vzJmRwIcSwiUO+JFfrv/xGiigmME=
 github.com/onsi/gomega v1.7.0/go.mod h1:ex+gbHU/CVuBBDIJjb2X0qEXbFg53c61hWP/1CpauHY=
 github.com/sclevine/spec v1.2.0 h1:1Jwdf9jSfDl9NVmt8ndHqbTZ7XCCPbh1jI3hkDBHVYA=
@@ -56,6 +58,8 @@ golang.org/x/sys v0.0.0-20190222072716-a9d3bda3a223/go.mod h1:STP8DvDyc/dI5b8T5h
 golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190826190057-c7b8b68b1456 h1:ng0gs1AKnRRuEMZoTLLlbOd+C17zUDepwGQBb/n+JVg=
 golang.org/x/sys v0.0.0-20190826190057-c7b8b68b1456/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20190903213830-1f305c863dab h1:2WmrFWBmUPXp+o/5X0nS66SLRS6DKwZlgFD76BKThvc=
+golang.org/x/sys v0.0.0-20190903213830-1f305c863dab/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.2 h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=
@@ -64,6 +68,8 @@ golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGm
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 h1:YR8cESwS4TdDjEe65xsg0ogRM/Nc3DYOhEAlW+xobZo=
+gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/fsnotify.v1 v1.4.7 h1:xOHLXZwVvI9hhs+cLKq5+I5onOuwQLhQwiu63xxlHs4=
 gopkg.in/fsnotify.v1 v1.4.7/go.mod h1:Tz8NjZHkW78fSQdbUxIjBTcgA1z1m8ZHf0WmKUhAMys=
 gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 h1:uRGJdciOHaEIrze2W8Q3AKkepLTh2hOroT7a+7czfdQ=
