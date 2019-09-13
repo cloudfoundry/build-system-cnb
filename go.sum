@@ -13,10 +13,13 @@ github.com/cloudfoundry/jvm-application-cnb v1.0.2 h1:0PN2P5qJTA89uL1JQt7SJ1WkfG
 github.com/cloudfoundry/jvm-application-cnb v1.0.2/go.mod h1:m+2+n0b4QdTYM5HAtxBz8lvJAzFNXwE5UntWAxsBODo=
 github.com/cloudfoundry/libcfbuildpack v1.85.0 h1:7ncRWtaz2zltkaKx4lrzj1xZihEu6UM7uven/Ip1wAo=
 github.com/cloudfoundry/libcfbuildpack v1.85.0/go.mod h1:SU8UqWgq0UMx6FegsTxny8LPFQBC/AcLBlbc/H760Ag=
+github.com/cloudfoundry/libcfbuildpack v1.85.1/go.mod h1:SU8UqWgq0UMx6FegsTxny8LPFQBC/AcLBlbc/H760Ag=
 github.com/cloudfoundry/libcfbuildpack v1.85.3 h1:3al9uXCU7jHdqWmM+vCn3e8tR9Rjb+lDSvltUSiS4aU=
 github.com/cloudfoundry/libcfbuildpack v1.85.3/go.mod h1:BCJrNwVR24GDa/6DOP0NU5KJCRE2aIH04jTFML8r6Yw=
 github.com/cloudfoundry/openjdk-cnb v1.0.1 h1:H3DCvo8IlS7jmouTQWfOM6UrWGCPHKD5M7bFbVj9qhs=
 github.com/cloudfoundry/openjdk-cnb v1.0.1/go.mod h1:DbojaClBHiuhzrecV6oZM1Q7fezImWd+7vQbctcjM24=
+github.com/cloudfoundry/openjdk-cnb v1.0.2 h1:QbX7rfr8L8a1hfbCaq0Lp78JAoms6cUt3ZaHLqUgNOQ=
+github.com/cloudfoundry/openjdk-cnb v1.0.2/go.mod h1:tZF4DEQ3ghC9CE5Zg4CVEnj6t1rAInsukH/lWkYC1B0=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
