@@ -10,6 +10,8 @@ github.com/cloudfoundry/jvm-application-cnb v1.0.10 h1:3rJMAwfZ8aXs7YUVhdQAKIg6/
 github.com/cloudfoundry/jvm-application-cnb v1.0.10/go.mod h1:CPofihmcxrlm9/4zrfk9rXfwu1CaETTtigPhTDhj7v0=
 github.com/cloudfoundry/libcfbuildpack v1.85.3 h1:3al9uXCU7jHdqWmM+vCn3e8tR9Rjb+lDSvltUSiS4aU=
 github.com/cloudfoundry/libcfbuildpack v1.85.3/go.mod h1:BCJrNwVR24GDa/6DOP0NU5KJCRE2aIH04jTFML8r6Yw=
+github.com/cloudfoundry/libcfbuildpack v1.85.4 h1:wh+woyzp2UTIHeiPJdeOmshNioROSBMEUXdIyExxn7g=
+github.com/cloudfoundry/libcfbuildpack v1.85.4/go.mod h1:oPScuxhq4GUuWRpDmbc/M4qK9ta9bLc5egQFlNdYjUg=
 github.com/cloudfoundry/openjdk-cnb v1.0.7 h1:GRU9HYO/NV8zoUh9YEUre4YHVhyzCQGtk75/W14/BNM=
 github.com/cloudfoundry/openjdk-cnb v1.0.7/go.mod h1:hUK33BNVkEAnuiF73pQwrEttkvAn+TNRKkJdTzN9nio=
 github.com/cloudfoundry/openjdk-cnb v1.0.8 h1:rIYAY3BXxgm5BlEoKVclK2My8sE6HDIk6edDwt+rUWs=
