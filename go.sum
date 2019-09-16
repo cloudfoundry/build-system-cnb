@@ -4,6 +4,8 @@ github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3Q
 github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
 github.com/buildpack/libbuildpack v1.24.2 h1:OsbbQS1VYwnHZpZwtFgKi0f5DkqDnmzBTRPjSDNfhrQ=
 github.com/buildpack/libbuildpack v1.24.2/go.mod h1:W54e1K2bhBxTkTC0B+FlvTOrdkTHD1JwNrzSt9qODJU=
+github.com/buildpack/libbuildpack v1.24.3 h1:bhAxazWrAZkxPSnpEzxc4a8Nc8FZfl1A76Va8r978/A=
+github.com/buildpack/libbuildpack v1.24.3/go.mod h1:16+PwmWtgcwzIVcCzwxwc9yi1g/NwqF+ji9IU0deBpg=
 github.com/cloudfoundry/jvm-application-cnb v1.0.9 h1:4Qoc3k6H6ik0ZqtiNOJOA2DbtiksqenIyvOtanf3NLI=
 github.com/cloudfoundry/jvm-application-cnb v1.0.9/go.mod h1:nTcBHMN6y65RjixiZEstF43AZtVlUDg35nKieOsAyUw=
 github.com/cloudfoundry/libcfbuildpack v1.85.3 h1:3al9uXCU7jHdqWmM+vCn3e8tR9Rjb+lDSvltUSiS4aU=
