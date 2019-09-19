@@ -4,12 +4,10 @@ github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3Q
 github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
 github.com/buildpack/libbuildpack v1.24.3 h1:bhAxazWrAZkxPSnpEzxc4a8Nc8FZfl1A76Va8r978/A=
 github.com/buildpack/libbuildpack v1.24.3/go.mod h1:16+PwmWtgcwzIVcCzwxwc9yi1g/NwqF+ji9IU0deBpg=
-github.com/cloudfoundry/jvm-application-cnb v1.0.20 h1:FL4KspKF8AOK8hW7YUtRXqQMAqWL+hfYgbRNI3fcHiU=
-github.com/cloudfoundry/jvm-application-cnb v1.0.20/go.mod h1:1KW3iDnMouo3DfSiN2oZ5e3tG7qAvUHq2kLhQXeNCYc=
+github.com/cloudfoundry/jvm-application-cnb v1.0.21 h1:vsYhOyYoHJjteQLCkKN5MSNGnxCC6diRHOJD+Jqf4BI=
+github.com/cloudfoundry/jvm-application-cnb v1.0.21/go.mod h1:OXcDFEvNMMOXphiC/QoZGiPr9mH+2uv2i4itX93r7Zc=
 github.com/cloudfoundry/libcfbuildpack v1.86.0 h1:ES6fD7hNKL5Kz0SaTnpqzfK3jNrJUd3HmBCQfpdzLtw=
 github.com/cloudfoundry/libcfbuildpack v1.86.0/go.mod h1:oPScuxhq4GUuWRpDmbc/M4qK9ta9bLc5egQFlNdYjUg=
-github.com/cloudfoundry/openjdk-cnb v1.0.14 h1:lSkZpe6lOuBeI2uh9jZlIQy3RDUVuiTgLsrfSY3ec9E=
-github.com/cloudfoundry/openjdk-cnb v1.0.14/go.mod h1:kR2z/EIy0Iq0p1zrb9dhsa6CmrAawO8YJkOh4Q0Sgbk=
 github.com/cloudfoundry/openjdk-cnb v1.0.15 h1:OGqt8s0v2Q4wdUto63l1kXIJfx5O2T051jIskqsd6C4=
 github.com/cloudfoundry/openjdk-cnb v1.0.15/go.mod h1:kR2z/EIy0Iq0p1zrb9dhsa6CmrAawO8YJkOh4Q0Sgbk=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
