@@ -42,11 +42,15 @@ func (b BuiltArtifactProvider) Get(application application.Application) (string,
 
 	var artifacts []string
 
-	for _, c := range candidates {
-		if i, err := b.isInterestingFile(c); err != nil {
-			return "", err
-		} else if i {
-			artifacts = append(artifacts, c)
+	if len(candidates) == 1 {
+		artifacts = candidates
+	} else {
+		for _, c := range candidates {
+			if i, err := b.isInterestingFile(c); err != nil {
+				return "", err
+			} else if i {
+				artifacts = append(artifacts, c)
+			}
 		}
 	}
 

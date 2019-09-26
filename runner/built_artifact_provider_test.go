@@ -45,17 +45,6 @@ func TestBuiltArtifactProvider(t *testing.T) {
 			g.Expect(err).To(gomega.MatchError("unable to find built artifact (executable JAR or WAR) in *.[jw]ar, candidates: []"))
 		})
 
-		it("fails with no candidates", func() {
-			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
-				filepath.Join(f.Build.Application.Root, "stub-application.jar"))
-
-			_, err := runner.NewBuiltArtifactProvider("*.[jw]ar").Get(f.Build.Application)
-
-			g.Expect(err).To(gomega.MatchError(
-				fmt.Sprintf("unable to find built artifact (executable JAR or WAR) in *.[jw]ar, candidates: [%s]",
-					filepath.Join(f.Build.Application.Root, "stub-application.jar"))))
-		})
-
 		it("fails with multiple candidates", func() {
 			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
 				filepath.Join(f.Build.Application.Root, "stub-application.jar"))
@@ -71,6 +60,14 @@ func TestBuiltArtifactProvider(t *testing.T) {
 					filepath.Join(f.Build.Application.Root, "stub-application.jar"),
 					filepath.Join(f.Build.Application.Root, "stub-application.war"),
 					filepath.Join(f.Build.Application.Root, "stub-executable.jar"))))
+		})
+
+		it("passes with a single candidate", func() {
+			test.CopyFile(t, filepath.Join("testdata", "stub-application.jar"),
+				filepath.Join(f.Build.Application.Root, "stub-application.jar"))
+
+			g.Expect(runner.NewBuiltArtifactProvider("*.[jw]ar").Get(f.Build.Application)).
+				To(gomega.Equal(filepath.Join(f.Build.Application.Root, "stub-application.jar")))
 		})
 
 		it("passes with single executable JAR", func() {
