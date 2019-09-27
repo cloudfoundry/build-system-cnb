@@ -3,7 +3,7 @@ module github.com/cloudfoundry/build-system-cnb
 go 1.13
 
 require (
-	github.com/buildpack/libbuildpack v1.24.3
+	github.com/buildpack/libbuildpack v1.24.4
 	github.com/cloudfoundry/jvm-application-cnb v1.0.27
 	github.com/cloudfoundry/libcfbuildpack v1.87.2
 	github.com/cloudfoundry/openjdk-cnb v1.0.19
