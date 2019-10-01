@@ -9,6 +9,8 @@ github.com/cloudfoundry/jvm-application-cnb v1.0.34 h1:sVubidmTSoEeEWchcpQnqWxwF
 github.com/cloudfoundry/jvm-application-cnb v1.0.34/go.mod h1:FoPcifmnwMQcJYo6vf0mpMbXIneQOVB+IegKPk5SLQk=
 github.com/cloudfoundry/libcfbuildpack v1.88.1 h1:lRplzgEYLxvJkpYf85RY2BaH4CBVX2jFQ3mqJTLKCho=
 github.com/cloudfoundry/libcfbuildpack v1.88.1/go.mod h1:QejuzmxKISD3/i1j2v7T2+fvUyUpBhRahyk/K05Fa14=
+github.com/cloudfoundry/libcfbuildpack v1.88.2 h1:z7Y1Cy8ZE12tnc+Q8EHxtGW1K2Jz0lMgHUawt4ToRyI=
+github.com/cloudfoundry/libcfbuildpack v1.88.2/go.mod h1:Tf2OvOKTTv2sZUymYxx/YPe/0/vCj2/3uO9xCdI56wY=
 github.com/cloudfoundry/openjdk-cnb v1.0.22 h1:/y/kDcTCq80bfHLPG6M/ESI7C8SRHGr5GYuBGM3v5mY=
 github.com/cloudfoundry/openjdk-cnb v1.0.22/go.mod h1:U0XrIHNmIe6ucWWsT23sJWHz13PRBUkr2VPFkei3WJE=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
