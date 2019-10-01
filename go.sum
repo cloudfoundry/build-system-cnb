@@ -8,7 +8,6 @@ github.com/buildpack/libbuildpack v1.24.5/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/
 github.com/cloudfoundry/jvm-application-cnb v1.0.35 h1:TyYw3ctRmz0+lK3rIbf2l5E2T1uP0lXQ/OhdwKyj7Ck=
 github.com/cloudfoundry/jvm-application-cnb v1.0.35/go.mod h1:VsUKfINkbGnbZp5EkjWp23JuT8vMQoQq0MyidgnZVrk=
 github.com/cloudfoundry/libcfbuildpack v1.88.1/go.mod h1:QejuzmxKISD3/i1j2v7T2+fvUyUpBhRahyk/K05Fa14=
-github.com/cloudfoundry/libcfbuildpack v1.88.2 h1:z7Y1Cy8ZE12tnc+Q8EHxtGW1K2Jz0lMgHUawt4ToRyI=
 github.com/cloudfoundry/libcfbuildpack v1.88.2/go.mod h1:Tf2OvOKTTv2sZUymYxx/YPe/0/vCj2/3uO9xCdI56wY=
 github.com/cloudfoundry/libcfbuildpack v1.88.3 h1:I6kjO6fYwC/4kQC8ugDQU5W7AiWwKhuvRVWuCLk2odk=
 github.com/cloudfoundry/libcfbuildpack v1.88.3/go.mod h1:Xfj/aCkXDzTfMal/E8nWUjaV4rD/vDx53nRpwLSdWJ8=
