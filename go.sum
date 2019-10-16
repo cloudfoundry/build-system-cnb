@@ -4,7 +4,6 @@ cloud.google.com/go v0.38.0/go.mod h1:990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSR
 cloud.google.com/go v0.44.1/go.mod h1:iSa0KzasP4Uvy3f1mN/7PiObzGgflwredwwASm/v6AU=
 cloud.google.com/go v0.44.2/go.mod h1:60680Gw3Yr4ikxnPRS/oxxkBccT6SA1yMk63TGekxKY=
 cloud.google.com/go v0.45.1/go.mod h1:RpBamKRgapWJb87xiFSdk4g1CME7QZg3uwTez+TSTjc=
-cloud.google.com/go v0.46.3 h1:AVXDdKsrtX33oR9fbCMu/+c1o8Ofjq6Ku/MInaLVg5Y=
 cloud.google.com/go v0.46.3/go.mod h1:a6bKKbmY7er1mI7TEI4lsAkts/mkhTSZK8w33B4RAg0=
 cloud.google.com/go v0.47.0 h1:1JUtpcY9E7+eTospEwWS2QXP3DEn7poB3E2j0jN74mM=
 cloud.google.com/go v0.47.0/go.mod h1:5p3Ky/7f3N10VBkhuR5LFtddroTiMyjZV/Kj5qOQFxU=
@@ -18,21 +17,20 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3QEww=
 github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
-github.com/buildpack/libbuildpack v1.24.5 h1:r7AM7r8ff7ocI1KOopVHEC3EDTCdrj0YeTXkfYuqH0I=
 github.com/buildpack/libbuildpack v1.24.5/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/Xf3aJWK2PLbPG1g=
 github.com/buildpack/libbuildpack v1.25.0 h1:9Hs3a9rz4qrjqgcDDTYY5S4zRaQJc5ctoLkV5X0WBDw=
 github.com/buildpack/libbuildpack v1.25.0/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/Xf3aJWK2PLbPG1g=
+github.com/buildpack/libbuildpack v1.25.1 h1:IV4v1jm/ERRgIpjnQO+ckJFboVJdzSYmLVJHt6WADM0=
+github.com/buildpack/libbuildpack v1.25.1/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/Xf3aJWK2PLbPG1g=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudfoundry/jvm-application-cnb v1.0.43 h1:tMO8HWRNG+X3vUC2Fi9Pjizljk1ZVlUuFqkrU1JWIUE=
 github.com/cloudfoundry/jvm-application-cnb v1.0.43/go.mod h1:KuUHISoFO9QmHAKzlqapmzgf20TtzWXwUzwFV+5nWc0=
-github.com/cloudfoundry/libcfbuildpack v1.89.0 h1:A0OXihcHjvDRLYendhfqMxTBVe5pi5fmM5t4sqNRpao=
 github.com/cloudfoundry/libcfbuildpack v1.89.0/go.mod h1:ufhp/bp0LxbDDwbf2Ms3Bf4x9YnLr9dkL1RTUYSdKg0=
 github.com/cloudfoundry/libcfbuildpack v1.89.1 h1:d0qgnFHUb1pCUdjlawFPKZ+r78Hq1L9C6Lo/AX8LtwU=
 github.com/cloudfoundry/libcfbuildpack v1.89.1/go.mod h1:dcWh59YByoKe7AtQXv9/wa5MWLc/0Vy6laVQqH7FM28=
-github.com/cloudfoundry/openjdk-cnb v1.0.29 h1:BqST1DhdhS3PO9hYPJL1g8uWzyP0lK1Mle2ZnsxT9Xc=
 github.com/cloudfoundry/openjdk-cnb v1.0.29/go.mod h1:M6MRY3v71COZdD0B31evjTdtpXxcmTWhOhYh18ce26s=
-github.com/cloudfoundry/openjdk-cnb v1.0.30 h1:01hyVkTj72d4LwSXp9OprkGjBOiZ+EtIXMRUkEwL0OE=
-github.com/cloudfoundry/openjdk-cnb v1.0.30/go.mod h1:/I0A0lda5pZEMBt0t73YcK6iL7K1JcAiRa76GJlVn30=
+github.com/cloudfoundry/openjdk-cnb v1.0.32 h1:upzOsMFY2WkFzrD3tSfGu/ioaU0DVZAEX+Hq0wSG5KU=
+github.com/cloudfoundry/openjdk-cnb v1.0.32/go.mod h1:8MXeeHGIwBAnlQDKf3mCABMA7vgZTeEeMTparxJ2/Ng=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
@@ -72,7 +70,6 @@ github.com/magiconair/properties v1.8.1/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czP
 github.com/mattn/go-colorable v0.1.4 h1:snbPLB8fVfU9iwbbo30TPtbLRzwWu6aJS6Xh4eaaviA=
 github.com/mattn/go-colorable v0.1.4/go.mod h1:U0ppj6V5qS13XJ6of8GYAs25YV2eR4EVcfRqFIhoBtE=
 github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
-github.com/mattn/go-isatty v0.0.9 h1:d5US/mDsogSGW37IV293h//ZFaeajb69h+EHFsv2xGg=
 github.com/mattn/go-isatty v0.0.9/go.mod h1:YNRxwqDuOph6SZLI9vUUz6OYw3QyUt7WiY2yME+cCiQ=
 github.com/mattn/go-isatty v0.0.10 h1:qxFzApOv4WsAL965uUPIsXzAKCZxN2p9UqdhFS4ZW10=
 github.com/mattn/go-isatty v0.0.10/go.mod h1:qgIWMr58cqv1PHHyhnkY9lrL7etaEgOFcMEpPG5Rm84=
@@ -127,7 +124,6 @@ golang.org/x/net v0.0.0-20190603091049-60506f45cf65/go.mod h1:HSz+uSET+XFnRR8LxR
 golang.org/x/net v0.0.0-20190620200207-3b0461eec859/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/net v0.0.0-20190930134127-c5a3c61f89f3/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/net v0.0.0-20191003171128-d98b1b443823/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
-golang.org/x/net v0.0.0-20191007182048-72f939374954 h1:JGZucVF/L/TotR719NbujzadOZ2AgnYlqphQGHDCKaU=
 golang.org/x/net v0.0.0-20191007182048-72f939374954/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
 golang.org/x/net v0.0.0-20191014212845-da9a3fd4c582 h1:p9xBe/w/OzkeYVKm234g55gMdD1nSIooTir5kV11kfA=
 golang.org/x/net v0.0.0-20191014212845-da9a3fd4c582/go.mod h1:z5CRVTTTmAJ677TzLLGU+0bjPO0LkuOLi4/5GtJWs/s=
@@ -153,7 +149,6 @@ golang.org/x/sys v0.0.0-20190624142023-c5567b49c5d0/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191001151750-bb3f8db39f24/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191003212358-c178f38b412c/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20191008105621-543471e840be h1:QAcqgptGM8IQBC9K/RC4o+O9YmqEm0diQn9QmZw/0mU=
 golang.org/x/sys v0.0.0-20191008105621-543471e840be/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191010194322-b09406accb47 h1:/XfQ9z7ib8eEJX2hdgFTZJ/ntt0swNk5oYBziWeTCvY=
 golang.org/x/sys v0.0.0-20191010194322-b09406accb47/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
