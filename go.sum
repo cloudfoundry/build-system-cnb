@@ -21,13 +21,15 @@ github.com/buildpack/libbuildpack v1.25.0/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/
 github.com/buildpack/libbuildpack v1.25.2 h1:usiNCOhmM3WbxklbrGgb1NhDKRaYyECOOynsF0f0UeY=
 github.com/buildpack/libbuildpack v1.25.2/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/Xf3aJWK2PLbPG1g=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudfoundry/jvm-application-cnb v1.0.47 h1:1VRaEPTwV/bkfcDzQJs2l1v5gA91XKhJk3acGvH764E=
-github.com/cloudfoundry/jvm-application-cnb v1.0.47/go.mod h1:7arpUj03N7iTeU02Mtgsyulvl1HVtXHIeuwQTeZz1LY=
+github.com/cloudfoundry/jvm-application-cnb v1.0.48 h1:+AX6qbWwR6iGHqfH9dO/bhO4UjLKwpVChyY+3x1T00A=
+github.com/cloudfoundry/jvm-application-cnb v1.0.48/go.mod h1:HNPEOtttuEFcXeb0YsBU0CImxgJTHvUWpOCdfiaNHBQ=
 github.com/cloudfoundry/libcfbuildpack v1.89.2/go.mod h1:dcWh59YByoKe7AtQXv9/wa5MWLc/0Vy6laVQqH7FM28=
 github.com/cloudfoundry/libcfbuildpack v1.89.3 h1:C2KFJtu6YKVni8uYOVim9GPt/t/5D01elmFyZdBt2Qg=
 github.com/cloudfoundry/libcfbuildpack v1.89.3/go.mod h1:xiHXVOlUXVnv2rwaRBiFWZCwcxkb2SzMH/xQi5H6bFg=
 github.com/cloudfoundry/openjdk-cnb v1.0.34 h1:y4k92iWMD8dLJ3tyLAKtnDwHcUABYJMTFZ/pcQi1FlY=
 github.com/cloudfoundry/openjdk-cnb v1.0.34/go.mod h1:xvuRSLIaIKp/7jyOikjkjF8nON5csZbmAK+TCHpuqIM=
+github.com/cloudfoundry/openjdk-cnb v1.0.35 h1:Xevq5mM5T3mvnUZJ6dmko2KKR0Qir0Z+O2r6+asXfuw=
+github.com/cloudfoundry/openjdk-cnb v1.0.35/go.mod h1:ovqLFqY4sfhVOas9n5oLouQnAWynZFmlQ8mxRf3bzI8=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
