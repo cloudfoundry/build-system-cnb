@@ -20,9 +20,8 @@ github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF0
 github.com/buildpack/libbuildpack v1.25.2 h1:usiNCOhmM3WbxklbrGgb1NhDKRaYyECOOynsF0f0UeY=
 github.com/buildpack/libbuildpack v1.25.2/go.mod h1:cBmq8aozSDfy+RiKCERQbT6lk0M/Xf3aJWK2PLbPG1g=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudfoundry/jvm-application-cnb v1.0.52 h1:mNWRgGshxEPaUPCQC0sG1DZSuKGl+66yzS1UqWcDHCs=
-github.com/cloudfoundry/jvm-application-cnb v1.0.52/go.mod h1:feoKW7nMU5fD8/7Lk28NT4vto8KZD2fMjkx4n+lnWyQ=
-github.com/cloudfoundry/libcfbuildpack v1.89.4 h1:tpr0/QYgDV2XAaCJu7S7KB+50Nd3iP4kHUdXzsXHY84=
+github.com/cloudfoundry/jvm-application-cnb v1.0.53 h1:D2ZPxRreLmS18xd7Gb63ULL+W7A4UBJhKq0VUCWVzZU=
+github.com/cloudfoundry/jvm-application-cnb v1.0.53/go.mod h1:wDTuFmpFFyvdvtb5kJ/RE6qrd9Ew/sfoIFotLglBa+M=
 github.com/cloudfoundry/libcfbuildpack v1.89.4/go.mod h1:xiHXVOlUXVnv2rwaRBiFWZCwcxkb2SzMH/xQi5H6bFg=
 github.com/cloudfoundry/libcfbuildpack v1.89.5 h1:SZPRZlOyH7iziRGa7CCaGDnw9285w1W1zqMK2ZZwIEY=
 github.com/cloudfoundry/libcfbuildpack v1.89.5/go.mod h1:xiHXVOlUXVnv2rwaRBiFWZCwcxkb2SzMH/xQi5H6bFg=
@@ -142,7 +141,6 @@ golang.org/x/sys v0.0.0-20190606165138-5da285871e9c/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190624142023-c5567b49c5d0/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191001151750-bb3f8db39f24/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191008105621-543471e840be/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20191010194322-b09406accb47 h1:/XfQ9z7ib8eEJX2hdgFTZJ/ntt0swNk5oYBziWeTCvY=
 golang.org/x/sys v0.0.0-20191010194322-b09406accb47/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191018095205-727590c5006e h1:ZtoklVMHQy6BFRHkbG6JzK+S6rX82//Yeok1vMlizfQ=
 golang.org/x/sys v0.0.0-20191018095205-727590c5006e/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
