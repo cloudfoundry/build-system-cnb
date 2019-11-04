@@ -20,8 +20,8 @@ github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF0
 github.com/buildpack/libbuildpack v1.25.4 h1:jlflYJWNy+WFup6/6v4ErOG6y8+4OVAb7ie/ECM5bBs=
 github.com/buildpack/libbuildpack v1.25.4/go.mod h1:GhVefAW5VEN0L2AWrupSzwMUeKd3N0UzT45oUAKcPCM=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudfoundry/jvm-application-cnb v1.0.76 h1:v+MhecbxnOmAHc3695LICVt9nY5D+erf9WtDwon3rYg=
-github.com/cloudfoundry/jvm-application-cnb v1.0.76/go.mod h1:8AYswMHuLWfnmAX8cgcsfaHR6WwFX7ELhPgKc6btpCU=
+github.com/cloudfoundry/jvm-application-cnb v1.0.77 h1:O5LeREB5O0fLfRMPBjr3SW7SWqU/oJZ9XnH0p0Oqy60=
+github.com/cloudfoundry/jvm-application-cnb v1.0.77/go.mod h1:8AYswMHuLWfnmAX8cgcsfaHR6WwFX7ELhPgKc6btpCU=
 github.com/cloudfoundry/libcfbuildpack v1.91.4 h1:aLJLomJI9uYizrBQ28OkiSKzq+5RjXfV96qKBgt3ulE=
 github.com/cloudfoundry/libcfbuildpack v1.91.4/go.mod h1:1W3acvFCrUAnYOHZSVoRtxVAiSFKYatBZExvEyHgYPk=
 github.com/cloudfoundry/openjdk-cnb v1.0.55 h1:n+hUNXLqHrWkAD2heqb4UHWoRMc8ponAAwlxFw7AW4U=
