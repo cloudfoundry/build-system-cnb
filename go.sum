@@ -28,6 +28,8 @@ github.com/cloudfoundry/libcfbuildpack v1.91.7 h1:QSd8on4KgWV9iADgFjTrr1P2G2Q0OG
 github.com/cloudfoundry/libcfbuildpack v1.91.7/go.mod h1:0hpIGA9by2NZgVBGt2MfuJOgu6mgl7og5laYEsEVD8Y=
 github.com/cloudfoundry/openjdk-cnb v1.0.58 h1:A4jU6/+Ho9BheZtF2JWFFcJCzVlHQVO3iTIHRD1y7tE=
 github.com/cloudfoundry/openjdk-cnb v1.0.58/go.mod h1:4oN+M5GfWS7QuimRm1dt9h2b+aRJ40yfILFVsQ0sC7o=
+github.com/cloudfoundry/openjdk-cnb v1.0.59 h1:Hu9XPlHfzRRDPI2Bx8S54zhyPa6Q4rQ5rRam7an2XGU=
+github.com/cloudfoundry/openjdk-cnb v1.0.59/go.mod h1:ustqDlyGGqLNC1PT+ixsVpTzfX3oImdCTaQKrtUwrSc=
 github.com/fatih/color v1.7.0 h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
