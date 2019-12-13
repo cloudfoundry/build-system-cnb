@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/buildpack/libbuildpack v1.25.6
-	github.com/cloudfoundry/jvm-application-cnb v1.0.89
+	github.com/cloudfoundry/jvm-application-cnb v1.0.90
 	github.com/cloudfoundry/libcfbuildpack v1.91.9
 	github.com/cloudfoundry/openjdk-cnb v1.0.64
 	github.com/magiconair/properties v1.8.1
