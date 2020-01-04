@@ -24,14 +24,12 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/cloudfoundry/jvm-application-cnb v1.0.109 h1:+qW3kCFpm5kCS6mqUfDr+4s6KFSxtG16PW+OpBGVG94=
 github.com/cloudfoundry/jvm-application-cnb v1.0.109/go.mod h1:2yua1wk5SnRLyp7S0kwFhZn6t05+CedoRGPYP5D2CJw=
 github.com/cloudfoundry/libcfbuildpack v1.91.17/go.mod h1:hoAcV8yAsfkkMPikDuhDhx/2WGegFrsmGQoVqie23dE=
-github.com/cloudfoundry/libcfbuildpack v1.91.18 h1:v0KjQ23g2CPPOoqEP0jcNdoET47KFX/NKwKcWF++hqU=
 github.com/cloudfoundry/libcfbuildpack v1.91.18/go.mod h1:hoAcV8yAsfkkMPikDuhDhx/2WGegFrsmGQoVqie23dE=
 github.com/cloudfoundry/libcfbuildpack v1.91.19 h1:9tZR/w4sngP5Von694tpkLsK+PYfVrdmQTVLoMsI5mg=
 github.com/cloudfoundry/libcfbuildpack v1.91.19/go.mod h1:LLXPiEr7YjuU4sx0lHNBeg8cnWImlwtUSKUOp5tLN6U=
-github.com/cloudfoundry/openjdk-cnb v1.0.76 h1:8/SbprfGNmRy+arfUPDi60iQiRVK86ZqLbkEffeZ9Kk=
 github.com/cloudfoundry/openjdk-cnb v1.0.76/go.mod h1:KGqodst0/9hei3672dZHoTr/IC5J3WIzDlpXYpKItHI=
-github.com/cloudfoundry/openjdk-cnb v1.0.78 h1:By3RrlDW+5fRyRQ3mGg5SVXRVxUd44ajcYXumRywAS4=
-github.com/cloudfoundry/openjdk-cnb v1.0.78/go.mod h1:/Vst8oayp1kEG6GUk1lea9xTbE2betv5AYqZTiwfv+I=
+github.com/cloudfoundry/openjdk-cnb v1.0.79 h1:mjJEj93YXynZ7ms5+CteJDXWcUPxKH8SSUV0H2aDVbo=
+github.com/cloudfoundry/openjdk-cnb v1.0.79/go.mod h1:1rstHiyUvziyXBH9SaD1BiODSTIyS3WsAQVtu0kO0Dw=
 github.com/fatih/color v1.8.0 h1:5bzFgL+oy7JITMTxUPJ00n7VxmYd/PdMp5mHFX40/RY=
 github.com/fatih/color v1.8.0/go.mod h1:3l45GVGkyrnYNl9HoIjnp2NnNWvh6hLAqD8yTfGjnw8=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
