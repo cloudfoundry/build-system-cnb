@@ -17,7 +17,6 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3QEww=
 github.com/Masterminds/semver v1.5.0/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
-github.com/buildpack/libbuildpack v1.25.10 h1:r8iC8TS3x7PNfofX0RGg3GnVqT02ABgagxCMEosWtrk=
 github.com/buildpack/libbuildpack v1.25.10/go.mod h1:SAar5bFlgGoIk0umOpPyl5XvnWt4gFVbvKsLmdIPnS4=
 github.com/buildpack/libbuildpack v1.25.11 h1:dsvBRoD90s48tyndN5lQFvJFWpp7bKbSZ3V2wTiDxQc=
 github.com/buildpack/libbuildpack v1.25.11/go.mod h1:Fb1Eg3vT+B3i5l46aF6WsW7naCAYpCZmAv9UzIYs614=
@@ -26,8 +25,8 @@ github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWR
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudfoundry/jvm-application-cnb v1.0.116 h1:HvXMniofT9vjGkfiWKrXkCUyiuNJswtLMTIV7Mfi+rg=
-github.com/cloudfoundry/jvm-application-cnb v1.0.116/go.mod h1:8LyYdTGK/FqUq2fiYB3DGOEJ7sY6BqZf6TN6f7uxaAI=
+github.com/cloudfoundry/jvm-application-cnb v1.0.117 h1:YsOKsi+jpWmiPKCYXBpHlfrzgqMWPwDJiIAfEMGjCqI=
+github.com/cloudfoundry/jvm-application-cnb v1.0.117/go.mod h1:J2i4vVePRVFmASEp1ZQpGNmug+QBxK17xUb4LnKtgYA=
 github.com/cloudfoundry/libcfbuildpack v1.91.21 h1:T9JZZ7vwhqhvim3IZ8mq2wUFkJVOFTAh2Ut1F4UrUSo=
 github.com/cloudfoundry/libcfbuildpack v1.91.21/go.mod h1:+m6SL65YqNK9RvUoWdEAk7rMkMvKRUQJ3ay1AVP8tWU=
 github.com/cloudfoundry/openjdk-cnb v1.0.82 h1:4GstMYE/AB9N9D8WQEsZG2swmXcEeHg/rwpWBJjccUg=
