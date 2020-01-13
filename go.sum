@@ -24,14 +24,10 @@ github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWR
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudfoundry/jvm-application-cnb v1.0.113 h1:kheREkdikUNupzld2gj2GNIq1uSbVekOKc+eP9LqUyM=
-github.com/cloudfoundry/jvm-application-cnb v1.0.113/go.mod h1:GPJ3/XhdsYXayke98fYUZRCoqyZIcXuhRZTmQumP+E4=
-github.com/cloudfoundry/libcfbuildpack v1.91.20 h1:ll9/TuxtSeESIZG/vThZGE5ZkJZGvUN8/B58cKtU87I=
-github.com/cloudfoundry/libcfbuildpack v1.91.20/go.mod h1:+m6SL65YqNK9RvUoWdEAk7rMkMvKRUQJ3ay1AVP8tWU=
+github.com/cloudfoundry/jvm-application-cnb v1.0.114 h1:cEuXW+O+z4nbzXy2IGWydW00cvLrMqDyyNmj6CrQIYw=
+github.com/cloudfoundry/jvm-application-cnb v1.0.114/go.mod h1:amJcODnbIYqpX3MUaz/P5GAfUHDEeI0gyVAHPimE56I=
 github.com/cloudfoundry/libcfbuildpack v1.91.21 h1:T9JZZ7vwhqhvim3IZ8mq2wUFkJVOFTAh2Ut1F4UrUSo=
 github.com/cloudfoundry/libcfbuildpack v1.91.21/go.mod h1:+m6SL65YqNK9RvUoWdEAk7rMkMvKRUQJ3ay1AVP8tWU=
-github.com/cloudfoundry/openjdk-cnb v1.0.80 h1:f+8mSZlBRUl0PgjtZ6hMrFUSmaNm0h/Ecog/lMYu9xs=
-github.com/cloudfoundry/openjdk-cnb v1.0.80/go.mod h1:GiaPXlN91viQPt8tw/u3NarNYpK1Tu093EZ5J1wCHtM=
 github.com/cloudfoundry/openjdk-cnb v1.0.81 h1:iQei0Q2ERIxTkA4VYEUa6ZmCpUhbnrOC63/1X48/6LY=
 github.com/cloudfoundry/openjdk-cnb v1.0.81/go.mod h1:X+TfSDuwrKxdRNH6HQc6g9HxlbbKP/BZkE4E0rMtt54=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -146,7 +142,6 @@ golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAG
 golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20191202225959-858c2ad4c8b6/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
-golang.org/x/oauth2 v0.0.0-20200107160858-eca82077e2d1 h1:ZIyoSZim+gxR9tlenFGVMGE6iwLBRDOqw27oeedehB0=
 golang.org/x/oauth2 v0.0.0-20200107160858-eca82077e2d1/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
 golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d h1:TzXSXBo42m9gQenoE3b9BGiEpg5IG2JkU5FkPIawgtw=
 golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
@@ -170,7 +165,6 @@ golang.org/x/sys v0.0.0-20191026070338-33540a1f6037/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20191204072324-ce4227a45e2e/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20191228213918-04cbcbbfeed8/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200102141924-c96a22e43c9c/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20200107162124-548cf772de50 h1:YvQ10rzcqWXLlJZ3XCUoO25savxmscf4+SC+ZqiCHhA=
 golang.org/x/sys v0.0.0-20200107162124-548cf772de50/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200113162924-86b910548bc1 h1:gZpLHxUX5BdYLA08Lj4YCJNN/jk7KtquiArPoeX0WvA=
 golang.org/x/sys v0.0.0-20200113162924-86b910548bc1/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
