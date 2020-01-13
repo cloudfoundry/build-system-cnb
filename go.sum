@@ -30,6 +30,8 @@ github.com/cloudfoundry/libcfbuildpack v1.91.21 h1:T9JZZ7vwhqhvim3IZ8mq2wUFkJVOF
 github.com/cloudfoundry/libcfbuildpack v1.91.21/go.mod h1:+m6SL65YqNK9RvUoWdEAk7rMkMvKRUQJ3ay1AVP8tWU=
 github.com/cloudfoundry/openjdk-cnb v1.0.81 h1:iQei0Q2ERIxTkA4VYEUa6ZmCpUhbnrOC63/1X48/6LY=
 github.com/cloudfoundry/openjdk-cnb v1.0.81/go.mod h1:X+TfSDuwrKxdRNH6HQc6g9HxlbbKP/BZkE4E0rMtt54=
+github.com/cloudfoundry/openjdk-cnb v1.0.82 h1:4GstMYE/AB9N9D8WQEsZG2swmXcEeHg/rwpWBJjccUg=
+github.com/cloudfoundry/openjdk-cnb v1.0.82/go.mod h1:X+TfSDuwrKxdRNH6HQc6g9HxlbbKP/BZkE4E0rMtt54=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=

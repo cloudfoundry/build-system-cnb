@@ -6,7 +6,7 @@ require (
 	github.com/buildpack/libbuildpack v1.25.10
 	github.com/cloudfoundry/jvm-application-cnb v1.0.115
 	github.com/cloudfoundry/libcfbuildpack v1.91.21
-	github.com/cloudfoundry/openjdk-cnb v1.0.81
+	github.com/cloudfoundry/openjdk-cnb v1.0.82
 	github.com/magiconair/properties v1.8.1
 	github.com/mattn/go-shellwords v1.0.6
 	github.com/onsi/gomega v1.8.1
