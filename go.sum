@@ -28,10 +28,9 @@ github.com/cloudfoundry/jvm-application-cnb v1.0.122 h1:dI/WQ4Echt+SvzuZg6CmApl9
 github.com/cloudfoundry/jvm-application-cnb v1.0.122/go.mod h1:HLf32hs4AT+VNqwxm0nz1crNVuQ8m0QCw4lnOpDjmPQ=
 github.com/cloudfoundry/libcfbuildpack v1.91.22 h1:p7s8VyhcrDc3d0gAmzsDGoogyegNwp6d+UOfL7nGyE4=
 github.com/cloudfoundry/libcfbuildpack v1.91.22/go.mod h1:cEdi3DdqBruJMcaUw4MmP0iplOQeh7H4lcD3FtpqmOo=
-github.com/cloudfoundry/openjdk-cnb v1.0.86 h1:/ket7QERV9t7srl3Pt6FkZxNbOX4YSyoXmvGwWo9/ZA=
 github.com/cloudfoundry/openjdk-cnb v1.0.86/go.mod h1:5T0GTLQ9xf+tCxOr7BrUesZkRhqA/KUMt13DgjAdxyo=
-github.com/cloudfoundry/openjdk-cnb v1.0.87 h1:+mVjZNXYOQtpyUaB8W9Wg+M1I+muuUAhAZtc5d7M7j4=
-github.com/cloudfoundry/openjdk-cnb v1.0.87/go.mod h1:5T0GTLQ9xf+tCxOr7BrUesZkRhqA/KUMt13DgjAdxyo=
+github.com/cloudfoundry/openjdk-cnb v1.0.88 h1:n3Zx39MyZRBsSwXq4iTm5Bz0ADirKzEWHt0/5OPJAzk=
+github.com/cloudfoundry/openjdk-cnb v1.0.88/go.mod h1:5T0GTLQ9xf+tCxOr7BrUesZkRhqA/KUMt13DgjAdxyo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
