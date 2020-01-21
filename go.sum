@@ -24,11 +24,10 @@ github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWR
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudfoundry/jvm-application-cnb v1.0.125 h1:KV3nwjnmmHA5l+p81NVz49mJJuq3ojvr4gzALPqNf3Y=
-github.com/cloudfoundry/jvm-application-cnb v1.0.125/go.mod h1:iVU/gneMYyEprkdgj17hpWGlY6bz3tp7B3BreF0EClo=
+github.com/cloudfoundry/jvm-application-cnb v1.0.126 h1:RLD6gz+pS/7B0kNn7djzhHbv3I7GwEIzsMwkgo5n4hc=
+github.com/cloudfoundry/jvm-application-cnb v1.0.126/go.mod h1:tifGVPSKZnqudFalkhuF3wZ0RlZg2LEKyXfN/hjGM9I=
 github.com/cloudfoundry/libcfbuildpack v1.91.22 h1:p7s8VyhcrDc3d0gAmzsDGoogyegNwp6d+UOfL7nGyE4=
 github.com/cloudfoundry/libcfbuildpack v1.91.22/go.mod h1:cEdi3DdqBruJMcaUw4MmP0iplOQeh7H4lcD3FtpqmOo=
-github.com/cloudfoundry/openjdk-cnb v1.0.89/go.mod h1:5T0GTLQ9xf+tCxOr7BrUesZkRhqA/KUMt13DgjAdxyo=
 github.com/cloudfoundry/openjdk-cnb v1.0.90 h1:2GqQ+nwnVlo7EkL6GzNNzQ682QcnMPULu1i3JUdmXZ8=
 github.com/cloudfoundry/openjdk-cnb v1.0.90/go.mod h1:5T0GTLQ9xf+tCxOr7BrUesZkRhqA/KUMt13DgjAdxyo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
