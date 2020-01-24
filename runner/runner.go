@@ -100,4 +100,3 @@ func NewRunner(build build.Build, bin string, buildArgumentsProvider BuildArgume
 		build.Runner,
 	}
 }
-
