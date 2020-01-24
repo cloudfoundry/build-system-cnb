@@ -21,7 +21,7 @@ import (
 	"os"
 
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
-	"github.com/cloudfoundry/libcfbuildpack/detect"
+	"github.com/cloudfoundry/libcfbuildpack/v2/detect"
 )
 
 func main() {

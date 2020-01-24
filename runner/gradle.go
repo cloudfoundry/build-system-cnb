@@ -18,7 +18,7 @@ package runner
 
 import (
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
-	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/v2/build"
 )
 
 // NewRunner creates a new Gradle Runner instance.

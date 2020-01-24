@@ -19,11 +19,11 @@ package buildsystem
 import (
 	"path/filepath"
 
-	"github.com/buildpack/libbuildpack/application"
-	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/libcfbuildpack/build"
-	"github.com/cloudfoundry/libcfbuildpack/helper"
-	"github.com/cloudfoundry/libcfbuildpack/layers"
+	"github.com/buildpacks/libbuildpack/v2/application"
+	"github.com/buildpacks/libbuildpack/v2/buildplan"
+	"github.com/cloudfoundry/libcfbuildpack/v2/build"
+	"github.com/cloudfoundry/libcfbuildpack/v2/helper"
+	"github.com/cloudfoundry/libcfbuildpack/v2/layers"
 )
 
 // GradleDependency is the key identifying the Gradle build system in the buildpack plan.

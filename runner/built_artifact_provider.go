@@ -24,7 +24,7 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/buildpack/libbuildpack/application"
+	"github.com/buildpacks/libbuildpack/v2/application"
 	"github.com/magiconair/properties"
 )
 

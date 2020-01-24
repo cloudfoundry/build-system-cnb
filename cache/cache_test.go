@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/cloudfoundry/build-system-cnb/cache"
-	"github.com/cloudfoundry/libcfbuildpack/test"
+	"github.com/cloudfoundry/libcfbuildpack/v2/test"
 	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"

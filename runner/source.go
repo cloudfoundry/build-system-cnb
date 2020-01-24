@@ -22,7 +22,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/cloudfoundry/libcfbuildpack/logger"
+	"github.com/cloudfoundry/libcfbuildpack/v2/logger"
 )
 
 // Source is metadata about a source file.

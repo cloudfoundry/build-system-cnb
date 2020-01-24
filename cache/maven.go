@@ -20,7 +20,7 @@ import (
 	"os/user"
 	"path/filepath"
 
-	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/v2/build"
 )
 
 // NewMavenCache creates a new Cache instance for Maven.

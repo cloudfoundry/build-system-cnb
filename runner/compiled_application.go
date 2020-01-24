@@ -24,9 +24,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/buildpack/libbuildpack/application"
-	"github.com/cloudfoundry/libcfbuildpack/logger"
-	"github.com/cloudfoundry/libcfbuildpack/runner"
+	"github.com/buildpacks/libbuildpack/v2/application"
+	"github.com/cloudfoundry/libcfbuildpack/v2/logger"
+	"github.com/cloudfoundry/libcfbuildpack/v2/runner"
 )
 
 // CompiledApplication represents metadata about a compiled application.

@@ -23,7 +23,7 @@ import (
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
 	"github.com/cloudfoundry/build-system-cnb/cache"
 	"github.com/cloudfoundry/build-system-cnb/runner"
-	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/v2/build"
 )
 
 func main() {
