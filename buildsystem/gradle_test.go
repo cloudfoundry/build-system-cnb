@@ -22,10 +22,8 @@ import (
 
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/build-system-cnb/buildsystem"
-	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/buildpackplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
-	"github.com/cloudfoundry/openjdk-cnb/jdk"
 	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -46,11 +44,11 @@ func TestGradle(t *testing.T) {
 			g.Expect(buildsystem.GradlePlan()).To(gomega.Equal(buildplan.Plan{
 				Provides: []buildplan.Provided{
 					{Name: buildsystem.GradleDependency},
-					{Name: jvmapplication.Dependency},
+					{Name: "jvm-application"},
 				},
 				Requires: []buildplan.Required{
 					{Name: buildsystem.GradleDependency},
-					{Name: jdk.Dependency},
+					{Name: "openjdk-jdk"},
 				},
 			}))
 		})

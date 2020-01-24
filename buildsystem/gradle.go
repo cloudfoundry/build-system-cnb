@@ -21,11 +21,9 @@ import (
 
 	"github.com/buildpack/libbuildpack/application"
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/helper"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
-	"github.com/cloudfoundry/openjdk-cnb/jdk"
 )
 
 // GradleDependency is the key identifying the Gradle build system in the buildpack plan.
@@ -36,11 +34,11 @@ func GradlePlan() buildplan.Plan {
 	return buildplan.Plan{
 		Provides: []buildplan.Provided{
 			{Name: GradleDependency},
-			{Name: jvmapplication.Dependency},
+			{Name: "jvm-application"},
 		},
 		Requires: []buildplan.Required{
 			{Name: GradleDependency},
-			{Name: jdk.Dependency},
+			{Name: "openjdk-jdk"},
 		},
 	}
 }
