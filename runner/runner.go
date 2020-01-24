@@ -44,7 +44,7 @@ type Runner struct {
 // Contributes builds the application from source code, removes the source code, and expands the built artifact to
 // $APPLICATION_ROOT.
 func (r Runner) Contribute() error {
-	c, err := NewCompiledApplication(r.application, r.runner)
+	c, err := NewCompiledApplication(r.application, r.runner, r.logger)
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (r Runner) Contribute() error {
 
 		r.logger.Debug("Copying %s to %s", artifact, r.cachedApplication())
 		return helper.CopyFile(artifact, r.cachedApplication())
-	}); err != nil {
+	}, layers.Cache); err != nil {
 		return err
 	}
 
@@ -100,3 +100,4 @@ func NewRunner(build build.Build, bin string, buildArgumentsProvider BuildArgume
 		build.Runner,
 	}
 }
+

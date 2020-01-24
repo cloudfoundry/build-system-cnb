@@ -116,8 +116,56 @@ func TestMaven(t *testing.T) {
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
 				layer := f.Build.Layers.Layer("build-system-application")
-				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
 				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(gomega.BeARegularFile())
+			})
+
+			it("does not build application if source is unchanged", func() {
+				f.Runner.Outputs = []string{"test-java-version"}
+
+				b, _, err := buildsystem.NewMavenBuildSystem(f.Build)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
+				r, err := runner.NewMavenRunner(f.Build, b)
+				g.Expect(err).NotTo(gomega.HaveOccurred())
+
+				layer := f.Build.Layers.Layer("build-system-application")
+				test.WriteFile(t, layer.Metadata, `build = false
+	cache = true
+	launch = false
+
+	[metadata]
+	  java-version = "test-java-version"
+
+	  [[metadata.sources]]
+	    path = "%[1]s"
+	    mode = "drwxr-xr-x"
+	    sha256 = ""
+
+	  [[metadata.sources]]
+	    path = "%[1]s/.mvn"
+	    mode = "-rw-r--r--"
+	    sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+	  [[metadata.sources]]
+	    path = "%[1]s/mvnw"
+	    mode = "-rw-r--r--"
+	    sha256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+	  [[metadata.sources]]
+	    path = "%[1]s/target"
+	    mode = "drwxr-xr-x"
+	    sha256 = ""
+
+	  [[metadata.sources]]
+	    path = "%[1]s/target/stub-executable.jar"
+	    mode = "-rw-r--r--"
+	    sha256 = "e1ab4e25752b0aee3548b1a8d0825f8f96d1fa51919fb6c3ddb3a953aa92cc78"
+	`, f.Build.Application.Root)
+				test.CopyFile(t, filepath.Join("testdata", "stub-executable.jar"),
+					filepath.Join(layer.Root, "application.zip"))
+
+				g.Expect(r.Contribute()).To(gomega.Succeed())
+				g.Expect(f.Runner.Commands).To(gomega.HaveLen(1))
 			})
 		})
 
@@ -139,7 +187,7 @@ func TestMaven(t *testing.T) {
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
 				layer := f.Build.Layers.Layer("build-system-application")
-				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
 				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(gomega.BeARegularFile())
 			})
 		})
@@ -163,7 +211,7 @@ func TestMaven(t *testing.T) {
 				g.Expect(r.Contribute()).To(gomega.Succeed())
 
 				layer := f.Build.Layers.Layer("build-system-application")
-				g.Expect(layer).To(test.HaveLayerMetadata(false, false, false))
+				g.Expect(layer).To(test.HaveLayerMetadata(false, true, false))
 				g.Expect(filepath.Join(f.Build.Application.Root, "fixture-marker")).To(gomega.BeARegularFile())
 			})
 		})

@@ -17,9 +17,15 @@
 package runner
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
 	"strings"
+	"sync"
 
 	"github.com/buildpack/libbuildpack/application"
+	"github.com/cloudfoundry/libcfbuildpack/logger"
 	"github.com/cloudfoundry/libcfbuildpack/runner"
 )
 
@@ -27,21 +33,30 @@ import (
 type CompiledApplication struct {
 	// JavaVersion is the version of Java used to compile the application.
 	JavaVersion string `toml:"java-version"`
+
+	// Sources is metadata about the source files used to compile the application.
+	Sources Sources `toml:"sources"`
 }
 
 // Identity makes CompiledApplication satisfy the Identifiable interface.
 func (c CompiledApplication) Identity() (string, string) {
-	return "Compiled Application", ""
+	return "Compiled Application", fmt.Sprintf("(%d files)", len(c.Sources))
 }
 
-func NewCompiledApplication(application application.Application, runner runner.Runner) (CompiledApplication, error) {
+func NewCompiledApplication(application application.Application, runner runner.Runner, logger logger.Logger) (CompiledApplication, error) {
 	v, err := javaVersion(application, runner)
+	if err != nil {
+		return CompiledApplication{}, err
+	}
+
+	s, err := sources(application, logger)
 	if err != nil {
 		return CompiledApplication{}, err
 	}
 
 	return CompiledApplication{
 		v,
+		s,
 	}, nil
 }
 
@@ -60,4 +75,54 @@ func javaVersion(application application.Application, runner runner.Runner) (str
 	default:
 		return "unknown", nil
 	}
+}
+
+type result struct {
+	err   error
+	value Source
+}
+
+func sources(application application.Application, logger logger.Logger) (Sources, error) {
+	ch := make(chan result)
+	var wg sync.WaitGroup
+
+	if err := filepath.Walk(application.Root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			source, err := NewSource(path, info, logger)
+			if err != nil {
+				ch <- result{err: err}
+				return
+			}
+
+			ch <- result{value: source}
+		}()
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	var s Sources
+	for r := range ch {
+		if r.err != nil {
+			return Sources{}, r.err
+		}
+
+		s = append(s, r.value)
+	}
+	sort.Sort(s)
+
+	return s, nil
 }

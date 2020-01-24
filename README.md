@@ -24,10 +24,12 @@ If the build plan contains
   * If `<APPLICATION_ROOT>/gradlew` exists
     * Contributes a layer marked `build`, `cache`, and `launch` by running `<APPLICATION_ROOT>/gradlew -x test build`
     * If `$BP_BUILD_ARGUMENTS` exists, uses the specified arguments appended to the executable to build the application
+    * Avoids building application if source code has not changed
   * If `<APPLICATION_ROOT>/gradlew` does not exist
     * Contributes Gradle distribution to a layer marked `cache` with all commands on `$PATH`
     * Contributes a layer marked `build`, `cache`, and `launch` by running `<GRADLE_ROOT>/bin/gradle -x test build`
     * If `$BP_BUILD_ARGUMENTS` exists, uses the specified arguments appended to the executable to build the application
+    * Avoids building application if source code has not changed
   * Replaces`<APPLICATION_ROOT>` with a link to compiled application layer
   * If `$BP_BUILT_MODULE` exists, prepends a directory to the default glob pattern when searching for the built artifact
   * If `$BP_BUILT_ARTIFACT` exists, uses the specified path (including glob patterns) as the built artifact.  Supersedes `$BP_BUILT_MODULE`.
@@ -37,6 +39,7 @@ If the build plan contains
   * If `<APPLICATION_ROOT>/mvnw` exists
     * Contributes a layer marked `build`, `cache`, and `launch` by running `<APPLICATION_ROOT>/mvnw -Dmaven.test.skip=true package`
     * If `$BP_BUILD_ARGUMENTS` exists, uses the specified arguments appended to the executable to build the application
+    * Avoids building application if source code has not changed
   * If `<APPLICATION_ROOT>/mvnw` does not exist
     * Contributes Maven distribution to a layer marked `cache` with all commands on `$PATH`
     * Contributes a layer marked `build`, `cache`, and `launch` by running `<MAVEN_ROOT>/bin/mvn -Dmaven.test.skip=true package`
